@@ -1,0 +1,8 @@
+{
+  "_comment": "형식 견본: 7장 챕터 보스. 필수 보스는 |physical - magic| ≤ 0.15 (예외 0.20).",
+  "entity": "fantasyrpg:corrupted_spirit_lord",
+  "chapter": 7,
+  "role": "chapter_boss",
+  "max_health": 600,
+  "resist": { "physical": 0.25, "magic": 0.15 }
+}

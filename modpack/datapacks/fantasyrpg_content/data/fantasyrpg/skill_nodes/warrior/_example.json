@@ -1,0 +1,22 @@
+{
+  "_comment": "형식 견본: 전사 주문력 1번 노드 '마력 베기'. 수치는 검증 전 가설.",
+  "id": "fantasyrpg:warrior/spell_1",
+  "name": "마력 베기",
+  "direction": "spell",
+  "tier": 1,
+  "required_level": 1,
+  "required_direction_sp": 0,
+  "max_rank": 5,
+  "kind": "active",
+  "effect": "fantasyrpg:melee_strike",
+  "cooldown_ticks": 100,
+  "cost": { "core": "fantasyrpg:momentum", "amount": 20 },
+  "coef": {
+    "physical": [0.4, 0.4, 0.4, 0.4, 0.4],
+    "magic":    [1.0, 1.2, 1.35, 1.55, 1.75]
+  },
+  "rank_unlocks": {
+    "3": "fantasyrpg:apply_mana_mark",
+    "5": "fantasyrpg:mana_mark_burst"
+  }
+}

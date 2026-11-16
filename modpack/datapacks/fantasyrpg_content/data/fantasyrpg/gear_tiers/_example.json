@@ -1,0 +1,18 @@
+{
+  "_comment": "형식 견본: 7장 미스릴 등급. W는 모든 성향 공통, 성향은 부가 옵션 예산으로만 구분.",
+  "tier": "fantasyrpg:mithril",
+  "chapter": 7,
+  "weapon_power": 100,
+  "recipe_set": {
+    "fantasyrpg:mithril_crystal": 30,
+    "fantasyrpg:spirit_fiber": 12,
+    "fantasyrpg:spirit_core": 1
+  },
+  "tendency_budget": {
+    "physical": { "physical_penetration": 0.10 },
+    "spell":    { "core_efficiency": 0.15 },
+    "guard":    { "max_health": 6, "damage_reduction": 0.05 },
+    "finesse":  { "crit_chance": 0.05, "cooldown_reduction": 0.05 },
+    "balanced": { "physical_penetration": 0.05, "core_efficiency": 0.07 }
+  }
+}

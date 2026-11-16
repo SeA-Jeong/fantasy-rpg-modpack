@@ -1,0 +1,14 @@
+{
+  "_comment": "형식 견본: 지역 정의. 프로젝트의 지역별 중심좌표 CSV에서 tools/로 변환해 생성할 예정.",
+  "id": "fantasyrpg:spirit_forest",
+  "chapter": 7,
+  "center": [0, 64, 0],
+  "radius": 256,
+  "recommended_level": [31, 35],
+  "arena": {
+    "center": [0, 64, 0],
+    "radius": 40,
+    "block_place": false,
+    "ender_pearl": false
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "_comment": "형식 견본: 전사 전투 기세. 수치는 검증 전 가설.",
+  "id": "fantasyrpg:momentum",
+  "class": "warrior",
+  "max": 100,
+  "start": 0,
+  "gain": {
+    "basic_attack_hit": 8,
+    "combo_hit": 4
+  },
+  "decay": { "delay_ticks": 100, "per_second": 10 }
+}
