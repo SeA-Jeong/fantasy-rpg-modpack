@@ -55,6 +55,9 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    // 테스트는 빠르므로 캐시 결과를 재사용하지 않고 항상 실행 (CI 로그에 결과가 항상 남도록)
+    outputs.upToDateWhen { false }
+    outputs.cacheIf { false }
     // CI 로그에서 테스트별 결과와 합계를 바로 볼 수 있게 출력
     testLogging {
         events 'passed', 'skipped', 'failed'
