@@ -12,8 +12,15 @@
 | 기준 기획 | `docs/design/직업_전투시스템_v0.4.md` |
 | 구현 진행 | 8.3장 **1단계(피해 계산 엔진) 완료** → 다음은 2단계(직업 코어 6종) |
 | 플랫폼 | Minecraft 1.21.1 / NeoForge 21.1.228 / Java 21 / ModDevGradle 2.0.141 |
-| CI | push마다 빌드·JUnit·테스트 팩 생성. `v*` 태그 push 시 GitHub Release 생성 |
+| CI | push마다 빌드·JUnit·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄) |
+| 최신 테스트 팩 | [v0.1.0 Release](https://github.com/SeA-Jeong/fantasy-rpg-modpack/releases/tag/v0.1.0) |
 | 게임 테스트 | `docs/TESTING.md`의 v0.1 체크리스트 |
+
+### 테스트 팩 Release 만드는 법
+Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으로 만듭니다.
+- Claude: `gh api -X POST repos/SeA-Jeong/fantasy-rpg-modpack/actions/workflows/build.yml/dispatches -f ref=main -f 'inputs[release_tag]=v0.X.Y'`
+- 사람: Actions 탭 → core-mod build → Run workflow → `release_tag`에 버전 입력
+- 버전을 올릴 때 `core-mod/gradle.properties`의 `mod_version`도 맞춥니다.
 
 ### 동작하는 것
 - 기획 4장 피해 공식 전체: W → 계수 → 스킬 강화 → 관통·저항 → 치명타 → 최종 보정
@@ -84,7 +91,9 @@
 - 몬스터 저항 데이터 로더, 챕터 보스 저항 차이 검사, 설정 파일
 - RPG 피해 유형과 바닐라 방어구·무적 시간 우회 태그
 - `/rpg simulate|resist|hit` 커맨드, 테스트 전용 데이터팩
-- CI: 테스트 팩 zip 아티팩트, `v*` 태그 릴리스
+- CI: 테스트 팩 zip 아티팩트, 수동 실행·태그로 Release 생성, 테스트 결과 로그 출력
+- 단위 테스트 클래스패스에는 Minecraft가 없음 → Gson 등 필요한 라이브러리는 `testImplementation`으로 추가
+- v0.1.0 테스트 팩 Release 발행
 - 게임 테스트: `docs/TESTING.md` v0.1 항목
 
 ### 2026-11-16 — 저장소 초기 구성
