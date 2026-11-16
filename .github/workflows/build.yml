@@ -2,9 +2,12 @@ name: core-mod build
 
 on:
   push:
-    paths: ['core-mod/**', '.github/workflows/**']
+    branches: ['**']
+    tags: ['v*']
+    paths: ['core-mod/**', 'modpack/**', '.github/workflows/**']
   pull_request:
-    paths: ['core-mod/**', '.github/workflows/**']
+    paths: ['core-mod/**', 'modpack/**', '.github/workflows/**']
+  workflow_dispatch:
 
 concurrency:
   group: build-${{ github.ref }}
@@ -13,9 +16,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: core-mod
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -23,9 +25,39 @@ jobs:
           distribution: temurin
           java-version: '21'
       - uses: gradle/actions/setup-gradle@v4
-      - run: ./gradlew build --no-daemon
-      - uses: actions/upload-artifact@v4
-        if: success()
+
+      - name: 빌드 + 테스트
+        working-directory: core-mod
+        run: ./gradlew build --no-daemon
+
+      - name: 테스트 결과 보관
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          name: fantasyrpg-core
-          path: core-mod/build/libs/*.jar
+          name: test-report
+          path: core-mod/build/reports/tests/test/
+          if-no-files-found: ignore
+
+      - name: 테스트 팩 구성
+        run: |
+          mkdir -p testpack/mods testpack/datapacks
+          find core-mod/build/libs -name '*.jar' ! -name '*-sources.jar' -exec cp {} testpack/mods/ \;
+          cp -r modpack/datapacks/fantasyrpg_content modpack/datapacks/fantasyrpg_test testpack/datapacks/
+          cp -r modpack/kubejs testpack/kubejs
+          cp docs/TESTING.md testpack/TESTING.md
+          (cd testpack && zip -qr ../fantasyrpg-testpack.zip .)
+
+      - name: 테스트 팩 업로드
+        uses: actions/upload-artifact@v4
+        with:
+          name: fantasyrpg-testpack
+          path: testpack/
+
+      - name: 릴리스 (v* 태그)
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mv fantasyrpg-testpack.zip "fantasyrpg-testpack-${GITHUB_REF_NAME}.zip"
+          gh release create "$GITHUB_REF_NAME" "fantasyrpg-testpack-${GITHUB_REF_NAME}.zip" \
+            --title "$GITHUB_REF_NAME 테스트 팩" --notes-file docs/TESTING.md --prerelease
