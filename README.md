@@ -4,6 +4,8 @@
 
 - **플랫폼:** Minecraft Java 1.21.1 / NeoForge 21.1.x / Java 21
 - **기준 기획서:** [`docs/design/직업_전투시스템_v0.4.md`](docs/design/직업_전투시스템_v0.4.md)
+- **현재 진행 상황·인계:** [`docs/HANDOFF.md`](docs/HANDOFF.md)
+- **게임에서 테스트하기:** [`docs/TESTING.md`](docs/TESTING.md)
 
 ## 저장소 구조
 
