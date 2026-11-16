@@ -6,6 +6,10 @@ on:
   pull_request:
     paths: ['core-mod/**', '.github/workflows/**']
 
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
