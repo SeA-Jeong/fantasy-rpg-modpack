@@ -48,6 +48,8 @@ repositories {
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.11.4')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    // 순수 로직 단위 테스트에는 Minecraft 클래스패스가 없으므로 JSON 파싱용 Gson만 추가 (MC 1.21.1과 같은 버전)
+    testImplementation 'com.google.code.gson:gson:2.10.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
