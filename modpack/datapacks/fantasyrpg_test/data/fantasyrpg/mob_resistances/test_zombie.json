@@ -1,0 +1,5 @@
+{
+  "entity": "minecraft:zombie",
+  "role": "normal",
+  "resist": { "physical": 0.25, "magic": 0.15 }
+}

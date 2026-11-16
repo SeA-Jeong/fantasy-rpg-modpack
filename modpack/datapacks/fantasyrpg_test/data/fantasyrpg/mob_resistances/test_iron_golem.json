@@ -1,0 +1,7 @@
+{
+  "_comment": "일부러 챕터 보스 저항 차이 30%p로 설정 — 로그에 '기획 5.1장 위반' 오류가 찍히는지 확인용",
+  "entity": "minecraft:iron_golem",
+  "role": "chapter_boss",
+  "chapter": 1,
+  "resist": { "physical": 0.40, "magic": 0.10 }
+}
