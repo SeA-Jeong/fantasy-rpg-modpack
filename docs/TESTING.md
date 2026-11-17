@@ -10,7 +10,8 @@
    - **Releases** (권장): 저장소 오른쪽 Releases의 최신 테스트 팩 → `magic-kingdom-testpack-<버전>.mrpack`
    - **최신 빌드**: Actions 탭 → 가장 최근 성공한 `core-mod build` → Artifacts의 `magic-kingdom-testpack-mrpack` (zip을 풀면 `.mrpack`)
 3. Prism Launcher → **인스턴스 추가** → 왼쪽 **가져오기(Import)** → `.mrpack` 파일 선택 (Releases 파일 주소를 그대로 붙여 넣어도 됨) → 확인.
-   - 외부 모드 18개를 자동으로 내려받습니다. **FTB Library·Teams·Quests 3개는 FTB 공식 저장소(maven.ftb.dev) 주소라서, 런처가 "허용 목록 밖 주소에서 받을지" 물으면 받기를 선택**하세요.
+   - 외부 모드 18개를 자동으로 내려받습니다.
+   - 런처가 **"신뢰할 수 없는 모드"** 창을 띄울 수 있습니다. 목록에 FTB Library·Teams·Quests(FTB 공식 저장소 maven.ftb.dev에서 받음)와 우리 모드 3개(팩 안에 들어 있음)가 보이면 정상이니 **확인(수락)**을 누르세요. Modrinth가 아닌 곳에서 오는 파일을 알려 주는 창입니다.
 4. 인스턴스 설정 → Java 메모리를 **4GB 이상**으로 둡니다.
 5. 인스턴스 폴더(인스턴스 우클릭 → 폴더 열기)에 `datapacks/`(테스트 데이터팩 2개)와 `테스트방법.md`(이 문서)가 같이 들어 있습니다.
 
