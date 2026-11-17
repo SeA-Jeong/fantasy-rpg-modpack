@@ -43,9 +43,19 @@ neoForge {
 
 repositories {
     mavenCentral()
+    // magiccity 공개 API (커밋 해시로 고정). JitPack에서는 magiccity만 받는다
+    maven {
+        url = 'https://jitpack.io'
+        content { includeGroup 'com.github.aswq0258' }
+    }
 }
 
 dependencies {
+    // magiccity 진행도 API: 컴파일할 때만 참조하고 배포 jar에는 넣지 않는다 (게임에서는 magiccity jar를 mods 폴더에 따로 둔다)
+    compileOnly "com.github.aswq0258:magic-city-mod:${magiccity_commit}"
+    // runClient / runServer 개발 실행에서만 magiccity를 함께 띄운다
+    localRuntime "com.github.aswq0258:magic-city-mod:${magiccity_commit}"
+
     testImplementation platform('org.junit:junit-bom:5.11.4')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     // 순수 로직 단위 테스트에는 Minecraft 클래스패스가 없으므로 JSON 파싱용 Gson만 추가 (MC 1.21.1과 같은 버전)

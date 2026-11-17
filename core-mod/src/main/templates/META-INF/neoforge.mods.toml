@@ -22,3 +22,11 @@ type = "required"
 versionRange = "${minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"
+
+# 진행도(등급) API. fantasyrpg → magiccity 단방향 필수 의존성
+[[dependencies.${mod_id}]]
+modId = "magiccity"
+type = "required"
+versionRange = "[1.0.0,)"
+ordering = "AFTER"
+side = "BOTH"
