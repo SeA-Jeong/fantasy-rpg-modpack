@@ -6,7 +6,7 @@
 - source "modrinth": Modrinth API 에서 slug·버전 번호·NeoForge·MC 버전이 맞는 파일을 찾고 sha512 를 검사한다.
 - source "maven": version 이 있으면 그 버전, 없으면 maven-metadata.xml 에서 latest_prefix 로 시작하는 가장 높은 버전. 실패하면 fallback 을 쓴다.
 - source "url": 주소 그대로 받는다.
-- 결과 목록은 <출력 폴더>/resolved.json 에 남긴다 (CI 보고용).
+- 결과 목록은 <출력 폴더>/resolved.json 에 남긴다 (CI 보고용, 받은 주소·sha1·sha512·크기 포함 → tools/build_mrpack.py).
 """
 import hashlib
 import json
@@ -112,6 +112,11 @@ def main(argv):
                 continue
         r["name"] = e["name"]
         r["stage"] = e.get("stage")
+        with open(os.path.join(a.out, r["file"]), "rb") as fh:
+            data = fh.read()
+        r["sha1"] = hashlib.sha1(data).hexdigest()
+        r["sha512"] = hashlib.sha512(data).hexdigest()
+        r["size"] = len(data)
         resolved.append(r)
         print(f"받음  {e['name']:<22} {r['version']:<26} {r['file']}" + (f"  ({r['note']})" if "note" in r else ""))
     with open(os.path.join(a.out, "resolved.json"), "w", encoding="utf-8") as fh:
