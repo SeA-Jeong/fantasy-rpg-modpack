@@ -54,6 +54,11 @@ repositories {
         url = 'https://jitpack.io'
         content { includeGroup 'com.github.aswq0258' }
     }
+    // Modrinth 메이븐: 외부 모드(Better Combat 등)를 컴파일 참조용으로만 받는다
+    maven {
+        url = 'https://api.modrinth.com/maven'
+        content { includeGroup 'maven.modrinth' }
+    }
 }
 
 dependencies {
@@ -61,6 +66,9 @@ dependencies {
     compileOnly "com.github.aswq0258:magic-city-mod:${magiccity_commit}"
     // runClient / runServer 개발 실행에서만 magiccity를 함께 띄운다
     localRuntime "com.github.aswq0258:magic-city-mod:${magiccity_commit}"
+    // Better Combat 연동 실험 준비 (설계: 프로젝트 문서 claude/혼합개발_연동설계_v1.md C-4).
+    // 컴파일 참조만 하고 배포 jar·테스트 팩에는 넣지 않는다. 연동 코드는 compat/bettercombat 에서 ModList 확인 후에만 로드
+    compileOnly "maven.modrinth:better-combat:${bettercombat_version}"
 
     testImplementation platform('org.junit:junit-bom:5.11.4')
     testImplementation 'org.junit.jupiter:junit-jupiter'
