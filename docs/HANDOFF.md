@@ -125,6 +125,14 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 
 ## 작업 기록
 
+### 2026-11-18 — 첫 게임 안 확인 (사용자, 통합 팩 v0.2.0-test.1, Prism Launcher 11.1.1)
+- 통합 팩 가져오기·실행 정상, 모드 목록 26개(우리 3 + 외부 18 + 함께 들어오는 3 + MC·NeoForge)
+- 통과: M1·M2·M3(`magiccity status`, `rpg simulate` 150)·M4(Better Combat 휘두르기 영상)·M6(파티)·M8 일부(JourneyMap 미니맵)·M9(`armorcap info`: 다이아 흉갑 7/1 → 1급 상한 12/0으로 강도 0, 실제 방어력 7)·royalqol Q1~Q12
+- 발견 1: royalqol "가까운 지역" 키 G가 Curios 장신구 창 기본 키 G와 겹침(키 설정 빨간 표시) → royalqol 0.2.1에서 Y로 변경(`magic-city-mod` `08251d2`, `mods.lock.json` 갱신)
+- 발견 2: "장신구가 안 나옴" — Curios는 기본 칸이 없고 칸은 다른 모드·데이터팩이 줘야 함. 테스트 데이터팩에 시험용 반지 2·목걸이 1을 넣음(`fantasyrpg_test/data/fantasyrpg/curios/entities/`). 실제 칸 종류·개수는 [미정](fantasyrpg 결정 필요)
+- Q12: 서리 결투장 근사 좌표 도착 알림은 정상, 실제 결투장 건물 위치와 맞는지는 미확인
+- 남은 것: M5(장신구 창), M7(Easy NPC 편집 화면), M8 JEI·Jade, v0.2 13항목, magiccity ①~⑱
+
 ### 2026-11-17 — 통합 테스트 팩(.mrpack)
 - `tools/build_mrpack.py`: Modrinth 모드팩 형식. 외부 18개는 주소·sha1·sha512·크기만(재배포 안 함), 우리 모드 3개·테스트 데이터팩·`테스트방법.md`는 overrides. `dependencies`로 MC 1.21.1·NeoForge 21.1.266 지정
 - `tools/install_mrpack.py`: launcher처럼 설치(주소에서 받기·해시 확인). CI `core-mod build`는 팩을 만들고 설치해 21개가 모이는지 확인, `modpack smoke`는 설치한 팩으로 서버 기동. 자체 검사 `test_mrpack.py` 2개
