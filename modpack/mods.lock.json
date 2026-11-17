@@ -2,6 +2,7 @@
   "_comment": "1차 외부 모드 구성 (프로젝트 문서 claude/혼합개발_연동설계_v1.md A절). tools/fetch_mods.py 가 읽는다. stage 는 단계별 설치 순서(A-4). 버전을 바꿀 때는 이 파일만 고친다.",
   "minecraft": "1.21.1",
   "neoforge": "21.1.266",
+  "royalqol": { "_comment": "우리 편의 모드(클라이언트 전용). magic-city-mod 저장소 royalqol/ 폴더를 이 커밋으로 빌드한다 (tools/build_royalqol.sh)", "repo": "https://github.com/aswq0258/magic-city-mod.git", "commit": "d81196022251eead14049be96e2d8e31ab7dbafe" },
   "mods": [
     { "name": "Architectury API", "stage": 2, "required": true, "source": "modrinth", "slug": "architectury-api", "version": "13.0.12+neoforge" },
     { "name": "FTB Library", "stage": 2, "required": true, "source": "maven", "repo": "https://maven.ftb.dev/releases", "group": "dev.ftb.mods", "artifact": "ftb-library-neoforge", "version": "2101.1.40",

@@ -10,6 +10,7 @@ on:
       - 'modpack/mods.lock.json'
       - 'tools/fetch_mods.py'
       - 'tools/smoke_server.py'
+      - 'tools/build_royalqol.sh'
       - 'tools/check_mods.py'
       - '.github/workflows/modpack-smoke.yml'
 
@@ -33,11 +34,12 @@ jobs:
         working-directory: core-mod
         run: ./gradlew build -x test --no-daemon
 
-      - name: 우리 모드 jar 모으기
+      - name: 우리 모드 jar 모으기 (fantasyrpg + magiccity + royalqol)
         run: |
           mkdir -p ours
           find core-mod/build/libs -name '*.jar' ! -name '*-sources.jar' -exec cp {} ours/ \;
           find ~/.gradle/caches -path '*com.github.aswq0258*' -name 'magic-city-mod-*.jar' ! -name '*-sources.jar' -exec cp {} ours/ \;
+          bash tools/build_royalqol.sh modpack/mods.lock.json ours
           ls -la ours
 
       - name: 외부 모드 받기 (mods.lock.json)
@@ -54,7 +56,8 @@ jobs:
           ls server
 
       - name: "1단계: 우리 모드만 — 의존성 검사"
-        run: python3 tools/check_mods.py ours --neoforge "$(python3 -c "import json;print(json.load(open('modpack/mods.lock.json'))['neoforge'])")"
+        # royalqol 의 JEI·JourneyMap 의존성은 클라이언트 전용이라 서버 기준으로 검사
+        run: python3 tools/check_mods.py ours --side server --neoforge "$(python3 -c "import json;print(json.load(open('modpack/mods.lock.json'))['neoforge'])")"
 
       - name: "1단계: 우리 모드만 — 서버 기동"
         run: |
@@ -78,6 +81,8 @@ jobs:
           python3 tools/smoke_server.py server full \
             --command "magiccity status" \
             --command "rpg simulate 100 2.0 0 0.25 0=>150"
+          # royalqol 은 클라이언트 전용: 서버 모드 목록에 올라오고(로딩 오류 없이) 진입점은 만들어지지 않아야 한다
+          grep -E "Royal QoL .*\(royalqol\)" server/logs/latest.log
 
       - name: 로그 보관
         if: always()
