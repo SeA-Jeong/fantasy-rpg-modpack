@@ -4,7 +4,7 @@
 사용:  python3 tools/fetch_mods.py modpack/mods.lock.json <출력 폴더> [--max-stage N]
 
 - source "modrinth": Modrinth API 에서 slug·버전 번호·NeoForge·MC 버전이 맞는 파일을 찾고 sha512 를 검사한다.
-- source "maven": maven-metadata.xml 에서 latest_prefix 로 시작하는 가장 높은 버전을 고른다. 실패하면 fallback 을 쓴다.
+- source "maven": version 이 있으면 그 버전, 없으면 maven-metadata.xml 에서 latest_prefix 로 시작하는 가장 높은 버전. 실패하면 fallback 을 쓴다.
 - source "url": 주소 그대로 받는다.
 - 결과 목록은 <출력 폴더>/resolved.json 에 남긴다 (CI 보고용).
 """
@@ -50,11 +50,14 @@ def fetch_modrinth(entry, mc, out):
 
 def fetch_maven(entry, out):
     base = f"{entry['repo'].rstrip('/')}/{entry['group'].replace('.', '/')}/{entry['artifact']}"
-    meta = ET.fromstring(get(f"{base}/maven-metadata.xml"))
-    versions = [v.text for v in meta.iter("version") if v.text and v.text.startswith(entry.get("latest_prefix", ""))]
-    if not versions:
-        raise RuntimeError("조건에 맞는 버전 없음")
-    ver = max(versions, key=vkey)
+    if "version" in entry:  # 고정 버전 (재현성 우선)
+        ver = entry["version"]
+    else:
+        meta = ET.fromstring(get(f"{base}/maven-metadata.xml"))
+        versions = [v.text for v in meta.iter("version") if v.text and v.text.startswith(entry.get("latest_prefix", ""))]
+        if not versions:
+            raise RuntimeError("조건에 맞는 버전 없음")
+        ver = max(versions, key=vkey)
     name = f"{entry['artifact']}-{ver}.jar"
     data = get(f"{base}/{ver}/{name}", timeout=300)
     with open(os.path.join(out, name), "wb") as fh:

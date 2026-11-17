@@ -12,7 +12,8 @@
 | 기준 기획 | `docs/design/직업_전투시스템_v0.4.md` |
 | 구현 진행 | 8.3장 **1단계(피해 계산 엔진) 완료**. 별도 작업으로 **방어 등급 상한 최소 기능(v0.2) 구현, 게임 확인 전** (브랜치 `claude/armor-grade-cap`, 수치는 JUnit으로 재현됨) → 다음은 v0.2 게임 확인. **Better Combat 연동 실험 준비**(순수 로직·컴파일 의존성)는 브랜치 `claude/combat-experiment-prep` |
 | 플랫폼 | Minecraft 1.21.1 / NeoForge **21.1.266** / Java 21 / ModDevGradle 2.0.141. **필수 의존 모드 magiccity** (JitPack `com.github.aswq0258:magic-city-mod:7eb93cc`, `gradle.properties`의 `magiccity_commit`) |
-| CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄) |
+| CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄). 모드 구성이 바뀌면 `modpack smoke`가 외부 모드 18개 + 우리 모드 2개로 **NeoForge 전용 서버를 실제 기동** |
+| 1차 외부 모드 구성 | `modpack/mods.lock.json` (필수 13 + 권장 5, 버전 고정). 2026-11-17 전용 서버 기동 통과 (run 44061047052). 클라이언트 실행은 아직 확인 안 함 |
 | 최신 테스트 팩 | [v0.1.0 Release](https://github.com/SeA-Jeong/fantasy-rpg-modpack/releases/tag/v0.1.0) |
 | 게임 테스트 | `docs/TESTING.md`의 v0.1·v0.2 체크리스트 |
 
@@ -32,7 +33,7 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - **(v0.2, 게임 확인 전) 바닐라 갑옷 조정:** 다이아 18/2, 네더라이트 20/6 (아이템은 그대로, 능력치만). 철 15/0은 바닐라와 같음
 
 - **(준비, 게임 연결 없음) 무기 사용 권한·기본 공격 입력:** `combat/WeaponPermission`(정책 P1 판정), `combat/BasicAttackMath`(콤보 배율 정리·바닐라 충전 곡선). 아직 어떤 이벤트에도 연결하지 않음
-- **도구:** `tools/check_mods.py` — mods 폴더 jar 의존성·버전 범위 검사
+- **도구:** `tools/check_mods.py` — mods 폴더 jar 의존성·버전 범위 검사. `tools/fetch_mods.py` — `mods.lock.json`의 외부 모드 내려받기. `tools/smoke_server.py` — 전용 서버 기동·콘솔 명령·로그 검사
 
 ### 아직 없는 것 (다음 작업 후보)
 - 플레이어 기본 공격·스킬이 RPG 피해를 쓰는 연결 (지금은 커맨드로만 RPG 피해 발생). 설계: 프로젝트 문서 `claude/혼합개발_연동설계_v1.md` C-4 (`AttackEntityEvent` 취소 → `RpgDamage.apply`, 실험 채택). 플레이어 데이터(직업) 구현 후 연결
@@ -65,6 +66,7 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 | `core-mod/src/main/resources/data/` | 피해 유형 정의, 바닐라 피해 태그 추가 |
 | `core-mod/src/test/` | JUnit 51개: 부록 A-1, 4.3장 표, 계산 순서, 저항 파싱·판정, 방어 상한 계산·v0.2 게임 수치 재현(`ArmorCapScenarioTest`), 무기 권한, 기본 공격 입력 |
 | `tools/check_mods.py` | mods 폴더 의존성 검사 (자체 검사 `tools/test_check_mods.py`, CI) |
+| `modpack/mods.lock.json`, `tools/fetch_mods.py`, `tools/smoke_server.py`, `.github/workflows/modpack-smoke.yml` | 1차 외부 모드 고정 목록과 혼합 서버 기동 검사 (1단계 우리 모드만 → 전체 20개) |
 | `modpack/datapacks/fantasyrpg_content` | 실제 콘텐츠 데이터 (지금은 형식 견본만) |
 | `modpack/datapacks/fantasyrpg_test` | 테스트 전용 데이터 (좀비·스켈레톤·철골렘 저항, `function/armorcap/*` 방어 상한 시험 함수) |
 
@@ -121,6 +123,14 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 ---
 
 ## 작업 기록
+
+### 2026-11-17 — 모드 혼합 서버 기동 검사 (브랜치 `claude/modpack-smoke`)
+- 병합: fantasyrpg main ← v0.2 + 연동 실험 준비 (`1dc15a6`, 복구 지점 `backup/main-before-v0.2-merge-2026-11-17`), magiccity main ← 테스트 추가 (`f30d2f2`, 복구 지점 `backup/main-before-ff-2026-11-17`). 게임 확인 전 병합임
+- `modpack/mods.lock.json`: 필수 13 + 권장 5. FTB 3종은 FTB 메이븐 2101.1.40(Library)·2101.1.12(Teams)·2101.1.39(Quests)로 고정
+- CI `modpack smoke`: 우리 모드 빌드 → 외부 모드 받기(sha512) → NeoForge 21.1.266 전용 서버 설치 → 1단계(우리 모드 2개) 기동 → 전체 20개(+자동 포함 3개) 기동. 둘 다 `magiccity status`, `rpg simulate` 콘솔 명령 통과. 치명 로그 없음
+- 발견: JEI 19.51.0.418 jar가 `minecraft` 범위를 `[1.21, 1.21.1)`로 선언 → `check_mods.py`는 오류로 판정하지만 NeoForge 21.1.266은 그대로 로드함. 전체 구성의 check_mods 단계는 기록용(`continue-on-error`)으로 두고 판정은 서버 기동으로 함
+- 경고만 있음: mixin refmap 경고(배포판에서 정상), Lootr의 Create 연동 mixin 대상 클래스 없음(선택 연동)
+- 확인 안 한 것: 클라이언트 실행·화면·렌더링, 플레이어 접속, Better Combat 실제 공격, 파티·퀘스트 동작 (`docs/TESTING.md` 모드 혼합 항목)
 
 ### 2026-11-17 — v0.2 자동 테스트, Better Combat 연동 실험 준비
 - (브랜치 `claude/armor-grade-cap`, 커밋 `c5d316e`) `ArmorCapDefaults` 분리, `ArmorCapScenarioTest` 11개: `docs/TESTING.md` v0.2 #1~#12·#17 수치를 바닐라 1.21.1 갑옷 공식으로 재현. TESTING.md에 자동/게임 안 구분 표. CI 41개 통과

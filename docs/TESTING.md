@@ -17,6 +17,12 @@
    ```
 4. `mods/` 안의 jar를 **모두** 인스턴스의 `mods` 폴더에 넣습니다. 새 버전이 나오면 이전 jar는 지우세요. magiccity가 없으면 게임이 시작되지 않습니다(필수 의존성).
 
+### 1-1. 1차 모드 구성 전체로 시험할 때 (선택)
+외부 모드 18개는 배포 허락이 모드마다 달라서 테스트 팩에 넣지 않습니다. 목록은 `modpack/mods.lock.json`에 버전까지 고정돼 있습니다.
+- 파이썬이 있으면: 저장소를 받은 뒤 `python3 tools/fetch_mods.py modpack/mods.lock.json 받은폴더` → `받은폴더`의 jar를 인스턴스 `mods`에 넣습니다.
+- 없으면: `mods.lock.json`의 이름·버전대로 Modrinth(FTB 3종은 CurseForge)에서 직접 받습니다.
+- 서버 쪽 동시 로딩은 CI `modpack smoke`에서 확인됨(2026-11-17). 아래 "모드 혼합" 표는 클라이언트·게임 안에서만 확인할 수 있는 항목입니다.
+
 ## 2. 테스트 월드
 
 1. 새 월드 생성 화면에서 **치트 허용: 켜기**, 게임 모드 **크리에이티브**.
@@ -91,4 +97,18 @@
 | 18 | — | 로그 경고 없음 |
 
 결과는 번호별로 성공·실패·미확인으로 알려주세요. 실패하면 `/rpg armorcap info` 출력 전체를 함께 보내 주세요.
+
+### 모드 혼합 (1차 구성 20개) — 게임 안 확인
+
+| # | 할 일 | 기대 결과 | 자동 검증 |
+|---|---|---|---|
+| M1 | 클라이언트에 20개 모드를 넣고 실행 | 메인 화면까지 오류 없이 도달, 모드 목록에 fantasyrpg·magiccity·FTB 3종·Better Combat·Curios·Easy NPC·JEI·JourneyMap 표시 | 전용 서버 기동만 (CI) |
+| M2 | 새 월드 생성 후 접속 | 월드 진입, 크래시 없음 | 아니오 |
+| M3 | `/magiccity status`, `/rpg simulate 100 2.0 0 0.25 0` | 각각 출력. simulate 최종 150 | 서버 콘솔에서 통과 (CI) |
+| M4 | 검으로 좀비를 Better Combat 콤보로 공격 | 콤보 동작·애니메이션 표시. 피해는 아직 바닐라 경로(RPG 연결 전) | 아니오 |
+| M5 | 장신구 슬롯 열기(Curios 키) | 슬롯 화면 표시 | 아니오 |
+| M6 | FTB Quests 책 열기, `/ftbteams party create 시험` | 화면 열림, 파티 생성 | 아니오 |
+| M7 | Easy NPC 생성 후 대화 편집 화면 열기 | Config UI 표시 | 아니오 |
+| M8 | JEI 아이템 목록, JourneyMap 지도(J), Jade 툴팁 | 각각 표시 | 아니오 |
+| M9 | `/rpg armorcap info` 를 다이아 갑옷 착용 상태로 | v0.2 표와 같은 값 | 계산만 JUnit |
 
