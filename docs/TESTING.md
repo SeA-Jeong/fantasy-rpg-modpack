@@ -2,32 +2,40 @@
 
 ## 1. 준비 (처음 한 번)
 
-1. Prism Launcher 또는 CurseForge 앱에서 새 인스턴스를 만듭니다.
-   - Minecraft **1.21.1**, 로더 **NeoForge 21.1.266 이상** (v0.2부터. magiccity와 같은 버전)
-2. 테스트 팩을 받습니다. 둘 중 하나를 고르면 됩니다.
-   - **Releases** (권장): 저장소 오른쪽 Releases에서 `fantasyrpg-testpack-*.zip`
-   - **최신 빌드**: Actions 탭 → 가장 최근 성공한 `core-mod build` → Artifacts의 `fantasyrpg-testpack`
-3. zip을 풀면 아래 구조가 나옵니다.
+### 1-A. 통합 테스트 팩으로 한 번에 설치 (권장)
+우리 모드 3개(`magiccity`·`fantasyrpg`·`royalqol`)와 1차 외부 모드 18개, Minecraft 1.21.1 + NeoForge 21.1.266을 한 번에 맞춥니다.
+
+1. **Prism Launcher**를 설치합니다 (https://prismlauncher.org, 무료).
+2. 통합 팩 파일 `magic-kingdom-testpack-*.mrpack`을 받습니다.
+   - **Releases** (권장): 저장소 오른쪽 Releases의 최신 테스트 팩 → `magic-kingdom-testpack-<버전>.mrpack`
+   - **최신 빌드**: Actions 탭 → 가장 최근 성공한 `core-mod build` → Artifacts의 `magic-kingdom-testpack-mrpack` (zip을 풀면 `.mrpack`)
+3. Prism Launcher → **인스턴스 추가** → 왼쪽 **가져오기(Import)** → `.mrpack` 파일 선택 (Releases 파일 주소를 그대로 붙여 넣어도 됨) → 확인.
+   - 외부 모드 18개를 자동으로 내려받습니다. **FTB Library·Teams·Quests 3개는 FTB 공식 저장소(maven.ftb.dev) 주소라서, 런처가 "허용 목록 밖 주소에서 받을지" 물으면 받기를 선택**하세요.
+4. 인스턴스 설정 → Java 메모리를 **4GB 이상**으로 둡니다.
+5. 인스턴스 폴더(인스턴스 우클릭 → 폴더 열기)에 `datapacks/`(테스트 데이터팩 2개)와 `테스트방법.md`(이 문서)가 같이 들어 있습니다.
+
+새 테스트 팩이 나오면 인스턴스를 새로 가져오는 것이 가장 깔끔합니다(월드는 `saves/`를 옮기면 됨).
+
+### 1-B. 직접 설치 (팩을 쓰지 않을 때)
+1. Prism Launcher 또는 CurseForge 앱에서 새 인스턴스를 만듭니다. Minecraft **1.21.1**, 로더 **NeoForge 21.1.266 이상**.
+2. Actions의 `fantasyrpg-testpack`(또는 Releases의 `fantasyrpg-testpack-*.zip`)을 받아 풀면:
    ```
    mods/fantasyrpg-<버전>.jar
-   mods/magic-city-mod-<커밋>.jar   (v0.2부터 필수 의존 모드 magiccity)
-   mods/royalqol-<버전>.jar         (편의 모드, 클라이언트 전용. 2026-11-17부터)
+   mods/magic-city-mod-<커밋>.jar   (필수 의존 모드 magiccity)
+   mods/royalqol-<버전>.jar         (편의 모드, 클라이언트 전용)
    datapacks/fantasyrpg_content/
    datapacks/fantasyrpg_test/
    kubejs/ (아직 비어 있음)
    ```
-4. `mods/` 안의 jar를 **모두** 인스턴스의 `mods` 폴더에 넣습니다. 새 버전이 나오면 이전 jar는 지우세요. magiccity가 없으면 게임이 시작되지 않습니다(필수 의존성).
+3. `mods/` 안의 jar를 **모두** 인스턴스의 `mods` 폴더에 넣습니다. 새 버전이 나오면 이전 jar는 지우세요.
+4. 외부 모드 18개(선택): `modpack/mods.lock.json`에 버전까지 고정돼 있습니다. 파이썬이 있으면 `python3 tools/fetch_mods.py modpack/mods.lock.json 받은폴더`, 없으면 이름·버전대로 Modrinth(FTB 3종은 CurseForge)에서 받습니다.
 
-### 1-1. 1차 모드 구성 전체로 시험할 때 (선택)
-외부 모드 18개는 배포 허락이 모드마다 달라서 테스트 팩에 넣지 않습니다. 목록은 `modpack/mods.lock.json`에 버전까지 고정돼 있습니다.
-- 파이썬이 있으면: 저장소를 받은 뒤 `python3 tools/fetch_mods.py modpack/mods.lock.json 받은폴더` → `받은폴더`의 jar를 인스턴스 `mods`에 넣습니다.
-- 없으면: `mods.lock.json`의 이름·버전대로 Modrinth(FTB 3종은 CurseForge)에서 직접 받습니다.
-- 서버 쪽 동시 로딩은 CI `modpack smoke`에서 확인됨(2026-11-17, 우리 모드 3개 + 외부 18개). 아래 "모드 혼합"·"royalqol" 표는 클라이언트·게임 안에서만 확인할 수 있는 항목입니다.
+서버 쪽 동시 로딩은 CI `modpack smoke`에서 통합 팩을 실제로 설치해 확인합니다(우리 모드 3개 + 외부 18개). 아래 "모드 혼합"·"royalqol" 표는 클라이언트·게임 안에서만 확인할 수 있는 항목입니다.
 
 ## 2. 테스트 월드
 
 1. 새 월드 생성 화면에서 **치트 허용: 켜기**, 게임 모드 **크리에이티브**.
-2. **데이터 팩** 버튼 → 열린 폴더에 `datapacks/` 안의 두 폴더를 복사 → 둘 다 "선택됨"으로 옮깁니다.
+2. **데이터 팩** 버튼 → 열린 폴더에 `datapacks/`(통합 팩이면 인스턴스 폴더 안) 안의 두 폴더를 복사 → 둘 다 "선택됨"으로 옮깁니다.
 3. 이미 만든 월드라면 `saves/<월드>/datapacks/`에 두 폴더를 넣고 게임 안에서 `/reload`.
 
 ## 3. 버전별 확인 항목
