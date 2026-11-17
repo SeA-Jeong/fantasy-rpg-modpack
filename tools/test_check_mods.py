@@ -15,7 +15,8 @@ def make_jar(path, mod_id, version, deps):
     lines = ['modLoader="javafml"', 'loaderVersion="[1,)"', 'license="x"', "[[mods]]",
              f'modId="{mod_id}"', f'version="{version}"']
     for d in deps:
-        lines += [f"[[dependencies.{mod_id}]]", f'modId="{d[0]}"', f'type="{d[1]}"', f'versionRange="{d[2]}"', 'side="BOTH"']
+        side = d[3] if len(d) > 3 else "BOTH"
+        lines += [f"[[dependencies.{mod_id}]]", f'modId="{d[0]}"', f'type="{d[1]}"', f'versionRange="{d[2]}"', f'side="{side}"']
     with zipfile.ZipFile(path, "w") as z:
         z.writestr("META-INF/neoforge.mods.toml", "\n".join(lines))
 
@@ -36,13 +37,13 @@ class RangeTest(unittest.TestCase):
 
 
 class FolderTest(unittest.TestCase):
-    def run_dir(self, jars):
+    def run_dir(self, jars, *extra):
         with tempfile.TemporaryDirectory() as d:
             for name, mid, ver, deps in jars:
                 make_jar(os.path.join(d, name), mid, ver, deps)
             buf = io.StringIO()
             with redirect_stdout(buf):
-                code = check_mods.main([d])
+                code = check_mods.main([d, *extra])
             return code, buf.getvalue()
 
     def test_missing_required(self):
@@ -57,6 +58,14 @@ class FolderTest(unittest.TestCase):
         ])
         self.assertEqual(1, code)
         self.assertIn("범위", out)
+
+    def test_client_only_dependency(self):
+        jars = [("rq.jar", "royalqol", "0.2.0", [("jei", "required", "[0,)", "CLIENT"), ("journeymap", "required", "[0,)", "CLIENT")])]
+        code, _ = self.run_dir(jars, "--side", "server")
+        self.assertEqual(0, code)
+        code, out = self.run_dir(jars)
+        self.assertEqual(1, code)
+        self.assertIn("jei", out)
 
     def test_ok(self):
         code, _ = self.run_dir([

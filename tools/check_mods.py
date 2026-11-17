@@ -105,6 +105,8 @@ def main(argv):
     ap.add_argument("mods_dir")
     ap.add_argument("--neoforge", default="21.1.266")
     ap.add_argument("--minecraft", default="1.21.1")
+    ap.add_argument("--side", choices=["both", "client", "server"], default="both",
+                    help="server: side=\"CLIENT\" 의존성은 건너뜀 (전용 서버 기준), client: side=\"SERVER\" 건너뜀")
     a = ap.parse_args(argv)
 
     mods = []
@@ -118,11 +120,14 @@ def main(argv):
     present.setdefault("minecraft", {"modId": "minecraft", "version": a.minecraft, "jar": "(게임)"})
 
     errors, unknown = [], []
-    print(f"모드 {len(mods)}개 (jar-in-jar 포함), NeoForge {a.neoforge}, Minecraft {a.minecraft}\n")
+    print(f"모드 {len(mods)}개 (jar-in-jar 포함), NeoForge {a.neoforge}, Minecraft {a.minecraft}, 기준 {a.side}\n")
     for m in sorted(mods, key=lambda x: x["modId"] or ""):
         print(f"- {m['modId']} {m['version']}  ({m['jar']})")
         for d in m["deps"]:
             did = d.get("modId")
+            dside = str(d.get("side", "BOTH")).upper()
+            if a.side != "both" and dside not in ("BOTH", a.side.upper()):
+                continue
             typ = str(d.get("type", "required" if d.get("mandatory", True) else "optional")).lower()
             rng = d.get("versionRange")
             dep = present.get(did)
