@@ -41,6 +41,12 @@ neoForge {
     }
 }
 
+// 개발 실행(runClient/runServer)에만 넣고 배포 jar 의존성에는 넣지 않는 구성 (NeoForge MDK와 같음)
+configurations {
+    localRuntime
+    runtimeClasspath.extendsFrom localRuntime
+}
+
 repositories {
     mavenCentral()
     // magiccity 공개 API (커밋 해시로 고정). JitPack에서는 magiccity만 받는다
