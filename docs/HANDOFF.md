@@ -15,7 +15,7 @@
 | CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄). 모드 구성이 바뀌면 `modpack smoke`가 외부 모드 18개 + 우리 모드 2개로 **NeoForge 전용 서버를 실제 기동** |
 | 1차 외부 모드 구성 | `modpack/mods.lock.json` (필수 13 + 권장 5, 버전 고정). 2026-11-17 전용 서버 기동 통과 (run 44061047052). 클라이언트 실행은 아직 확인 안 함 |
 | 우리 모드 3개 | `fantasyrpg`(이 저장소), `magiccity`(JitPack), `royalqol`(클라이언트 전용 편의 모드, `magic-city-mod` 저장소 `royalqol/`, `mods.lock.json`의 `royalqol.commit`으로 빌드 — `tools/build_royalqol.sh`). 테스트 팩과 서버 기동 검사에 셋 다 들어감 |
-| 최신 테스트 팩 | [v0.1.0 Release](https://github.com/SeA-Jeong/fantasy-rpg-modpack/releases/tag/v0.1.0) |
+| 최신 테스트 팩 | [v0.2.0-test.1 Release](https://github.com/SeA-Jeong/fantasy-rpg-modpack/releases/tag/v0.2.0-test.1) (사전 릴리스, 게임 확인 전): 통합 팩 `magic-kingdom-testpack-*.mrpack`(우리 모드 3개 + 외부 18개, Prism 가져오기) + 기존 `fantasyrpg-testpack-*.zip` |
 | 게임 테스트 | `docs/TESTING.md`의 v0.1·v0.2 체크리스트 |
 
 ### 테스트 팩 Release 만드는 법
@@ -124,6 +124,12 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 ---
 
 ## 작업 기록
+
+### 2026-11-17 — 통합 테스트 팩(.mrpack)
+- `tools/build_mrpack.py`: Modrinth 모드팩 형식. 외부 18개는 주소·sha1·sha512·크기만(재배포 안 함), 우리 모드 3개·테스트 데이터팩·`테스트방법.md`는 overrides. `dependencies`로 MC 1.21.1·NeoForge 21.1.266 지정
+- `tools/install_mrpack.py`: launcher처럼 설치(주소에서 받기·해시 확인). CI `core-mod build`는 팩을 만들고 설치해 21개가 모이는지 확인, `modpack smoke`는 설치한 팩으로 서버 기동. 자체 검사 `test_mrpack.py` 2개
+- FTB 3종은 Modrinth에 없어 FTB 메이븐 주소 → Prism은 Modrinth CDN이 아닌 파일(FTB 3개 + overrides의 우리 모드 3개)을 "신뢰할 수 없는 모드" 창으로 확인받음(Prism 소스 `promptForUntrustedMods` 확인). TESTING.md 1-A에 안내
+- 사전 릴리스 `v0.2.0-test.1` (`main` `76fe7fa`). Prism에서 실제로 가져오기는 해 보지 않음
 
 ### 2026-11-17 — 편의 모드 royalqol 포함
 - 이전 대화의 `royalqol-src.zip`이 남아 있지 않아 통합문서 8절 명세대로 새로 작성: `magic-city-mod` 저장소 `royalqol/` (독립 빌드, `./gradlew -p royalqol build`), 커밋 `d811960`, magiccity `main` 병합(복구 지점 `backup/main-before-royalqol-2026-11-17`)
