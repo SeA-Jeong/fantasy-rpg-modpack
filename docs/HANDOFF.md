@@ -10,9 +10,9 @@
 | 항목 | 상태 |
 |---|---|
 | 기준 기획 | `docs/design/직업_전투시스템_v0.4.md` |
-| 구현 진행 | 8.3장 **1단계(피해 계산 엔진) 완료**. 별도 작업으로 **방어 등급 상한 최소 기능(v0.2) 구현, 게임 확인 전** (브랜치 `claude/armor-grade-cap`) → 다음은 v0.2 게임 확인, 그 뒤 2단계(직업 코어 6종) |
+| 구현 진행 | 8.3장 **1단계(피해 계산 엔진) 완료**. 별도 작업으로 **방어 등급 상한 최소 기능(v0.2) 구현, 게임 확인 전** (브랜치 `claude/armor-grade-cap`, 수치는 JUnit으로 재현됨) → 다음은 v0.2 게임 확인. **Better Combat 연동 실험 준비**(순수 로직·컴파일 의존성)는 브랜치 `claude/combat-experiment-prep` |
 | 플랫폼 | Minecraft 1.21.1 / NeoForge **21.1.266** / Java 21 / ModDevGradle 2.0.141. **필수 의존 모드 magiccity** (JitPack `com.github.aswq0258:magic-city-mod:7eb93cc`, `gradle.properties`의 `magiccity_commit`) |
-| CI | push마다 빌드·JUnit·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄) |
+| CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄) |
 | 최신 테스트 팩 | [v0.1.0 Release](https://github.com/SeA-Jeong/fantasy-rpg-modpack/releases/tag/v0.1.0) |
 | 게임 테스트 | `docs/TESTING.md`의 v0.1·v0.2 체크리스트 |
 
@@ -31,8 +31,11 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - **(v0.2, 게임 확인 전) 방어 등급 상한:** 플레이어 ARMOR·ARMOR_TOUGHNESS에 등급별 상한(1급 12/0 … 10급 20/12). 장신구·스킬·다른 모드 수정자 포함. 최종 곱셈형 임시 수정자 `fantasyrpg:grade_limit` 하나로 맞춤, 매 틱(상태가 바뀔 때만)과 피격 직전 갱신. `/rpg armorcap info|grade|refresh`
 - **(v0.2, 게임 확인 전) 바닐라 갑옷 조정:** 다이아 18/2, 네더라이트 20/6 (아이템은 그대로, 능력치만). 철 15/0은 바닐라와 같음
 
+- **(준비, 게임 연결 없음) 무기 사용 권한·기본 공격 입력:** `combat/WeaponPermission`(정책 P1 판정), `combat/BasicAttackMath`(콤보 배율 정리·바닐라 충전 곡선). 아직 어떤 이벤트에도 연결하지 않음
+- **도구:** `tools/check_mods.py` — mods 폴더 jar 의존성·버전 범위 검사
+
 ### 아직 없는 것 (다음 작업 후보)
-- 플레이어 기본 공격·스킬이 RPG 피해를 쓰는 연결 (지금은 커맨드로만 RPG 피해 발생)
+- 플레이어 기본 공격·스킬이 RPG 피해를 쓰는 연결 (지금은 커맨드로만 RPG 피해 발생). 설계: 프로젝트 문서 `claude/혼합개발_연동설계_v1.md` C-4 (`AttackEntityEvent` 취소 → `RpgDamage.apply`, 실험 채택). 플레이어 데이터(직업) 구현 후 연결
 - 치명타 확률 판정 (지금은 배율만 입력받음. 확률·상한은 5.4장, 8.4장 미확정 값)
 - 직업, 코어 자원, 스킬트리, SP, 장비 W 전부
 - magiccity 연동 중 레벨·SP 부분(연동작업지침 4~8절). 이번에는 의존성 연결(1~3절)만 함
@@ -53,12 +56,15 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 | `resist/MobResistanceParser`, `ResistanceRules` | JSON 파싱, 보스 저항 차이 판정 (순수) |
 | `command/RpgCommands` | `/rpg` 커맨드 |
 | `command/ArmorCapCommands` | `/rpg armorcap` (상한 진단, 테스트용 등급 덮어쓰기) |
+| `gear/armorcap/ArmorCapDefaults` | **순수** 기본값(등급 상한·다이아·네더라이트). `RpgConfig` 기본값이 이를 가리킴 |
+| `combat/WeaponPermission`, `combat/BasicAttackMath` | **순수** 무기 사용 권한(P1)·기본 공격 입력 (연동 실험 준비, 미연결) |
 | `gear/armorcap/ArmorCapMath` | **순수 계산** (MC 비의존): 가상 교체 → 바닐라 순서 재계산(클램프 전 값) → 상한 → 최종 곱셈 보정 k, 적용 후 ulp 조정(`refine`) |
 | `gear/armorcap/ArmorCapService` | 플레이어 속성에 보정 수정자 적용. 상태값(등급·상한·기본값·수정자 목록·현재 보정) 비교, 재진입 방지, 40틱 연속 변경 시 호환성 경고(5분 1회) |
 | `gear/armorcap/VanillaArmorTuning` | `ItemAttributeModifierEvent`로 바닐라 다이아·네더라이트 갑옷 수정자 값 교체 |
 | `gear/armorcap/GradeSource` | 장비 등급 = `MagicCityApi.grade`(지금 1~6) + 테스트 덮어쓰기. magiccity에 `gearGrade`가 생기면 여기만 바꿈 |
 | `core-mod/src/main/resources/data/` | 피해 유형 정의, 바닐라 피해 태그 추가 |
-| `core-mod/src/test/` | JUnit: 부록 A-1, 4.3장 표, 계산 순서, 저항 파싱·판정 |
+| `core-mod/src/test/` | JUnit 51개: 부록 A-1, 4.3장 표, 계산 순서, 저항 파싱·판정, 방어 상한 계산·v0.2 게임 수치 재현(`ArmorCapScenarioTest`), 무기 권한, 기본 공격 입력 |
+| `tools/check_mods.py` | mods 폴더 의존성 검사 (자체 검사 `tools/test_check_mods.py`, CI) |
 | `modpack/datapacks/fantasyrpg_content` | 실제 콘텐츠 데이터 (지금은 형식 견본만) |
 | `modpack/datapacks/fantasyrpg_test` | 테스트 전용 데이터 (좀비·스켈레톤·철골렘 저항, `function/armorcap/*` 방어 상한 시험 함수) |
 
@@ -91,6 +97,10 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 | 11-17 | 계산 횟수 제한 없음, 상태가 바뀌면 같은 틱에도 다시 계산 | 피해 계산 시점의 정확성 우선 (프로젝트 결정) |
 | 11-17 | 등급은 지금 `MagicCityApi.grade`(1~6). 7~10급은 `/rpg armorcap grade`로만 시험 | magiccity에 `gearGrade` 미구현 (네더 원정 전에는 두 값이 같음) |
 | 11-17 | 플레이어가 받는 피해에 `fantasyrpg:rpg` 유형을 쓰지 않음 | 방어 무시라서 상한·방어 투자가 무의미해짐 |
+| 11-17 | 직업 외 무기로는 RPG 피해 없음, 도구로 공격 차단, 맨손은 최소 피해, 예외 권한 자리 마련 (정책 P1) | 프로젝트 결정 (`claude/혼합개발_연동설계_v1.md` 0절) |
+| 11-17 | 바닐라 전투 인챈트는 RPG 전투에서 제외, 보호 인챈트는 유지하고 밸런스 v1.0 수치로 재정의 (P2) | 프로젝트 결정. 보호 인챈트 재정의는 아직 구현 안 함 |
+| 11-17 | PvP 1차 완전 비활성 | 프로젝트 결정 |
+| 11-17 | 기본 공격 충전 배율은 바닐라 `0.2 + 0.8c²`를 그대로 씀 | 새 수치를 만들지 않음. 기획 결정이 나오면 `BasicAttackMath.chargeScale`만 교체 |
 
 ## 관련 프로젝트와의 관계
 
@@ -111,6 +121,12 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 ---
 
 ## 작업 기록
+
+### 2026-11-17 — v0.2 자동 테스트, Better Combat 연동 실험 준비
+- (브랜치 `claude/armor-grade-cap`, 커밋 `c5d316e`) `ArmorCapDefaults` 분리, `ArmorCapScenarioTest` 11개: `docs/TESTING.md` v0.2 #1~#12·#17 수치를 바닐라 1.21.1 갑옷 공식으로 재현. TESTING.md에 자동/게임 안 구분 표. CI 41개 통과
+- (브랜치 `claude/combat-experiment-prep`) `WeaponPermission`·`BasicAttackMath` + JUnit 10개, Better Combat `compileOnly`(Modrinth 메이븐, 배포 jar 미포함), `tools/check_mods.py` + 자체 검사 + CI 단계. CI 51개 통과
+- 확인한 것: FTB XMod Compat 21.1.14는 JEI를 선택 의존성 `[19.53.0.425,)`으로 선언 → JEI 정식판 19.51.0.418과 함께 넣으면 범위 밖 → 1차 구성에서 XMod 제외 권장 (check_mods.py 자체 검사에 같은 경우를 넣음)
+- 게임 안 확인은 하지 않음
 
 ### 2026-11-17 — 방어 등급 상한 최소 기능 (v0.2, 브랜치 `claude/armor-grade-cap`)
 - magiccity 의존성 연결: JitPack 커밋 해시, `localRuntime` 구성, mods.toml 필수 의존, NeoForge 21.1.266, 테스트 팩에 magiccity jar 포함·mods.toml 검사
