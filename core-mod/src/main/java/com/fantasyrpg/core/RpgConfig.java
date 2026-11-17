@@ -1,5 +1,6 @@
 package com.fantasyrpg.core;
 
+import com.fantasyrpg.core.gear.armorcap.ArmorCapDefaults;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.List;
@@ -30,12 +31,13 @@ public final class RpgConfig {
     public static final ModConfigSpec.ConfigValue<List<? extends Number>> NETHERITE_ARMOR;
     public static final ModConfigSpec.ConfigValue<List<? extends Number>> NETHERITE_TOUGHNESS;
 
-    public static final List<Double> DEFAULT_ARMOR_CAPS = List.of(12.0, 15.0, 18.0, 19.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0);
-    public static final List<Double> DEFAULT_TOUGHNESS_CAPS = List.of(0.0, 0.0, 2.0, 2.0, 3.0, 4.0, 6.0, 8.0, 10.0, 12.0);
-    public static final List<Double> DEFAULT_DIAMOND_ARMOR = List.of(3.0, 7.0, 5.0, 3.0);
-    public static final List<Double> DEFAULT_DIAMOND_TOUGHNESS = List.of(0.0, 1.0, 1.0, 0.0);
-    public static final List<Double> DEFAULT_NETHERITE_ARMOR = List.of(3.0, 8.0, 6.0, 3.0);
-    public static final List<Double> DEFAULT_NETHERITE_TOUGHNESS = List.of(1.0, 2.0, 2.0, 1.0);
+    // 기본값은 Minecraft 없이 테스트할 수 있도록 ArmorCapDefaults 에 둔다
+    public static final List<Double> DEFAULT_ARMOR_CAPS = ArmorCapDefaults.ARMOR_CAPS;
+    public static final List<Double> DEFAULT_TOUGHNESS_CAPS = ArmorCapDefaults.TOUGHNESS_CAPS;
+    public static final List<Double> DEFAULT_DIAMOND_ARMOR = ArmorCapDefaults.DIAMOND_ARMOR;
+    public static final List<Double> DEFAULT_DIAMOND_TOUGHNESS = ArmorCapDefaults.DIAMOND_TOUGHNESS;
+    public static final List<Double> DEFAULT_NETHERITE_ARMOR = ArmorCapDefaults.NETHERITE_ARMOR;
+    public static final List<Double> DEFAULT_NETHERITE_TOUGHNESS = ArmorCapDefaults.NETHERITE_TOUGHNESS;
 
     static {
         BUILDER.comment("플레이어 방어력·방어 강도 등급 상한. ARMOR·ARMOR_TOUGHNESS 속성에 직접 더해지는 모든 값(방어구·장신구·스킬·다른 모드)에 적용")
