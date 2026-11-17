@@ -11,6 +11,7 @@
    ```
    mods/fantasyrpg-<버전>.jar
    mods/magic-city-mod-<커밋>.jar   (v0.2부터 필수 의존 모드 magiccity)
+   mods/royalqol-<버전>.jar         (편의 모드, 클라이언트 전용. 2026-11-17부터)
    datapacks/fantasyrpg_content/
    datapacks/fantasyrpg_test/
    kubejs/ (아직 비어 있음)
@@ -21,7 +22,7 @@
 외부 모드 18개는 배포 허락이 모드마다 달라서 테스트 팩에 넣지 않습니다. 목록은 `modpack/mods.lock.json`에 버전까지 고정돼 있습니다.
 - 파이썬이 있으면: 저장소를 받은 뒤 `python3 tools/fetch_mods.py modpack/mods.lock.json 받은폴더` → `받은폴더`의 jar를 인스턴스 `mods`에 넣습니다.
 - 없으면: `mods.lock.json`의 이름·버전대로 Modrinth(FTB 3종은 CurseForge)에서 직접 받습니다.
-- 서버 쪽 동시 로딩은 CI `modpack smoke`에서 확인됨(2026-11-17). 아래 "모드 혼합" 표는 클라이언트·게임 안에서만 확인할 수 있는 항목입니다.
+- 서버 쪽 동시 로딩은 CI `modpack smoke`에서 확인됨(2026-11-17, 우리 모드 3개 + 외부 18개). 아래 "모드 혼합"·"royalqol" 표는 클라이언트·게임 안에서만 확인할 수 있는 항목입니다.
 
 ## 2. 테스트 월드
 
@@ -111,4 +112,23 @@
 | M7 | Easy NPC 생성 후 대화 편집 화면 열기 | Config UI 표시 | 아니오 |
 | M8 | JEI 아이템 목록, JourneyMap 지도(J), Jade 툴팁 | 각각 표시 | 아니오 |
 | M9 | `/rpg armorcap info` 를 다이아 갑옷 착용 상태로 | v0.2 표와 같은 값 | 계산만 JUnit |
+
+### royalqol (편의 모드, 클라이언트 전용) — 게임 안 확인
+
+`magiccity`로 왕국 대륙(`/magiccity kingdom` 뒤 차원 `magiccity:kingdom`)에 들어가서 확인합니다. 전용 서버에서 서버 실행을 막지 않는 것까지는 CI로 확인됐습니다.
+
+| # | 할 일 | 기대 결과 | 자동 검증 |
+|---|---|---|---|
+| Q1 | 월드 접속 | 왼쪽 위 HUD: 좌표·방위, "N일차 HH:MM", 지역, 가까운 곳 | 아니오 (방위·시각 계산은 JUnit) |
+| Q2 | 제자리에서 한 바퀴 돌기 | 방위가 북→동→남→서 순서로 바뀜 (F3의 Facing과 일치) | 계산만 JUnit |
+| Q3 | H 키 두 번, `/rq hud` | HUD 꺼짐·켜짐, 게임을 다시 켜도 상태 유지 | 아니오 |
+| Q4 | 왕성도시 (260, 260) 근처로 이동 | 화면 아래 "― 왕성도시 ―", HUD 지역: 왕성도시 | 지역 판정만 JUnit |
+| Q5 | `/rq near`, `/rq list` | 가까운 5곳 / 33곳과 거리·방위 | 아니오 |
+| Q6 | `/rq go 북문` 후 이동 | 목적지 줄에 거리·화살표, 바라보는 방향에 맞게 화살표가 바뀜, 도착하면 채팅 알림 후 안내 종료 | 화살표 계산만 JUnit |
+| Q7 | G 키 여러 번 | 가까운 5곳이 차례로 목적지가 됨 | 아니오 |
+| Q8 | `/rq add 우리 집`, `/rq add 30 광장`, 게임 재시작, `/rq list` | ★ 표시로 남아 있음, `config/royalqol/waypoints.json`에 저장 | JSON 형식만 JUnit |
+| Q9 | `/rq remove 왕성도시`, `/rq remove 우리 집` | 내장 지역은 거부, 내 웨이포인트는 지워짐 | 규칙만 JUnit |
+| Q10 | 오버월드·네더로 이동 | 지역 "-", 내장 지역은 안 보임(차원별) | 규칙만 JUnit |
+| Q11 | 조작 설정 | "왕국 편의 기능" 분류에 H·G 키, 바꿀 수 있음 | 아니오 |
+| Q12 | 각 지역에 가서 이름이 맞는지 | 특히 서리 결투장(좌표 근사)과 지역 반경이 너무 크거나 작지 않은지 | 아니오 |
 

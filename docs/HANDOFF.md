@@ -14,6 +14,7 @@
 | 플랫폼 | Minecraft 1.21.1 / NeoForge **21.1.266** / Java 21 / ModDevGradle 2.0.141. **필수 의존 모드 magiccity** (JitPack `com.github.aswq0258:magic-city-mod:7eb93cc`, `gradle.properties`의 `magiccity_commit`) |
 | CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄). 모드 구성이 바뀌면 `modpack smoke`가 외부 모드 18개 + 우리 모드 2개로 **NeoForge 전용 서버를 실제 기동** |
 | 1차 외부 모드 구성 | `modpack/mods.lock.json` (필수 13 + 권장 5, 버전 고정). 2026-11-17 전용 서버 기동 통과 (run 44061047052). 클라이언트 실행은 아직 확인 안 함 |
+| 우리 모드 3개 | `fantasyrpg`(이 저장소), `magiccity`(JitPack), `royalqol`(클라이언트 전용 편의 모드, `magic-city-mod` 저장소 `royalqol/`, `mods.lock.json`의 `royalqol.commit`으로 빌드 — `tools/build_royalqol.sh`). 테스트 팩과 서버 기동 검사에 셋 다 들어감 |
 | 최신 테스트 팩 | [v0.1.0 Release](https://github.com/SeA-Jeong/fantasy-rpg-modpack/releases/tag/v0.1.0) |
 | 게임 테스트 | `docs/TESTING.md`의 v0.1·v0.2 체크리스트 |
 
@@ -123,6 +124,11 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 ---
 
 ## 작업 기록
+
+### 2026-11-17 — 편의 모드 royalqol 포함
+- 이전 대화의 `royalqol-src.zip`이 남아 있지 않아 통합문서 8절 명세대로 새로 작성: `magic-city-mod` 저장소 `royalqol/` (독립 빌드, `./gradlew -p royalqol build`), 커밋 `d811960`, magiccity `main` 병합(복구 지점 `backup/main-before-royalqol-2026-11-17`)
+- 이 저장소: `tools/build_royalqol.sh`, `mods.lock.json`의 `royalqol` 고정 커밋, 테스트 팩·`modpack smoke`에 포함. `check_mods.py --side server` 추가(클라이언트 전용 의존성 건너뜀, 자체 검사 5개)
+- CI: royalqol JUnit 11개 통과, 서버 기동 1단계(우리 모드 3개)·전체(21개) 통과, 서버 모드 목록에 `Royal QoL 0.2.0 (royalqol)` 확인. 게임 안 확인은 `docs/TESTING.md` Q1~Q12
 
 ### 2026-11-17 — 모드 혼합 서버 기동 검사 (브랜치 `claude/modpack-smoke`)
 - 병합: fantasyrpg main ← v0.2 + 연동 실험 준비 (`1dc15a6`, 복구 지점 `backup/main-before-v0.2-merge-2026-11-17`), magiccity main ← 테스트 추가 (`f30d2f2`, 복구 지점 `backup/main-before-ff-2026-11-17`). 게임 확인 전 병합임
