@@ -131,7 +131,9 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - 발견 1: royalqol "가까운 지역" 키 G가 Curios 장신구 창 기본 키 G와 겹침(키 설정 빨간 표시) → royalqol 0.2.1에서 Y로 변경(`magic-city-mod` `08251d2`, `mods.lock.json` 갱신)
 - 발견 2: "장신구가 안 나옴" — Curios는 기본 칸이 없고 칸은 다른 모드·데이터팩이 줘야 함. 테스트 데이터팩에 시험용 반지 2·목걸이 1을 넣음(`fantasyrpg_test/data/fantasyrpg/curios/entities/`). 실제 칸 종류·개수는 [미정](fantasyrpg 결정 필요)
 - Q12: 서리 결투장 근사 좌표 도착 알림은 정상, 실제 결투장 건물 위치와 맞는지는 미확인
-- 남은 것: M5(장신구 창), M7(Easy NPC 편집 화면), M8 JEI·Jade, v0.2 13항목, magiccity ①~⑱
+- 이어서(같은 날, test.2 팩): M5 통과(시험용 데이터팩으로 목걸이·반지 칸 표시, 반지는 개수 미지정이라 1칸), M7 통과(`/summon easy_npc:humanoid` → 지팡이 우클릭으로 편집 화면), M8 통과(JEI 목록·Jade 표시). **모드 혼합 M1~M9 모두 통과**
+- 참고: 장신구 칸이 하나도 배정되지 않은 싱글 월드에서는 `/curios add ring …`이 "존재하지 않는 장신구 슬롯"으로 실패함(Curios가 슬롯 이름 목록을 클라이언트 아이콘 동기화로 덮어씀). 칸을 데이터팩으로 배정하면 해결
+- 남은 것: v0.2 13항목, magiccity ①~⑱
 
 ### 2026-11-17 — 통합 테스트 팩(.mrpack)
 - `tools/build_mrpack.py`: Modrinth 모드팩 형식. 외부 18개는 주소·sha1·sha512·크기만(재배포 안 함), 우리 모드 3개·테스트 데이터팩·`테스트방법.md`는 overrides. `dependencies`로 MC 1.21.1·NeoForge 21.1.266 지정
