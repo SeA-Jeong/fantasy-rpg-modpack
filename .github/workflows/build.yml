@@ -4,9 +4,9 @@ on:
   push:
     branches: ['**']
     tags: ['v*']
-    paths: ['core-mod/**', 'modpack/**', '.github/workflows/**', 'tools/build_royalqol.sh']
+    paths: ['core-mod/**', 'modpack/**', '.github/workflows/**', 'tools/build_royalqol.sh', 'tools/*mrpack*.py', 'tools/fetch_mods.py']
   pull_request:
-    paths: ['core-mod/**', 'modpack/**', '.github/workflows/**', 'tools/build_royalqol.sh']
+    paths: ['core-mod/**', 'modpack/**', '.github/workflows/**', 'tools/build_royalqol.sh', 'tools/*mrpack*.py', 'tools/fetch_mods.py']
   workflow_dispatch:
     inputs:
       release_tag:
@@ -35,9 +35,9 @@ jobs:
         working-directory: core-mod
         run: ./gradlew build --no-daemon
 
-      - name: 도구 자체 검사 (check_mods.py)
+      - name: 도구 자체 검사 (check_mods.py, build/install_mrpack.py)
         working-directory: tools
-        run: python3 -m unittest -v test_check_mods
+        run: python3 -m unittest -v test_check_mods test_mrpack
 
       - name: 테스트 결과 보관
         if: always()
@@ -68,6 +68,24 @@ jobs:
           name: fantasyrpg-testpack
           path: testpack/
 
+      # 통합 테스트 팩: 우리 모드 3개 + 외부 모드 18개(주소만). Prism Launcher 에서 가져오기 한 번으로 설치
+      - name: 통합 팩(.mrpack) 만들기
+        run: |
+          VER="$(grep '^mod_version=' core-mod/gradle.properties | cut -d= -f2)-$(git rev-parse --short HEAD)"
+          python3 tools/fetch_mods.py modpack/mods.lock.json external
+          python3 tools/build_mrpack.py --lock modpack/mods.lock.json --resolved external/resolved.json \
+            --ours testpack/mods --datapacks modpack/datapacks --guide docs/TESTING.md --version "$VER" \
+            --out magic-kingdom-testpack.mrpack
+          # launcher 처럼 설치해 보고(주소·해시 확인) 모드 21개가 모이는지 확인
+          python3 tools/install_mrpack.py magic-kingdom-testpack.mrpack packcheck
+          test "$(ls packcheck/mods/*.jar | wc -l)" -eq 21
+
+      - name: 통합 팩 업로드
+        uses: actions/upload-artifact@v4
+        with:
+          name: magic-kingdom-testpack-mrpack
+          path: magic-kingdom-testpack.mrpack
+
       - name: 릴리스 (v* 태그 push 또는 수동 실행 시 release_tag 입력)
         if: startsWith(github.ref, 'refs/tags/v') || inputs.release_tag != ''
         env:
@@ -75,5 +93,6 @@ jobs:
           TAG: ${{ inputs.release_tag != '' && inputs.release_tag || github.ref_name }}
         run: |
           mv fantasyrpg-testpack.zip "fantasyrpg-testpack-${TAG}.zip"
-          gh release create "$TAG" "fantasyrpg-testpack-${TAG}.zip" --target "$GITHUB_SHA" \
+          mv magic-kingdom-testpack.mrpack "magic-kingdom-testpack-${TAG}.mrpack"
+          gh release create "$TAG" "magic-kingdom-testpack-${TAG}.mrpack" "fantasyrpg-testpack-${TAG}.zip" --target "$GITHUB_SHA" \
             --title "$TAG 테스트 팩" --notes-file docs/TESTING.md --prerelease

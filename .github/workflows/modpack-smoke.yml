@@ -11,6 +11,8 @@ on:
       - 'tools/fetch_mods.py'
       - 'tools/smoke_server.py'
       - 'tools/build_royalqol.sh'
+      - 'tools/install_mrpack.py'
+      - 'tools/build_mrpack.py'
       - 'tools/check_mods.py'
       - '.github/workflows/modpack-smoke.yml'
 
@@ -67,12 +69,19 @@ jobs:
           mkdir -p smoke-logs/stage1 && cp -r server/logs smoke-logs/stage1/ 2>/dev/null || true
           cp -r server/crash-reports smoke-logs/stage1/ 2>/dev/null || true
 
+      - name: "통합 팩(.mrpack) 만들기·설치"
+        run: |
+          python3 tools/build_mrpack.py --lock modpack/mods.lock.json --resolved external/resolved.json \
+            --ours ours --datapacks modpack/datapacks --guide docs/TESTING.md --version smoke --out smoke.mrpack
+          python3 tools/install_mrpack.py smoke.mrpack packinst
+          mkdir -p full && cp packinst/mods/*.jar full/
+          ls full | wc -l
+
       - name: "전체 구성: 의존성 검사"
         # 판정은 NeoForge 가 직접 하는 서버 기동 단계가 기준이다. 여기서 나온 오류는 기록만 하고 다음 단계로 간다.
         continue-on-error: true
         run: |
           for j in external/jei-*.jar; do echo "== $j 의 minecraft 범위"; unzip -p "$j" META-INF/neoforge.mods.toml | grep -A3 'modId *= *"minecraft"' || true; done
-          mkdir -p full && cp ours/*.jar external/*.jar full/
           echo "check_mods 결과:"
           python3 tools/check_mods.py full --neoforge "$(python3 -c "import json;print(json.load(open('modpack/mods.lock.json'))['neoforge'])")"
 
