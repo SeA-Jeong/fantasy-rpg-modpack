@@ -5,16 +5,16 @@
 
 ---
 
-## 현재 상태 (2026-11-16 기준)
+## 현재 상태 (2026-11-17 기준)
 
 | 항목 | 상태 |
 |---|---|
 | 기준 기획 | `docs/design/직업_전투시스템_v0.4.md` |
-| 구현 진행 | 8.3장 **1단계(피해 계산 엔진) 완료** → 다음은 2단계(직업 코어 6종) |
-| 플랫폼 | Minecraft 1.21.1 / NeoForge 21.1.228 / Java 21 / ModDevGradle 2.0.141 |
+| 구현 진행 | 8.3장 **1단계(피해 계산 엔진) 완료**. 별도 작업으로 **방어 등급 상한 최소 기능(v0.2) 구현, 게임 확인 전** (브랜치 `claude/armor-grade-cap`) → 다음은 v0.2 게임 확인, 그 뒤 2단계(직업 코어 6종) |
+| 플랫폼 | Minecraft 1.21.1 / NeoForge **21.1.266** / Java 21 / ModDevGradle 2.0.141. **필수 의존 모드 magiccity** (JitPack `com.github.aswq0258:magic-city-mod:7eb93cc`, `gradle.properties`의 `magiccity_commit`) |
 | CI | push마다 빌드·JUnit·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄) |
 | 최신 테스트 팩 | [v0.1.0 Release](https://github.com/SeA-Jeong/fantasy-rpg-modpack/releases/tag/v0.1.0) |
-| 게임 테스트 | `docs/TESTING.md`의 v0.1 체크리스트 |
+| 게임 테스트 | `docs/TESTING.md`의 v0.1·v0.2 체크리스트 |
 
 ### 테스트 팩 Release 만드는 법
 Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으로 만듭니다.
@@ -28,11 +28,15 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - 필수 챕터 보스 저항 차이 검사 (기본 15%p 초과 시 경고, 20%p 초과 시 오류 로그)
 - RPG 피해 유형 `fantasyrpg:rpg`: 바닐라 방어구·보호 마법부여·무적 시간을 무시
 - 커맨드: `/rpg simulate`, `/rpg resist`, `/rpg hit` (권한 2)
+- **(v0.2, 게임 확인 전) 방어 등급 상한:** 플레이어 ARMOR·ARMOR_TOUGHNESS에 등급별 상한(1급 12/0 … 10급 20/12). 장신구·스킬·다른 모드 수정자 포함. 최종 곱셈형 임시 수정자 `fantasyrpg:grade_limit` 하나로 맞춤, 매 틱(상태가 바뀔 때만)과 피격 직전 갱신. `/rpg armorcap info|grade|refresh`
+- **(v0.2, 게임 확인 전) 바닐라 갑옷 조정:** 다이아 18/2, 네더라이트 20/6 (아이템은 그대로, 능력치만). 철 15/0은 바닐라와 같음
 
 ### 아직 없는 것 (다음 작업 후보)
 - 플레이어 기본 공격·스킬이 RPG 피해를 쓰는 연결 (지금은 커맨드로만 RPG 피해 발생)
 - 치명타 확률 판정 (지금은 배율만 입력받음. 확률·상한은 5.4장, 8.4장 미확정 값)
 - 직업, 코어 자원, 스킬트리, SP, 장비 W 전부
+- magiccity 연동 중 레벨·SP 부분(연동작업지침 4~8절). 이번에는 의존성 연결(1~3절)만 함
+- 계열 방어구 24종·effectiveTier 가상 교체(계산 함수에는 자리만 있음)·세트/고유 효과·넉백 저항·작업대 (설계: 프로젝트 문서 `claude/장비등급제한_설계.md`)
 
 ---
 
@@ -41,17 +45,22 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 | 위치 | 내용 |
 |---|---|
 | `core-mod/.../FantasyRpgCore.java` | 진입점. 설정 등록, 리로드 리스너·커맨드 이벤트 연결 |
-| `core-mod/.../RpgConfig.java` | `config/fantasyrpg-common.toml` (보스 저항 차이 상한) |
+| `core-mod/.../RpgConfig.java` | `config/fantasyrpg-common.toml` (보스 저항 차이 상한, `armorCap` 등급 상한표, `vanillaTuning` 부위별 값) |
 | `combat/DamageCalculator` | **순수 계산** (MC 비의존). 공식은 클래스 주석 참고 |
 | `combat/DamageInput`, `Resistances`, `DamageBreakdown` | 입력·저항·단계별 결과 레코드 |
 | `combat/RpgDamage` | 계산 결과를 실제 엔티티에 적용 (피해 유형 `fantasyrpg:rpg`) |
 | `resist/MobResistanceManager` | 데이터팩 저항 로더 (싱글턴, 리로드 리스너) |
 | `resist/MobResistanceParser`, `ResistanceRules` | JSON 파싱, 보스 저항 차이 판정 (순수) |
 | `command/RpgCommands` | `/rpg` 커맨드 |
+| `command/ArmorCapCommands` | `/rpg armorcap` (상한 진단, 테스트용 등급 덮어쓰기) |
+| `gear/armorcap/ArmorCapMath` | **순수 계산** (MC 비의존): 가상 교체 → 바닐라 순서 재계산(클램프 전 값) → 상한 → 최종 곱셈 보정 k, 적용 후 ulp 조정(`refine`) |
+| `gear/armorcap/ArmorCapService` | 플레이어 속성에 보정 수정자 적용. 상태값(등급·상한·기본값·수정자 목록·현재 보정) 비교, 재진입 방지, 40틱 연속 변경 시 호환성 경고(5분 1회) |
+| `gear/armorcap/VanillaArmorTuning` | `ItemAttributeModifierEvent`로 바닐라 다이아·네더라이트 갑옷 수정자 값 교체 |
+| `gear/armorcap/GradeSource` | 장비 등급 = `MagicCityApi.grade`(지금 1~6) + 테스트 덮어쓰기. magiccity에 `gearGrade`가 생기면 여기만 바꿈 |
 | `core-mod/src/main/resources/data/` | 피해 유형 정의, 바닐라 피해 태그 추가 |
 | `core-mod/src/test/` | JUnit: 부록 A-1, 4.3장 표, 계산 순서, 저항 파싱·판정 |
 | `modpack/datapacks/fantasyrpg_content` | 실제 콘텐츠 데이터 (지금은 형식 견본만) |
-| `modpack/datapacks/fantasyrpg_test` | 테스트 전용 데이터 (좀비·스켈레톤·철골렘 저항) |
+| `modpack/datapacks/fantasyrpg_test` | 테스트 전용 데이터 (좀비·스켈레톤·철골렘 저항, `function/armorcap/*` 방어 상한 시험 함수) |
 
 ## 데이터 형식
 
@@ -76,13 +85,19 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 | 11-16 | 치명타 확률 판정은 계산기 밖에서, 계산기는 배율만 받음 | 순수 계산의 재현성·테스트 용이성 |
 | 11-16 | RPG 피해는 무적 시간(i-frame)을 무시 | 다단 히트 스킬이 바닐라 0.5초 무적에 막히지 않게. 연타 제한은 스킬 쿨다운으로 관리 |
 | 11-16 | 보스 저항 차이 상한은 config 값 (0.15/0.20) | 8.4장: 테스트로 확정할 값 |
+| 11-17 | 방어구·작업대·방어 상한은 이 모드가 담당, magiccity는 진행도만 | 프로젝트 결정(통합문서 1절) |
+| 11-17 | 방어 상한은 피해량이 아니라 **속성값**을 맞춤 (최종 곱셈 임시 수정자) | 바닐라 방어 공식이 한 번만 계산, HUD와 서버 값 일치. 피해 이벤트에서 방어 공식을 다시 계산하지 않음 |
+| 11-17 | 보정 k는 첫 추정 뒤 **실제 getValue()로 다시 읽어 ulp 단위 조정** | 방어력은 정수 내림으로 쓰여 부동소수 오차로 1이 깎일 수 있음. Java 시뮬레이션 50만 건에서 첫 추정이 틀린 경우 약 10%, 조정 후 불일치 0 |
+| 11-17 | 계산 횟수 제한 없음, 상태가 바뀌면 같은 틱에도 다시 계산 | 피해 계산 시점의 정확성 우선 (프로젝트 결정) |
+| 11-17 | 등급은 지금 `MagicCityApi.grade`(1~6). 7~10급은 `/rpg armorcap grade`로만 시험 | magiccity에 `gearGrade` 미구현 (네더 원정 전에는 두 값이 같음) |
+| 11-17 | 플레이어가 받는 피해에 `fantasyrpg:rpg` 유형을 쓰지 않음 | 방어 무시라서 상한·방어 투자가 무의미해짐 |
 
 ## 관련 프로젝트와의 관계
 
 같은 claude.ai 프로젝트 "마크"에서 월드·스토리 모드 `magiccity`(저장소 `aswq0258/magic-city-mod`)와 방어구·전투 밸런스 기준 v1.0, 확장 작업대 설계가 따로 진행 중입니다. 전체 현황은 프로젝트 문서 `claude/통합문서.md`, 이 엔진의 요약과 충돌 목록은 `claude/직업전투엔진_현재상태.md`에 있습니다.
 
 2026-11-17에 확인한, v0.4와 맞지 않는 점 (모두 미결):
-- 받는 피해는 밸런스 기준이 바닐라 갑옷 공식으로 설계함. RPG 피해 유형은 갑옷을 무시하므로 플레이어에게 쓰면 안 됨
+- 받는 피해는 밸런스 기준이 바닐라 갑옷 공식으로 설계함. RPG 피해 유형은 갑옷을 무시하므로 플레이어에게 쓰면 안 됨 (11-17 결정 기록에 반영)
 - 월드는 1~10장 자유 순서, v0.4는 장 번호에 레벨·장비 등급을 묶음
 - 스킬 초기화 규칙이 반대 (밸런스 기준: 재료 소모와 노드 단위 환급 / v0.4: 전체 초기화와 화폐)
 - 밸런스 기준의 체력·공통 패시브 트리, 1~10급 등급 체계, 작업대 무기 레시피와 v0.4의 4방향 트리, 광물 등급, 무기 위력 W의 대응이 없음
@@ -96,6 +111,13 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 ---
 
 ## 작업 기록
+
+### 2026-11-17 — 방어 등급 상한 최소 기능 (v0.2, 브랜치 `claude/armor-grade-cap`)
+- magiccity 의존성 연결: JitPack 커밋 해시, `localRuntime` 구성, mods.toml 필수 의존, NeoForge 21.1.266, 테스트 팩에 magiccity jar 포함·mods.toml 검사
+- `gear/armorcap` 패키지: 순수 계산·서비스·바닐라 조정·등급 출처, `/rpg armorcap`, 설정 2절
+- JUnit 10개 추가(무작위 10만 건 포함), 합계 30개 통과(CI). 게임 확인은 아직 안 함 → `docs/TESTING.md` v0.2
+- 테스트 데이터팩 함수: `armorcap/hit10|same_tick|ring|multiplier`
+- 이번에 하지 않음: 계열 방어구 24종, 세트·고유 효과, 넉백 저항, 작업대, 승급, 네더 7~10급
 
 ### 2026-11-16 — 8.3장 1단계: 피해 계산 엔진
 - 순수 계산기와 JUnit 테스트(부록 A-1 5건, 4.3장 표, 계산 순서, 입력 검증)

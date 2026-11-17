@@ -50,6 +50,8 @@ jobs:
           # 필수 의존 모드 magiccity (빌드 때 JitPack에서 받은 같은 커밋의 jar)
           find ~/.gradle/caches -path '*com.github.aswq0258*' -name 'magic-city-mod-*.jar' ! -name '*-sources.jar' -exec cp {} testpack/mods/ \;
           ls testpack/mods
+          # magiccity jar가 게임에 넣을 수 있는 모드 jar인지 확인
+          unzip -l testpack/mods/magic-city-mod-*.jar | grep -q 'META-INF/neoforge.mods.toml' && echo 'magiccity mods.toml 확인' || { echo 'magiccity jar에 neoforge.mods.toml 없음'; exit 1; }
           cp -r modpack/datapacks/fantasyrpg_content modpack/datapacks/fantasyrpg_test testpack/datapacks/
           cp -r modpack/kubejs testpack/kubejs
           cp docs/TESTING.md testpack/TESTING.md
