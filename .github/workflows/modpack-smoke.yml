@@ -1,0 +1,92 @@
+name: modpack smoke (모드 혼합 서버 기동 검사)
+
+# 1차 외부 모드 구성(modpack/mods.lock.json)과 우리 모드(fantasyrpg + magiccity)를 함께
+# NeoForge 전용 서버에 넣어 실제로 기동되는지 확인한다. 클라이언트 화면은 검증하지 않는다.
+on:
+  workflow_dispatch:
+  push:
+    branches: ['**']
+    paths:
+      - 'modpack/mods.lock.json'
+      - 'tools/fetch_mods.py'
+      - 'tools/smoke_server.py'
+      - 'tools/check_mods.py'
+      - '.github/workflows/modpack-smoke.yml'
+
+concurrency:
+  group: smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: 우리 모드 빌드 (fantasyrpg + JitPack magiccity)
+        working-directory: core-mod
+        run: ./gradlew build -x test --no-daemon
+
+      - name: 우리 모드 jar 모으기
+        run: |
+          mkdir -p ours
+          find core-mod/build/libs -name '*.jar' ! -name '*-sources.jar' -exec cp {} ours/ \;
+          find ~/.gradle/caches -path '*com.github.aswq0258*' -name 'magic-city-mod-*.jar' ! -name '*-sources.jar' -exec cp {} ours/ \;
+          ls -la ours
+
+      - name: 외부 모드 받기 (mods.lock.json)
+        run: |
+          mkdir -p external
+          python3 tools/fetch_mods.py modpack/mods.lock.json external
+
+      - name: NeoForge 전용 서버 설치
+        run: |
+          NEO=$(python3 -c "import json;print(json.load(open('modpack/mods.lock.json'))['neoforge'])")
+          curl -fsSL -o neoforge-installer.jar "https://maven.neoforged.net/releases/net/neoforged/neoforge/${NEO}/neoforge-${NEO}-installer.jar"
+          mkdir -p server
+          (cd server && java -jar ../neoforge-installer.jar --installServer . > ../installer.log 2>&1) || { tail -50 installer.log; exit 1; }
+          ls server
+
+      - name: "1단계: 우리 모드만 — 의존성 검사"
+        run: python3 tools/check_mods.py ours --neoforge "$(python3 -c "import json;print(json.load(open('modpack/mods.lock.json'))['neoforge'])")"
+
+      - name: "1단계: 우리 모드만 — 서버 기동"
+        run: |
+          python3 tools/smoke_server.py server ours \
+            --command "magiccity status" \
+            --command "rpg simulate 100 2.0 0 0.25 0=>150"
+          mkdir -p smoke-logs/stage1 && cp -r server/logs smoke-logs/stage1/ 2>/dev/null || true
+          cp -r server/crash-reports smoke-logs/stage1/ 2>/dev/null || true
+
+      - name: "전체 구성: 의존성 검사"
+        run: |
+          mkdir -p full && cp ours/*.jar external/*.jar full/
+          python3 tools/check_mods.py full --neoforge "$(python3 -c "import json;print(json.load(open('modpack/mods.lock.json'))['neoforge'])")"
+
+      - name: "전체 구성: 서버 기동"
+        run: |
+          python3 tools/smoke_server.py server full \
+            --command "magiccity status" \
+            --command "rpg simulate 100 2.0 0 0.25 0=>150"
+
+      - name: 로그 보관
+        if: always()
+        run: |
+          mkdir -p smoke-logs/full
+          cp -r server/logs smoke-logs/full/ 2>/dev/null || true
+          cp -r server/crash-reports smoke-logs/full/ 2>/dev/null || true
+          cp external/resolved.json smoke-logs/ 2>/dev/null || true
+          cp installer.log smoke-logs/ 2>/dev/null || true
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: smoke-logs
+          path: smoke-logs/
+          if-no-files-found: ignore
