@@ -35,6 +35,10 @@ jobs:
         working-directory: core-mod
         run: ./gradlew build --no-daemon
 
+      - name: 도구 자체 검사 (check_mods.py)
+        working-directory: tools
+        run: python3 -m unittest -v test_check_mods
+
       - name: 테스트 결과 보관
         if: always()
         uses: actions/upload-artifact@v4
