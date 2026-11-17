@@ -1,0 +1,28 @@
+{
+  "_comment": "1차 외부 모드 구성 (프로젝트 문서 claude/혼합개발_연동설계_v1.md A절). tools/fetch_mods.py 가 읽는다. stage 는 단계별 설치 순서(A-4). 버전을 바꿀 때는 이 파일만 고친다.",
+  "minecraft": "1.21.1",
+  "neoforge": "21.1.266",
+  "mods": [
+    { "name": "Architectury API", "stage": 2, "required": true, "source": "modrinth", "slug": "architectury-api", "version": "13.0.12+neoforge" },
+    { "name": "FTB Library", "stage": 2, "required": true, "source": "maven", "repo": "https://maven.ftb.dev/releases", "group": "dev.ftb.mods", "artifact": "ftb-library-neoforge", "latest_prefix": "2101.1.",
+      "fallback": { "source": "url", "url": "https://mediafilez.forgecdn.net/files/7420/412/ftb-library-neoforge-2101.1.30.jar" } },
+    { "name": "FTB Teams", "stage": 2, "required": true, "source": "maven", "repo": "https://maven.ftb.dev/releases", "group": "dev.ftb.mods", "artifact": "ftb-teams-neoforge", "latest_prefix": "2101.1.",
+      "fallback": { "source": "url", "url": "https://mediafilez.forgecdn.net/files/7878/281/ftb-teams-neoforge-2101.1.10.jar" } },
+    { "name": "FTB Quests", "stage": 2, "required": true, "source": "maven", "repo": "https://maven.ftb.dev/releases", "group": "dev.ftb.mods", "artifact": "ftb-quests-neoforge", "latest_prefix": "2101.1.",
+      "fallback": { "source": "url", "url": "https://mediafilez.forgecdn.net/files/8520/42/ftb-quests-neoforge-2101.1.28.jar" } },
+    { "name": "Cloth Config API", "stage": 3, "required": true, "source": "modrinth", "slug": "cloth-config", "version": "15.0.140+neoforge" },
+    { "name": "playerAnimator", "stage": 3, "required": true, "source": "modrinth", "slug": "playeranimator", "version": "2.0.4+1.21.1-forge" },
+    { "name": "Better Combat", "stage": 3, "required": true, "source": "modrinth", "slug": "better-combat", "version": "2.4.0+1.21.1-neoforge" },
+    { "name": "Curios API", "stage": 4, "required": true, "source": "modrinth", "slug": "curios", "version": "9.5.1+1.21.1" },
+    { "name": "GeckoLib", "stage": 4, "required": true, "source": "modrinth", "slug": "geckolib", "version": "4.9.3" },
+    { "name": "Easy NPC: Core", "stage": 5, "required": true, "source": "modrinth", "slug": "easy-npc-core", "version": "7.19.0" },
+    { "name": "Easy NPC: Config UI", "stage": 5, "required": true, "source": "modrinth", "slug": "easy-npc-config-ui", "version": "7.14.0" },
+    { "name": "Just Enough Items", "stage": 6, "required": true, "source": "modrinth", "slug": "jei", "version": "19.51.0.418" },
+    { "name": "JourneyMap", "stage": 6, "required": true, "source": "modrinth", "slug": "journeymap", "version": "1.21.1-6.0.9+neoforge" },
+    { "name": "Jade", "stage": 6, "required": false, "source": "modrinth", "slug": "jade", "version": "15.10.6+neoforge" },
+    { "name": "Lootr", "stage": 6, "required": false, "source": "modrinth", "slug": "lootr", "version": "1.21.1-1.11.38.127" },
+    { "name": "ModernFix", "stage": 7, "required": false, "source": "modrinth", "slug": "modernfix", "version": "5.27.27+mc1.21.1" },
+    { "name": "FerriteCore", "stage": 7, "required": false, "source": "modrinth", "slug": "ferrite-core", "version": "7.0.3-neoforge" },
+    { "name": "spark", "stage": 7, "required": false, "source": "modrinth", "slug": "spark", "version": "1.10.124-neoforge-1.21.1" }
+  ]
+}
