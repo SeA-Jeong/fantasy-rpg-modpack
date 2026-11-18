@@ -1,6 +1,9 @@
 package com.fantasyrpg.core;
 
+import com.fantasyrpg.core.combat.CombatEvents;
+import com.fantasyrpg.core.combat.CombatManager;
 import com.fantasyrpg.core.command.RpgCommands;
+import com.fantasyrpg.core.gear.weapon.WeaponRegistry;
 import com.fantasyrpg.core.gear.armor.ArmorStatManager;
 import com.fantasyrpg.core.gear.armor.FamilyArmorAttributes;
 import com.fantasyrpg.core.gear.armor.GearRegistry;
@@ -49,6 +52,14 @@ public final class FantasyRpgCore {
         NeoForge.EVENT_BUS.addListener(RpgProgress::onLivingDeath);
         NeoForge.EVENT_BUS.addListener(RpgProgress::onChapterFirstClear);
         NeoForge.EVENT_BUS.addListener(RpgProgress::onLogin);
+        // 실제 전투: 직업 무기 6종, 근접·활·지팡이 기본 공격 → RPG 피해, 다른 원거리 무기 막기, PvP 차단
+        WeaponRegistry.register(modEventBus);
+        NeoForge.EVENT_BUS.addListener(WeaponRegistry::onItemAttributes);
+        NeoForge.EVENT_BUS.addListener(CombatEvents::onAttack);
+        NeoForge.EVENT_BUS.addListener(CombatEvents::onEntityJoin);
+        NeoForge.EVENT_BUS.addListener(CombatEvents::onProjectileImpact);
+        NeoForge.EVENT_BUS.addListener(CombatEvents::onUseStart);
+        NeoForge.EVENT_BUS.addListener(CombatEvents::onIncomingDamage);
         // TODO: skilltree 데이터 로더 등록
     }
 
@@ -57,6 +68,7 @@ public final class FantasyRpgCore {
         event.addListener(ArmorStatManager.INSTANCE);
         event.addListener(RuneStatManager.INSTANCE);
         event.addListener(ProgressionManager.INSTANCE);
+        event.addListener(CombatManager.INSTANCE);
     }
 
     private static void onRegisterCommands(RegisterCommandsEvent event) {

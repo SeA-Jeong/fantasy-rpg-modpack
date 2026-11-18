@@ -5,6 +5,8 @@ import com.fantasyrpg.core.gear.rune.RuneDefinition;
 import com.fantasyrpg.core.gear.rune.RuneRegistry;
 import com.fantasyrpg.core.gear.rune.RuneRules;
 import com.fantasyrpg.core.gear.rune.RuneType;
+import com.fantasyrpg.core.gear.weapon.WeaponRegistry;
+import com.fantasyrpg.core.gear.weapon.WeaponType;
 import com.mojang.serialization.Codec;
 import net.minecraft.Util;
 import net.minecraft.core.component.DataComponentType;
@@ -95,6 +97,12 @@ public final class GearRegistry {
                 for (ArmorFamily family : ArmorFamily.values()) {
                     for (int tier = ArmorStatTable.MIN_TIER; tier <= ArmorStatTable.MAX_TIER; tier++) {
                         for (ArmorPart part : ArmorPart.values()) output.accept(stack(family, part, tier));
+                    }
+                }
+                // 직업 무기 6종 × 1~10급
+                for (WeaponType w : WeaponType.values()) {
+                    for (int tier = ArmorStatTable.MIN_TIER; tier <= ArmorStatTable.MAX_TIER; tier++) {
+                        output.accept(WeaponRegistry.stack(w, tier));
                     }
                 }
                 // 룬석 6종 × 4등급, 연마재 1~3, 추출 도구

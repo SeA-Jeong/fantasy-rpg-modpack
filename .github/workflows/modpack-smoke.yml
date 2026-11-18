@@ -74,6 +74,8 @@ jobs:
           grep -E "\[룬석\] 룬석 효과 6개 로드, 오류 0건" server/logs/latest.log
           # 성장 데이터(레벨 곡선·몬스터 경험치)가 읽혔는지
           grep -E "\[성장\] 레벨 곡선 need" server/logs/latest.log
+          # 기본 공격 수치가 읽혔는지
+          grep -E "\[전투\] 기본 공격 로드" server/logs/latest.log
           if grep -E "Parsing error loading recipe fantasyrpg" server/logs/latest.log; then echo "fantasyrpg 조합식 읽기 오류"; exit 1; fi
 
       - name: "통합 팩(.mrpack) 만들기·설치"

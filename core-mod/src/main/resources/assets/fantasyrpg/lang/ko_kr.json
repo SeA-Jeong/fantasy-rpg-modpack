@@ -52,5 +52,13 @@
   "message.fantasyrpg.level_up": "레벨 업! Lv.%s (SP +%s)",
   "message.fantasyrpg.xp_gain": "경험치 +%s (%s/%s)",
   "message.fantasyrpg.xp_capped": "레벨 상한 Lv.%s — 메인 챕터를 완료하면 상한이 오릅니다",
-  "message.fantasyrpg.clear_bonus_sp": "챕터 완료 보너스 SP +%s"
+  "message.fantasyrpg.clear_bonus_sp": "챕터 완료 보너스 SP +%s",
+  "item.fantasyrpg.warrior_sword": "전사의 검",
+  "item.fantasyrpg.knight_spear": "기사의 창",
+  "item.fantasyrpg.rogue_dagger": "도적의 단검",
+  "item.fantasyrpg.archer_bow": "궁수의 활",
+  "item.fantasyrpg.mage_staff": "마법사의 지팡이",
+  "item.fantasyrpg.cleric_mace": "전투사제의 철퇴",
+  "message.fantasyrpg.weapon_other_class": "다른 직업의 무기로는 피해를 줄 수 없습니다",
+  "message.fantasyrpg.weapon_not_weapon": "직업 무기가 아닙니다"
 }

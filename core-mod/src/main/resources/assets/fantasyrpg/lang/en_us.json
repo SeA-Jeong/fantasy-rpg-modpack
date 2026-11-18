@@ -52,5 +52,13 @@
   "message.fantasyrpg.level_up": "Level up! Lv.%s (SP +%s)",
   "message.fantasyrpg.xp_gain": "XP +%s (%s/%s)",
   "message.fantasyrpg.xp_capped": "Level cap Lv.%s — complete main chapters to raise it",
-  "message.fantasyrpg.clear_bonus_sp": "Chapter clear bonus SP +%s"
+  "message.fantasyrpg.clear_bonus_sp": "Chapter clear bonus SP +%s",
+  "item.fantasyrpg.warrior_sword": "Warrior Sword",
+  "item.fantasyrpg.knight_spear": "Knight Spear",
+  "item.fantasyrpg.rogue_dagger": "Rogue Dagger",
+  "item.fantasyrpg.archer_bow": "Archer Bow",
+  "item.fantasyrpg.mage_staff": "Mage Staff",
+  "item.fantasyrpg.cleric_mace": "Cleric Mace",
+  "message.fantasyrpg.weapon_other_class": "You cannot deal damage with another class's weapon",
+  "message.fantasyrpg.weapon_not_weapon": "Not a class weapon"
 }
