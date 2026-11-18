@@ -188,12 +188,12 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 ### 2026-11-19 — 6단 마스터리·혼합 노드 (브랜치 `claude/mastery-mixed`)
 - 사용자 결정: 초안 `claude/6직업_마스터리_혼합_초안.md` 승인("진행하자")
 - 추가: 활성 마스터리 저장·교체(`SET_MASTERY` 요청, `/rpg skill mastery`), 합산 키 `low_health_reduction`·`core_regen`·`kill_core`·`after_hurt_bonus`, 혼합 노드용 작은 코드(강격·반격 찌르기·관통 사격 마법, 점멸 흡수 체력, 패리 → 창돌진 초기화, 회피 → 투명), K 화면 혼합 줄·활성 표시, 데이터 36노드(전체 156), JUnit 1개(전체 73개)
-- 게임 확인: 하지 않음 → `docs/TESTING.md` v0.12 M1~M9
+- 게임 확인: 하지 않음 → `docs/TESTING.md` v0.12 Y1~Y9
 
 ### 2026-11-19 — 6직업 5단 궁극기 (브랜치 `claude/ultimates`)
 - 사용자 결정: 초안 `claude/6직업_궁극기_초안.md` 승인("진행하자")
 - 추가: `UltimateSkills` 24종, 지속형 궁극기 상태·받는 피해·끝날 때·부활(죽음 이벤트 취소), 시간 가속, 다음 스킬 보너스, K 화면 툴팁에 modifies 반영 쿨타임·"강화 중" 줄, 데이터 24노드, JUnit 1개(전체 72개)
-- 게임 확인: 하지 않음 → `docs/TESTING.md` v0.11 U1~U8
+- 게임 확인: 하지 않음 → `docs/TESTING.md` v0.11 G1~G8
 
 ### 2026-11-19 — 6직업 3~4단 스킬 (브랜치 `claude/tier34-skills`)
 - 사용자 결정: 범위 6직업 3~4단, 초안 승인("진행하자"). 초안 프로젝트 문서 `claude/6직업_3-4단_스킬_초안.md`
