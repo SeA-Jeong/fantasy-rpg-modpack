@@ -70,6 +70,9 @@ jobs:
           cp -r server/crash-reports smoke-logs/stage1/ 2>/dev/null || true
           # 계열 방어구 수치표 5계열이 오류 없이 로드됐는지
           grep -E "\[방어구\] 계열 수치표 5개 로드, 오류 0건" server/logs/latest.log
+          # 룬석 효과 6종이 오류 없이 로드되고, 우리 조합식에 읽기 오류가 없는지
+          grep -E "\[룬석\] 룬석 효과 6개 로드, 오류 0건" server/logs/latest.log
+          if grep -E "Parsing error loading recipe fantasyrpg" server/logs/latest.log; then echo "fantasyrpg 조합식 읽기 오류"; exit 1; fi
 
       - name: "통합 팩(.mrpack) 만들기·설치"
         run: |

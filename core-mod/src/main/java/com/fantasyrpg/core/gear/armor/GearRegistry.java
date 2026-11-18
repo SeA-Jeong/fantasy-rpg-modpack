@@ -1,6 +1,10 @@
 package com.fantasyrpg.core.gear.armor;
 
 import com.fantasyrpg.core.FantasyRpgCore;
+import com.fantasyrpg.core.gear.rune.RuneDefinition;
+import com.fantasyrpg.core.gear.rune.RuneRegistry;
+import com.fantasyrpg.core.gear.rune.RuneRules;
+import com.fantasyrpg.core.gear.rune.RuneType;
 import com.mojang.serialization.Codec;
 import net.minecraft.Util;
 import net.minecraft.core.component.DataComponentType;
@@ -93,6 +97,14 @@ public final class GearRegistry {
                         for (ArmorPart part : ArmorPart.values()) output.accept(stack(family, part, tier));
                     }
                 }
+                // 룬석 6종 × 4등급, 연마재 1~3, 추출 도구
+                for (RuneType type : RuneType.values()) {
+                    for (int g = RuneDefinition.MIN_GRADE; g <= RuneDefinition.MAX_GRADE; g++) {
+                        output.accept(RuneRegistry.runeStack(type, g));
+                    }
+                }
+                for (int g = 1; g <= RuneRules.MAX_ABRASIVE_GRADE; g++) output.accept(RuneRegistry.abrasiveStack(g));
+                output.accept(new ItemStack(RuneRegistry.EXTRACTOR.get()));
             })
             .build());
 

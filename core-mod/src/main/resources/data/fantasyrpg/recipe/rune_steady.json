@@ -1,0 +1,22 @@
+{
+  "_comment": "[시험용 임시] 하급 룬석 제작법. 정식 재료는 장비제작시스템 문서에서 정함",
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " A ",
+    "AKA",
+    " A "
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "K": {
+      "item": "minecraft:obsidian"
+    }
+  },
+  "result": {
+    "id": "fantasyrpg:rune_steady",
+    "count": 1
+  }
+}

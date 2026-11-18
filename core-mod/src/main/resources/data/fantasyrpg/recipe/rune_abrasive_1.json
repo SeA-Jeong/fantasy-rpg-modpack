@@ -1,0 +1,17 @@
+{
+  "_comment": "[시험용 임시] 정식 재료는 장비제작시스템 문서에서 정함",
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:flint"
+    },
+    {
+      "item": "minecraft:amethyst_shard"
+    }
+  ],
+  "result": {
+    "id": "fantasyrpg:rune_abrasive",
+    "count": 1
+  }
+}
