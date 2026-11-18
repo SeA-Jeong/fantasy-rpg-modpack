@@ -36,6 +36,7 @@ import static net.minecraft.commands.Commands.literal;
  * /rpg armor give|tier|info                              — 계열 방어구 시험 ({@link ArmorCommands})
  * /rpg rune give|abrasive|extractor|insert|clear         — 룬석 시험 ({@link RuneCommands})
  * /rpg player info|reset, /rpg class choose|change, /rpg xp add — 성장 시험 ({@link PlayerCommands})
+ * /rpg skill list|invest|refund|reset|equip|cast, /rpg passive list|invest|refund — 스킬트리 시험 ({@link SkillCommands})
  * </pre>
  * 비율 값은 0~1로 입력한다 (예: 25% → 0.25).
  */
@@ -61,6 +62,8 @@ public final class RpgCommands {
                 .then(PlayerCommands.player())
                 .then(PlayerCommands.rpgClass())
                 .then(PlayerCommands.xp())
+                .then(SkillCommands.skill())
+                .then(SkillCommands.passive())
                 .then(literal("hit")
                         .then(argument("target", EntityArgument.entity())
                                 .then(argument("W", doubleArg(0))

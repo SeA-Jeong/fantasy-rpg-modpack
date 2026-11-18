@@ -1,0 +1,99 @@
+package com.fantasyrpg.core.classcore;
+
+import com.fantasyrpg.core.network.RpgNetwork;
+import com.fantasyrpg.core.playerdata.RpgClass;
+import com.fantasyrpg.core.playerdata.RpgProgress;
+import com.fantasyrpg.core.skilltree.SkillData;
+import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
+
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * 직업 코어 자원 현재값 (서버, 저장하지 않음 — 전투 상태라 접속·부활·직업 변경 때 시작값).
+ * 매 틱 자동 회복·감소, 기본 공격 적중 등 사건으로 얻음, 바뀌면 클라이언트로 보냄. 소비는 스킬이 생기면.
+ */
+public final class CoreService {
+    private CoreService() {
+    }
+
+    /** 사건 이름 (코어 데이터 gain 키) */
+    public static final String BASIC_ATTACK_HIT = "basic_attack_hit";
+
+    private static final class State {
+        double value;
+        long lastGainTick;
+        int lastSentTenths = Integer.MIN_VALUE;
+    }
+
+    private static final Map<UUID, State> STATES = new ConcurrentHashMap<>();
+
+    private static CoreDef def(ServerPlayer p) {
+        RpgClass c = RpgProgress.get(p).classOrNull();
+        return c == null ? null : SkillData.core(c.id());
+    }
+
+    public static void reset(ServerPlayer p) {
+        CoreDef d = def(p);
+        State s = new State();
+        s.value = d == null ? 0 : d.start();
+        s.lastGainTick = p.level().getGameTime();
+        STATES.put(p.getUUID(), s);
+        send(p, d, s, true);
+    }
+
+    public static double value(ServerPlayer p) {
+        State s = STATES.get(p.getUUID());
+        return s == null ? 0 : s.value;
+    }
+
+    public static void onEvent(ServerPlayer p, String event) {
+        CoreDef d = def(p);
+        if (d == null) return;
+        double amount = d.gainFor(event);
+        if (amount == 0) return;
+        State s = STATES.computeIfAbsent(p.getUUID(), k -> new State());
+        s.value = d.add(s.value, amount);
+        s.lastGainTick = p.level().getGameTime();
+        send(p, d, s, false);
+    }
+
+    /** 스킬이 코어를 쓸 때 (다음 단계). 모자라면 false */
+    public static boolean spend(ServerPlayer p, double amount) {
+        CoreDef d = def(p);
+        State s = STATES.get(p.getUUID());
+        if (d == null || s == null || s.value < amount) return false;
+        s.value = d.clamp(s.value - amount);
+        send(p, d, s, false);
+        return true;
+    }
+
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
+        if (!(event.getEntity() instanceof ServerPlayer p)) return;
+        CoreDef d = def(p);
+        if (d == null) return;
+        State s = STATES.computeIfAbsent(p.getUUID(), k -> {
+            State n = new State();
+            n.value = d.start();
+            return n;
+        });
+        s.value = d.tick(s.value, p.level().getGameTime() - s.lastGainTick);
+        send(p, d, s, false);
+    }
+
+    private static void send(ServerPlayer p, CoreDef d, State s, boolean force) {
+        if (p.connection == null) return;
+        int tenths = (int) Math.round(s.value * 10);
+        if (!force && tenths == s.lastSentTenths) return;
+        s.lastSentTenths = tenths;
+        PacketDistributor.sendToPlayer(p, new RpgNetwork.Core(d == null ? "" : d.id(), (float) s.value,
+                d == null ? 0f : (float) d.max()));
+    }
+
+    public static void forget(ServerPlayer p) {
+        STATES.remove(p.getUUID());
+    }
+}

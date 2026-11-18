@@ -1,5 +1,6 @@
 package com.fantasyrpg.core;
 
+import com.fantasyrpg.core.classcore.CoreService;
 import com.fantasyrpg.core.combat.CombatEvents;
 import com.fantasyrpg.core.combat.CombatManager;
 import com.fantasyrpg.core.command.RpgCommands;
@@ -12,7 +13,10 @@ import com.fantasyrpg.core.gear.rune.RuneRegistry;
 import com.fantasyrpg.core.gear.rune.RuneStatManager;
 import com.fantasyrpg.core.playerdata.ProgressionManager;
 import com.fantasyrpg.core.playerdata.RpgProgress;
+import com.fantasyrpg.core.network.RpgNetwork;
 import com.fantasyrpg.core.resist.MobResistanceManager;
+import com.fantasyrpg.core.skilltree.SkillData;
+import com.fantasyrpg.core.skilltree.SkillService;
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -20,7 +24,10 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.minecraft.server.level.ServerPlayer;
 import org.slf4j.Logger;
 
 /**
@@ -60,7 +67,13 @@ public final class FantasyRpgCore {
         NeoForge.EVENT_BUS.addListener(CombatEvents::onProjectileImpact);
         NeoForge.EVENT_BUS.addListener(CombatEvents::onUseStart);
         NeoForge.EVENT_BUS.addListener(CombatEvents::onIncomingDamage);
-        // TODO: skilltree 데이터 로더 등록
+        // 스킬트리 틀: 노드·공통 패시브·코어 데이터, 서버↔클라 패킷, 코어 회복·감소, /reload 뒤 다시 보내기
+        RpgNetwork.register(modEventBus);
+        NeoForge.EVENT_BUS.addListener(RpgProgress::onRespawn);
+        NeoForge.EVENT_BUS.addListener(RpgProgress::onChangeDimension);
+        NeoForge.EVENT_BUS.addListener(CoreService::onPlayerTick);
+        NeoForge.EVENT_BUS.addListener(FantasyRpgCore::onLogout);
+        NeoForge.EVENT_BUS.addListener(FantasyRpgCore::onDatapackSync);
     }
 
     private static void onAddReloadListeners(AddReloadListenerEvent event) {
@@ -69,6 +82,18 @@ public final class FantasyRpgCore {
         event.addListener(RuneStatManager.INSTANCE);
         event.addListener(ProgressionManager.INSTANCE);
         event.addListener(CombatManager.INSTANCE);
+        event.addListener(SkillData.NODES);
+        event.addListener(SkillData.PASSIVES);
+        event.addListener(SkillData.CORES);
+    }
+
+    private static void onLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        if (event.getEntity() instanceof ServerPlayer p) CoreService.forget(p);
+    }
+
+    /** /reload 뒤(플레이어 null): 접속한 모두에게 정의·상태·패시브를 다시. 접속 때는 onLogin 이 처리 */
+    private static void onDatapackSync(OnDatapackSyncEvent event) {
+        if (event.getPlayer() == null) event.getPlayerList().getPlayers().forEach(SkillService::refreshAll);
     }
 
     private static void onRegisterCommands(RegisterCommandsEvent event) {
