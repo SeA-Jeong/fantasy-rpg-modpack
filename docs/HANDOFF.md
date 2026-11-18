@@ -5,17 +5,17 @@
 
 ---
 
-## 현재 상태 (2026-11-17 기준)
+## 현재 상태 (2026-11-18 기준)
 
 | 항목 | 상태 |
 |---|---|
 | 기준 기획 | `docs/design/직업_전투시스템_v0.4.md` |
-| 구현 진행 | 8.3장 **1단계(피해 계산 엔진) 완료**. **방어 등급 상한은 2026-11-18 폐지**(코드 삭제, 게임 확인에서 1~9번 통과했던 판). 남은 것은 바닐라 다이아·네더라이트 조정. **Better Combat 연동 준비**(순수 로직·컴파일 의존성)는 `main`에 있음 |
+| 구현 진행 | 8.3장 **1단계(피해 계산 엔진) 완료**. **방어 등급 상한은 2026-11-18 폐지**, 바닐라 갑옷은 원래 수치로 복원. **계열 방어구 20종(5계열×4부위, 1~10급, 방어력 최대 30)** 등록 — 게임 확인 전. 룬석 소켓은 설계만. **Better Combat 연동 준비**(순수 로직·컴파일 의존성)는 `main`에 있음 |
 | 플랫폼 | Minecraft 1.21.1 / NeoForge **21.1.266** / Java 21 / ModDevGradle 2.0.141. **필수 의존 모드 magiccity** (JitPack `com.github.aswq0258:magic-city-mod:7eb93cc`, `gradle.properties`의 `magiccity_commit`) |
 | CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄). 모드 구성이 바뀌면 `modpack smoke`가 외부 모드 18개 + 우리 모드 2개로 **NeoForge 전용 서버를 실제 기동** |
 | 1차 외부 모드 구성 | `modpack/mods.lock.json` (필수 13 + 권장 5, 버전 고정). 2026-11-17 전용 서버 기동 통과 (run 44061047052). 클라이언트 실행은 아직 확인 안 함 |
 | 우리 모드 3개 | `fantasyrpg`(이 저장소), `magiccity`(JitPack), `royalqol`(클라이언트 전용 편의 모드, `magic-city-mod` 저장소 `royalqol/`, `mods.lock.json`의 `royalqol.commit`으로 빌드 — `tools/build_royalqol.sh`). 테스트 팩과 서버 기동 검사에 셋 다 들어감 |
-| 최신 테스트 팩 | [v0.2.0-test.1 Release](https://github.com/SeA-Jeong/fantasy-rpg-modpack/releases/tag/v0.2.0-test.1) (사전 릴리스, 게임 확인 전): 통합 팩 `magic-kingdom-testpack-*.mrpack`(우리 모드 3개 + 외부 18개, Prism 가져오기) + 기존 `fantasyrpg-testpack-*.zip` |
+| 최신 테스트 팩 | v0.3.0-test.1 (계열 방어구, 게임 확인 전 — 발행 후 Releases 탭). 이전: v0.2.0-test.4: 통합 팩 `magic-kingdom-testpack-*.mrpack`(우리 모드 3개 + 외부 18개, Prism 가져오기) + 기존 `fantasyrpg-testpack-*.zip` |
 | 게임 테스트 | `docs/TESTING.md`의 v0.1·v0.2 체크리스트 |
 
 ### 테스트 팩 Release 만드는 법
@@ -31,7 +31,8 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - RPG 피해 유형 `fantasyrpg:rpg`: 바닐라 방어구·보호 마법부여·무적 시간을 무시
 - 커맨드: `/rpg simulate`, `/rpg resist`, `/rpg hit` (권한 2)
 - **방어 등급 상한: 2026-11-18 폐지.** 입은 갑옷 수치가 진행 등급과 무관하게 그대로 적용됨. 이전 구현(`gear/armorcap`, `/rpg armorcap`)은 커밋 `56c5bf0` 이전 기록과 복구 지점 `backup/main-before-cap-removal-2026-11-18`에 남음
-- **(v0.2, 게임 확인 전) 바닐라 갑옷 조정:** 다이아 18/2, 네더라이트 20/6 (아이템은 그대로, 능력치만). 철 15/0은 바닐라와 같음
+- **바닐라 갑옷:** 원래 수치 그대로(2026-11-18 조정 폐지). 다이아 20/8, 네더라이트 20/12
+- **(v0.3, 게임 확인 전) 계열 방어구:** 기사·드워프·고룡·엘프·마도 × 투구·흉갑·각반·장화 = 20종. 등급은 `fantasyrpg:gear_tier` 컴포넌트(1~10). 능력치는 `armor_stats` 수치표(모드 jar 기본값, 데이터팩으로 덮어쓰기)에서 세트 합계를 3:8:6:3으로 나눠 붙임. 10급 기사·드워프 30/16, 고룡 30/15, 엘프·마도 24/12. `/rpg armor give|tier|info`, 창작 탭 "판타지 RPG 장비". 그림은 바닐라 갑옷 그림 임시 사용. 받는 피해는 바닐라 공식 그대로
 
 - **(준비, 게임 연결 없음) 무기 사용 권한·기본 공격 입력:** `combat/WeaponPermission`(정책 P1 판정), `combat/BasicAttackMath`(콤보 배율 정리·바닐라 충전 곡선). 아직 어떤 이벤트에도 연결하지 않음
 - **도구:** `tools/check_mods.py` — mods 폴더 jar 의존성·버전 범위 검사. `tools/fetch_mods.py` — `mods.lock.json`의 외부 모드 내려받기. `tools/smoke_server.py` — 전용 서버 기동·콘솔 명령·로그 검사
@@ -41,7 +42,8 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - 치명타 확률 판정 (지금은 배율만 입력받음. 확률·상한은 5.4장, 8.4장 미확정 값)
 - 직업, 코어 자원, 스킬트리, SP, 장비 W 전부
 - magiccity 연동 중 레벨·SP 부분(연동작업지침 4~8절). 이번에는 의존성 연결(1~3절)만 함
-- 계열 방어구 24종·effectiveTier 가상 교체(계산 함수에는 자리만 있음)·세트/고유 효과·넉백 저항·작업대 (설계: 프로젝트 문서 `claude/장비등급제한_설계.md`)
+- 룬석 소켓(설계: 프로젝트 문서 `claude/계열방어구_상위옵션_초안.md` 3장), 세트·고유 효과, 계열 방어구 제작법·작업대·승급, 전용 그림, 계열별 내구도. 심연 계열은 설계 보류
+- 전용 서버에 접속한 클라이언트는 수치표가 없어 계열 방어구 툴팁에 수치가 안 보일 수 있음(판정은 서버 값). 수치표 동기화 패킷 필요
 
 ---
 
@@ -50,7 +52,7 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 | 위치 | 내용 |
 |---|---|
 | `core-mod/.../FantasyRpgCore.java` | 진입점. 설정 등록, 리로드 리스너·커맨드 이벤트 연결 |
-| `core-mod/.../RpgConfig.java` | `config/fantasyrpg-common.toml` (보스 저항 차이 상한, `armorCap` 등급 상한표, `vanillaTuning` 부위별 값) |
+| `core-mod/.../RpgConfig.java` | `config/fantasyrpg-common.toml` (보스 저항 차이 상한) |
 | `combat/DamageCalculator` | **순수 계산** (MC 비의존). 공식은 클래스 주석 참고 |
 | `combat/DamageInput`, `Resistances`, `DamageBreakdown` | 입력·저항·단계별 결과 레코드 |
 | `combat/RpgDamage` | 계산 결과를 실제 엔티티에 적용 (피해 유형 `fantasyrpg:rpg`) |
@@ -58,9 +60,12 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 | `resist/MobResistanceParser`, `ResistanceRules` | JSON 파싱, 보스 저항 차이 판정 (순수) |
 | `command/RpgCommands` | `/rpg` 커맨드 |
 | `combat/WeaponPermission`, `combat/BasicAttackMath` | **순수** 무기 사용 권한(P1)·기본 공격 입력 (연동 실험 준비, 미연결) |
-| `gear/vanilla/VanillaArmorTuning`, `VanillaArmorDefaults` | `ItemAttributeModifierEvent`로 바닐라 다이아(18/2)·네더라이트(20/6) 갑옷 수정자 값 교체. 기본값은 **순수** 클래스(`RpgConfig` 기본값이 가리킴). 모드 계열 방어구가 바닐라보다 높게 설계되는 기준선 |
-| `core-mod/src/main/resources/data/` | 피해 유형 정의, 바닐라 피해 태그 추가 |
-| `core-mod/src/test/` | JUnit 33개: 부록 A-1, 4.3장 표, 계산 순서, 저항 파싱·판정, 바닐라 조정값·피해(`VanillaArmorDamageTest`), 무기 권한, 기본 공격 입력 |
+| `gear/armor/ArmorPart`, `PartSplit`, `ArmorStatTable`, `ArmorStatParser`, `ArmorDamageMath`, `ArmorFamily` | **순수** 계열 방어구 수치표·검사(1~10급, 방어력 ≤30, 강도 ≤20, 단조 증가)·부위 배분(최대 나머지)·바닐라 방어 공식 사본 |
+| `gear/armor/GearRegistry`, `FamilyArmorItem`, `FamilyArmorAttributes`, `ArmorStatManager` | 등급 컴포넌트·재질·아이템 20종·창작 탭 등록, `ItemAttributeModifierEvent`로 수치표 능력치 부여(수정자 ID `fantasyrpg:armor/<부위>`), `armor_stats` 로더 |
+| `command/ArmorCommands` | `/rpg armor give <계열> <등급>`, `tier <등급>`, `info` |
+| `core-mod/src/main/resources/data/` | 피해 유형 정의, 바닐라 피해 태그 추가, `fantasyrpg/armor_stats/*.json` 계열 수치표 기본값, 바닐라 갑옷 부위 태그(인챈트용)에 계열 방어구 추가 |
+| `core-mod/src/main/resources/assets/` | 언어(ko·en), 계열 방어구 아이템 모델(바닐라 모델을 부모로) |
+| `core-mod/src/test/` | JUnit 36개: 부록 A-1, 4.3장 표, 계산 순서, 저항 파싱·판정, 계열 방어구 수치표·배분·바닐라 대비·받는 피해(`ArmorStatTableTest`), 무기 권한, 기본 공격 입력 |
 | `tools/check_mods.py` | mods 폴더 의존성 검사 (자체 검사 `tools/test_check_mods.py`, CI) |
 | `modpack/mods.lock.json`, `tools/fetch_mods.py`, `tools/smoke_server.py`, `.github/workflows/modpack-smoke.yml` | 1차 외부 모드 고정 목록과 혼합 서버 기동 검사 (1단계 우리 모드만 → 전체 20개) |
 | `modpack/datapacks/fantasyrpg_content` | 실제 콘텐츠 데이터 (지금은 형식 견본만) |
@@ -75,6 +80,14 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 ```
 - `entity: "default"`인 파일이 있으면 데이터 없는 모든 엔티티의 기본 저항이 됩니다. 없으면 0/0.
 - 알 수 없는 필드(`max_health`, `_comment` 등)는 무시합니다.
+
+`armor_stats/*.json` (계열 방어구 세트 합계, 부위 값은 자동 배분)
+```json
+{ "family": "knight", "class": "heavy",
+  "tiers": [ {"tier": 1, "armor": 13, "toughness": 1, "knockback": 0}, … 10급까지 ] }
+```
+- 1~10급 모두 필요, 방어력 0~30, 강도 0~20, 넉백 저항 0~1(0.01 단위), 등급이 오를 때 세트·부위 값이 줄면 그 파일 거부.
+- 기본값은 모드 jar 안에 있음. CLAUDE.md는 테스트로 바뀔 수치를 `modpack/datapacks/fantasyrpg_content/`에 두라고 하지만, 데이터팩 없이도 갑옷이 0이 되지 않도록 jar에 기본값을 넣고 데이터팩의 같은 경로 파일로 덮어쓰게 함(11-18 결정)
 
 ---
 
@@ -91,6 +104,9 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 | 11-16 | 보스 저항 차이 상한은 config 값 (0.15/0.20) | 8.4장: 테스트로 확정할 값 |
 | 11-17 | 방어구·작업대는 이 모드가 담당, magiccity는 진행도만 | 프로젝트 결정(통합문서 1절) |
 | 11-18 | **방어 등급 상한 폐지** (11-17 "상위 방어구 조기 획득 방지"의 방어력·강도 상한 부분 취소). 바닐라 다이아·네더라이트 조정은 유지. 모드에서 만드는 방어구가 바닐라보다 상위 능력치를 갖도록 설계 | 사용자 결정 2026-11-18 (게임 확인 뒤 "갑옷을 입는 의미가 없다"). 기획 반영: 프로젝트 통합문서 5절 |
+| 11-18 | **바닐라 갑옷 원래 수치 복원**, 모드 계열 갑옷만 방어력 20 초과(최대 30), 피해 공식은 바닐라 그대로 | 사용자 결정 2026-11-18. 기획: 프로젝트 `claude/계열방어구_상위옵션_초안.md`, `claude/장비등급제한_설계.md` v3 |
+| 11-18 | 계열 방어구 수치표 기본값을 모드 jar에 넣음(데이터팩으로 덮어쓰기) | 데이터팩을 월드에 넣지 않아도 갑옷 능력치가 0이 되지 않게 |
+| 11-18 | 계열 방어구 그림은 바닐라 갑옷 그림을 빌려 씀 | 전용 그림 전까지 시험 가능하게 |
 | 11-17 | 플레이어가 받는 피해에 `fantasyrpg:rpg` 유형을 쓰지 않음 | 방어 무시라서 방어 투자가 무의미해짐 |
 | 11-17 | 직업 외 무기로는 RPG 피해 없음, 도구로 공격 차단, 맨손은 최소 피해, 예외 권한 자리 마련 (정책 P1) | 프로젝트 결정 (`claude/혼합개발_연동설계_v1.md` 0절) |
 | 11-17 | 바닐라 전투 인챈트는 RPG 전투에서 제외, 보호 인챈트는 유지하고 밸런스 v1.0 수치로 재정의 (P2) | 프로젝트 결정. 보호 인챈트 재정의는 아직 구현 안 함 |
@@ -116,6 +132,15 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 ---
 
 ## 작업 기록
+
+### 2026-11-18 — 바닐라 갑옷 복원, 계열 방어구 20종 (브랜치 `claude/family-armor`)
+- 사용자 결정(같은 날): 바닐라 갑옷 원래 수치, 모드 갑옷 방어력 20 초과(안 1: 바닐라 공식 유지), 10급 30, 수치표 확정, 심연 보류, 룬석 소켓 방식(설계)
+- 기획 먼저 수정: 프로젝트 문서 `claude/장비등급제한_설계.md` v3, `claude/방어구_전투밸런스_기준_v1.0.md`(체력 상한 32·이동속도 상한과 룬석 합계 무제한이 충돌 → [검토] 표시, 생존 횟수표 재계산 필요), `claude/계열방어구_상위옵션_초안.md`
+- 삭제: `gear/vanilla`(`VanillaArmorTuning`·`VanillaArmorDefaults`), 설정 `vanillaTuning`, JUnit `VanillaArmorDamageTest`
+- 추가: `gear/armor` 패키지, `armor_stats` 5계열, `/rpg armor`, 아이템 모델·언어·인챈트 태그. JUnit `ArmorStatTableTest` 6개 → CI 36개 통과
+- 발견: 확정 표의 고룡 3급(21/8)·7급(26/12)은 강도가 같은 단계 바닐라(다이아 8, 네더라이트 12)와 **같음**(방어력은 높음). 표대로 두고 테스트는 "고룡 강도 ≥ 바닐라"로 검사
+- `modpack smoke`에 수치표 로드 확인 줄 추가
+- 게임 확인: 하지 않음 → `docs/TESTING.md` v0.3 A1~A4, F1~F11
 
 ### 2026-11-18 — 방어 등급 상한 폐지
 - 사용자 결정: 방어 상한을 완전히 없앰. 모드 제작 방어구가 바닐라보다 상위 능력치를 갖게 설계
