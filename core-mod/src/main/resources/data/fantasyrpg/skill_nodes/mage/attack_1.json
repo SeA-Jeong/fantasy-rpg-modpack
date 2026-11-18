@@ -1,0 +1,41 @@
+{
+  "_comment": "[초안] 수치는 claude/전사마법사_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:mage/attack_1",
+  "name": "실체 마탄",
+  "description": "바라보는 방향으로 물리 마탄 3발을 쏩니다. 3랭크: 3발 모두 같은 적에 맞으면 밀쳐냄. 5랭크: 관통.",
+  "direction": "attack",
+  "tier": 1,
+  "kind": "active",
+  "max_rank": 5,
+  "required_level": 1,
+  "required_direction_sp": 0,
+  "effect": "fantasyrpg:mage_solid_bolts",
+  "cooldown_ticks": 80,
+  "cost": 15,
+  "values": {
+    "physical": [
+      0.6,
+      0.67,
+      0.75,
+      0.82,
+      0.9
+    ],
+    "bolts": 3,
+    "interval_ticks": 3,
+    "range": 20,
+    "knockback": [
+      0,
+      0,
+      0.6,
+      0.6,
+      0.6
+    ],
+    "pierce": [
+      0,
+      0,
+      0,
+      0,
+      1
+    ]
+  }
+}

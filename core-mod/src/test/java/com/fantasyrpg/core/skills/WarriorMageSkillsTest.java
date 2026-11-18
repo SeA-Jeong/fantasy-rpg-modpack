@@ -1,0 +1,176 @@
+package com.fantasyrpg.core.skills;
+
+import com.fantasyrpg.core.classcore.CoreDef;
+import com.fantasyrpg.core.skilltree.SkillNode;
+import com.fantasyrpg.core.skilltree.SkillValues;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+/**
+ * 전사·마법사 1~2단 스킬 (claude/전사마법사_스킬_초안.md): 모드 jar 기본 데이터 검사와 순수 계산.
+ */
+class WarriorMageSkillsTest {
+    private static final Path DATA = Path.of("src/main/resources/data/fantasyrpg");
+
+    private static Map<String, SkillNode> load(String cls) throws IOException {
+        Map<String, SkillNode> out = new HashMap<>();
+        try (var files = Files.list(DATA.resolve("skill_nodes").resolve(cls))) {
+            for (Path f : files.toList()) {
+                JsonObject o = JsonParser.parseString(Files.readString(f)).getAsJsonObject();
+                SkillNode n = SkillNode.parse(cls, o);
+                out.put(n.id(), n);
+            }
+        }
+        return out;
+    }
+
+    /** 효과마다 코드가 읽는 수치 키 */
+    private static final Map<String, List<String>> REQUIRED = Map.ofEntries(
+            Map.entry(SkillIds.W_HEAVY_STRIKE, List.of("physical", "range", "stun_ticks", "empower_threshold", "empower_cost", "empower_mult")),
+            Map.entry(SkillIds.W_SWORD_MASTERY, List.of("basic_physical_bonus", "hit_core_bonus", "third_hit_physical")),
+            Map.entry(SkillIds.W_MANA_SLASH, List.of("physical", "magic", "range", "angle", "mark_ticks", "burst_magic")),
+            Map.entry(SkillIds.W_SPELLBLADE, List.of("basic_magic", "high_core", "high_core_mult", "mana_slash_cooldown_cut")),
+            Map.entry(SkillIds.W_INDOMITABLE, List.of("duration_ticks", "reduction", "cast_core", "hit_core", "end_physical", "end_radius")),
+            Map.entry(SkillIds.W_FIGHTING_SPIRIT, List.of("hurt_core", "low_health", "low_core", "low_cooldown_ticks", "low_absorption", "absorption_ticks")),
+            Map.entry(SkillIds.W_FLURRY, List.of("physical", "hits", "interval_ticks", "range", "refund_core")),
+            Map.entry(SkillIds.W_COMBO_SENSE, List.of("crit_chance", "after_skill_ticks", "after_skill_bonus", "crit_core")),
+            Map.entry(SkillIds.M_SOLID_BOLTS, List.of("physical", "bolts", "interval_ticks", "range", "knockback", "pierce")),
+            Map.entry(SkillIds.M_BOLT_TRAINING, List.of("bolt_physical", "bolt_cooldown_ticks", "extra_every")),
+            Map.entry(SkillIds.M_ARCANE_BURST, List.of("magic", "range", "radius", "echo_delay", "echo_ratio")),
+            Map.entry(SkillIds.M_ARCANE_INSIGHT, List.of("skill_magic_bonus", "max_core_bonus", "spell_hit_core")),
+            Map.entry(SkillIds.M_BARRIER_SHOCK, List.of("magic", "radius", "knockback", "absorption", "absorption_ticks", "slow_ticks", "reflect_magic", "reflect_interval")),
+            Map.entry(SkillIds.M_MANA_WARD, List.of("ratio", "mana_per_hp", "low_health", "low_mult", "auto_barrier")),
+            Map.entry(SkillIds.M_BLINK, List.of("distance", "afterimage_magic", "afterimage_radius")),
+            Map.entry(SkillIds.M_SPELL_CHAIN, List.of("window_ticks", "cooldown_cut", "chain_core", "chain_count", "chain_bonus")));
+
+    @Test
+    @DisplayName("전사·마법사 각 8노드: 4방향 × 1단 액티브·2단 패시브, 5랭크, 효과 id·수치 키 모두 있음")
+    void nodeData() throws IOException {
+        Set<String> effects = new HashSet<>();
+        for (String cls : List.of("warrior", "mage")) {
+            Map<String, SkillNode> nodes = load(cls);
+            assertEquals(8, nodes.size(), cls);
+            for (SkillNode.Direction d : SkillNode.Direction.values()) {
+                for (int tier = 1; tier <= 2; tier++) {
+                    final int t = tier;
+                    SkillNode n = nodes.values().stream().filter(x -> x.directions().equals(Set.of(d)) && x.tier() == t).findFirst().orElseThrow();
+                    assertEquals(t == 1 ? SkillNode.Kind.ACTIVE : SkillNode.Kind.PASSIVE, n.kind(), n.id());
+                    assertEquals(5, n.maxRank(), n.id());
+                    assertEquals(1, n.requiredLevel(), n.id());
+                    assertEquals(0, n.requiredDirectionSp(), n.id());
+                    assertTrue(REQUIRED.containsKey(n.effect()), n.id() + " 효과 " + n.effect());
+                    for (String k : REQUIRED.get(n.effect())) assertTrue(n.values().has(k), n.id() + " 수치 " + k);
+                    assertFalse(n.description().isEmpty(), n.id());
+                    if (t == 1) assertTrue(n.cooldownTicks(1) > 0, n.id() + " 쿨타임");
+                    effects.add(n.effect());
+                }
+            }
+        }
+        assertEquals(16, effects.size());
+    }
+
+    @Test
+    @DisplayName("초안 표의 대표 수치 (강격 2.4, 마력 베기 마법 1.75, 불굴 35%, 비전 폭발 반경 4, 점멸 8초·10칸)")
+    void draftNumbers() throws IOException {
+        Map<String, SkillNode> w = load("warrior");
+        Map<String, SkillNode> m = load("mage");
+        SkillNode strike = w.get("fantasyrpg:warrior/attack_1");
+        assertEquals(1.6, strike.value("physical", 1), 1e-9);
+        assertEquals(2.4, strike.value("physical", 5), 1e-9);
+        assertEquals(120, strike.cooldownTicks(3));
+        assertEquals(20, strike.cost(5), 1e-9);
+        assertEquals(1.75, w.get("fantasyrpg:warrior/spell_1").value("magic", 5), 1e-9);
+        assertEquals(0.4, w.get("fantasyrpg:warrior/spell_1").value("physical", 2), 1e-9);
+        assertEquals(0.35, w.get("fantasyrpg:warrior/guard_1").value("reduction", 5), 1e-9);
+        assertEquals(0, w.get("fantasyrpg:warrior/guard_1").cost(1), 1e-9); // 기획 3.2: 코어 없이 쓰는 행동
+        assertEquals(4, w.get("fantasyrpg:warrior/finesse_1").value("hits", 5), 1e-9);
+        assertEquals(4, m.get("fantasyrpg:mage/spell_1").value("radius", 3), 1e-9);
+        assertEquals(3, m.get("fantasyrpg:mage/spell_1").value("radius", 2), 1e-9);
+        assertEquals(160, m.get("fantasyrpg:mage/finesse_1").cooldownTicks(3));
+        assertEquals(200, m.get("fantasyrpg:mage/finesse_1").cooldownTicks(2));
+        assertEquals(10, m.get("fantasyrpg:mage/finesse_1").value("distance", 5), 1e-9);
+        // 연계 감각 최대 +5%p 는 기교 트리 상한 +15%p 안
+        assertTrue(w.get("fantasyrpg:warrior/finesse_2").value("crit_chance", 5) <= 0.15);
+    }
+
+    @Test
+    @DisplayName("코어: 기세 최대 100·적중 +8·5초 뒤 초당 10 감소, 마나 최대 100·시작 100·초당 5, 비전 이해로 최대 120")
+    void cores() throws IOException {
+        CoreDef w = CoreDef.parse(JsonParser.parseString(Files.readString(DATA.resolve("class_cores/warrior.json"))).getAsJsonObject());
+        CoreDef m = CoreDef.parse(JsonParser.parseString(Files.readString(DATA.resolve("class_cores/mage.json"))).getAsJsonObject());
+        assertEquals(8, w.gainFor("basic_attack_hit"), 1e-9);
+        assertEquals(50, w.tick(50, 99), 1e-9);
+        assertEquals(49.5, w.tick(50, 100), 1e-9);
+        assertEquals(100, m.start(), 1e-9);
+        assertEquals(50.25, m.tick(50, 0), 1e-9);
+        CoreDef bigger = m.withMax(120);
+        assertEquals(120, bigger.clamp(500), 1e-9);
+        assertEquals(100, m.clamp(500), 1e-9);
+    }
+
+    @Test
+    @DisplayName("부채꼴 판정: 90°면 정면·45° 안은 맞고 뒤·옆 90°는 안 맞음")
+    void cone() {
+        assertTrue(SkillMath.inCone(0, 3, 0, 1, 90));
+        assertTrue(SkillMath.inCone(2, 2, 0, 1, 90)); // 정확히 45°
+        assertFalse(SkillMath.inCone(3, 0.1, 0, 1, 90));
+        assertFalse(SkillMath.inCone(0, -3, 0, 1, 90));
+        assertTrue(SkillMath.inCone(0, 0, 0, 1, 90));
+    }
+
+    @Test
+    @DisplayName("마력 방벽: 피해 10·비율 12%·마나 충분 → 1.2를 마나 6으로, 마나 3뿐이면 0.6만")
+    void manaWard() {
+        SkillMath.Ward w = SkillMath.manaWard(10, 0.12, 100, 5);
+        assertEquals(1.2, w.absorbed(), 1e-9);
+        assertEquals(6.0, w.manaSpent(), 1e-9);
+        SkillMath.Ward poor = SkillMath.manaWard(10, 0.12, 3, 5);
+        assertEquals(0.6, poor.absorbed(), 1e-9);
+        assertEquals(3.0, poor.manaSpent(), 1e-9);
+        assertEquals(0, SkillMath.manaWard(10, 0.24, 0, 5).absorbed(), 1e-9);
+    }
+
+    @Test
+    @DisplayName("주문 연쇄 쿨타임(120틱 −25% = 90), 불굴 감소(10 × 0.65), 연속 적중 수")
+    void chainAndReduction() {
+        assertEquals(90, SkillMath.chainedCooldown(120, 0.25));
+        assertEquals(114, SkillMath.chainedCooldown(120, 0.05));
+        assertEquals(6.5, SkillMath.reduced(10, 0.35), 1e-9);
+        assertEquals(1.0, SkillMath.reduced(10, 5.0), 1e-9); // 최대 90%
+        assertEquals(3, SkillMath.consecutive(true, 2));
+        assertEquals(1, SkillMath.consecutive(false, 2));
+    }
+
+    @Test
+    @DisplayName("랭크 수치 형식: 배열 길이가 max_rank와 다르거나 음수면 거부, 숫자 하나는 모든 랭크 같음")
+    void valuesFormat() {
+        JsonObject ok = JsonParser.parseString("{\"cooldown_ticks\":100,\"cost\":{\"amount\":20},\"values\":{\"a\":[1,2,3],\"b\":7}}").getAsJsonObject();
+        SkillValues v = SkillValues.parse(ok, 3);
+        assertEquals(100, v.get(SkillValues.COOLDOWN, 2, 0), 1e-9);
+        assertEquals(20, v.get(SkillValues.COST, 1, 0), 1e-9);
+        assertEquals(3, v.get("a", 3, 0), 1e-9);
+        assertEquals(1, v.get("a", 0, 0), 1e-9);
+        assertEquals(7, v.get("b", 3, 0), 1e-9);
+        assertEquals(-1, v.get("없음", 1, -1), 1e-9);
+        assertThrows(IllegalArgumentException.class, () -> SkillValues.parse(
+                JsonParser.parseString("{\"values\":{\"a\":[1,2]}}").getAsJsonObject(), 3));
+        assertThrows(IllegalArgumentException.class, () -> SkillValues.parse(
+                JsonParser.parseString("{\"values\":{\"a\":-1}}").getAsJsonObject(), 3));
+    }
+}

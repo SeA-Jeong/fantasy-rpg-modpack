@@ -1,0 +1,17 @@
+{
+  "_comment": "경직·느림·밀쳐내기가 듣지 않는 대상(보스). 엔티티 태그 c:bosses, 아래 스코어보드 태그, 또는 최대 체력이 min_max_health 이상 [초안]",
+  "control_immune": {
+    "entity_tags": [
+      "c:bosses"
+    ],
+    "scoreboard_tags": [
+      "magiccity_fieldboss",
+      "magiccity_skyboss",
+      "magiccity_gatekeeper",
+      "magiccity_tombboss",
+      "magiccity_cursedboss",
+      "magiccity_dragon"
+    ],
+    "min_max_health": 100
+  }
+}

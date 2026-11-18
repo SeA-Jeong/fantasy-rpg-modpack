@@ -117,5 +117,11 @@
   "message.fantasyrpg.passive.grade": "Grade too low",
   "message.fantasyrpg.passive.no_points": "Not enough passive points",
   "message.fantasyrpg.passive.max_rank": "Already at max rank",
-  "message.fantasyrpg.passive.not_invested": "Passive not invested"
+  "message.fantasyrpg.passive.not_invested": "Passive not invested",
+  "message.fantasyrpg.skill.no_target": "No target",
+  "message.fantasyrpg.skill.blocked": "The way is blocked",
+  "message.fantasyrpg.skill.need_weapon": "Hold your class weapon to use skills",
+  "message.fantasyrpg.skill.cooldown": "%s: ready in %ss",
+  "message.fantasyrpg.skill.no_core": "%s: not enough core (%s needed)",
+  "screen.fantasyrpg.node.cd_cost": "Rank %s: cooldown %ss, core %s"
 }

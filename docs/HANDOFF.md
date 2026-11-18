@@ -10,7 +10,7 @@
 | 항목 | 상태 |
 |---|---|
 | 기준 기획 | `docs/design/직업_전투시스템_v0.4.md` |
-| 구현 진행 | 8.3장 **1단계(피해 계산 엔진) 완료**. **방어 등급 상한은 2026-11-18 폐지**, 바닐라 갑옷은 원래 수치로 복원. **계열 방어구 20종(5계열×4부위, 1~10급, 방어력 최대 30)** 등록, **룬석 소켓(6종·4등급, 제작대 끼우기·빼기·합성·연마)**, **플레이어 성장 최소판(직업·레벨·경험치·SP)**, **실제 전투 연결(직업 무기 6종, 근접·활·지팡이 기본 공격 → RPG 피해, PvP 차단)**, **스킬트리 틀(투자·되돌리기·초기화권·장착칸, 코어 자원, 공통 패시브, K 화면·Z X C V B·HUD, 스킬 효과는 아직 없음)** — 모두 게임 확인 전. **Better Combat 연동 준비**(순수 로직·컴파일 의존성)는 `main`에 있음 |
+| 구현 진행 | 8.3장 **1단계(피해 계산 엔진) 완료**. **방어 등급 상한은 2026-11-18 폐지**, 바닐라 갑옷은 원래 수치로 복원. **계열 방어구 20종(5계열×4부위, 1~10급, 방어력 최대 30)** 등록, **룬석 소켓(6종·4등급, 제작대 끼우기·빼기·합성·연마)**, **플레이어 성장 최소판(직업·레벨·경험치·SP)**, **실제 전투 연결(직업 무기 6종, 근접·활·지팡이 기본 공격 → RPG 피해, PvP 차단)**, **스킬트리 틀(투자·되돌리기·초기화권·장착칸, 코어 자원, 공통 패시브, K 화면·Z X C V B·HUD)**, **전사·마법사 1~2단 스킬 16종** — 모두 게임 확인 전. **Better Combat 연동 준비**(순수 로직·컴파일 의존성)는 `main`에 있음 |
 | 플랫폼 | Minecraft 1.21.1 / NeoForge **21.1.266** / Java 21 / ModDevGradle 2.0.141. **필수 의존 모드 magiccity** (JitPack `com.github.aswq0258:magic-city-mod:7eb93cc`, `gradle.properties`의 `magiccity_commit`) |
 | CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄). 모드 구성이 바뀌면 `modpack smoke`가 외부 모드 18개 + 우리 모드 2개로 **NeoForge 전용 서버를 실제 기동** |
 | 1차 외부 모드 구성 | `modpack/mods.lock.json` (필수 13 + 권장 5, 버전 고정). 2026-11-17 전용 서버 기동 통과 (run 44061047052). 클라이언트 실행은 아직 확인 안 함 |
@@ -45,7 +45,7 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - 스킬·코어 자원·가드·패리·경직, 파티원 공격 제외(FTB Teams), 쇠뇌, 바닐라 전투 인챈트 데이터팩(정의 덮어쓰기·획득 차단), 무기 제작법, 활 당김 모습(전용 그림·속성), 궁수 근접(지금은 활로 근접하면 "직업 무기가 아닙니다")
 - 서장 NPC 직업 선택, 직업 변경 비용, 파티 경험치 분배
 - 치명타 총상한(기교 보너스 합산)·장비 치명타 옵션
-- 실제 스킬 노드·효과(쿨타임·코어 소비 공통화), 유료 초기화·노드 되돌리기 비용(재료), 엔딩 후 무료 초기화(magiccity 엔딩 API 필요), 장비 W 전부
+- 전사·마법사 3~6단·혼합 노드, 나머지 4직업 스킬, 유료 초기화·노드 되돌리기 비용(재료), 엔딩 후 무료 초기화(magiccity 엔딩 API 필요), 장비 W 전부
 - magiccity 연동 중 레벨·SP 부분(연동작업지침 4~8절). 이번에는 의존성 연결(1~3절)만 함
 - 룬석 정식 재료·드롭·중급 제작(4×4), 직업 룬석(순환·가속, 직업 시스템 이후), 세트·고유 효과, 계열 방어구 제작법·작업대·승급, 전용 그림, 계열별 내구도. 심연 계열은 설계 보류
 - 전용 서버에 접속한 클라이언트는 수치표가 없어 계열 방어구 툴팁에 수치가 안 보일 수 있음(판정은 서버 값). 수치표 동기화 패킷 필요
@@ -82,10 +82,13 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 | `skilltree/SkillData`, `SkillService`, `SkillEffects`, `classcore/CoreService` | 로더 3개, 서버 처리·동기화, 스킬 효과 등록소(비어 있음), 코어 현재값 |
 | `network/RpgNetwork` | 패킷: 상태·정의·코어(서버→클라), 요청(클라→서버) |
 | `client/FantasyRpgClient`, `ClientRpgState`, `SkillTreeScreen`, `RpgHud` | 클라이언트 전용 진입점(`dist = CLIENT`)·단축키, 받은 상태, K 화면, HUD |
+| `skills/SkillMath`, `SkillIds` | **순수** 부채꼴·마력 방벽·연쇄 쿨타임·감소 계산, 효과 id |
+| `skilltree/SkillValues` | **순수** 노드의 랭크별 수치(`cooldown_ticks`·`cost`·`values`) |
+| `skills/Cast`, `SkillTargets`, `SkillRuntime`, `SkillPassives`, `SkillEvents`, `SkillSettings`, `WarriorSkills`, `MageSkills` | 스킬 한 번 사용(피해·치명타·비전 이해), 대상 고르기·제어 효과(보스 면역), 쿨타임·예약 실행·지속 효과, 패시브(기본 공격·흡수 체력), 받는 피해·틱 이벤트, `skill_settings` 로더, 전사·마법사 액티브 |
 | `command/SkillCommands` | `/rpg skill list|invest|refund|reset [force]|equip|cast`, `/rpg passive list|invest|refund` |
 | `core-mod/src/main/resources/data/` | 피해 유형 정의, 바닐라 피해 태그 추가, `fantasyrpg/armor_stats/*.json` 계열 수치표 기본값, `fantasyrpg/runes/*.json` 룬석 효과, `fantasyrpg/recipe/` 룬석 조합(특수 4종 + 시험용 임시 제작법), `fantasyrpg/progression/` 레벨 곡선·몬스터 경험치 [초안], `fantasyrpg/combat/basic_attack.json` 기본 공격 [초안], `fantasyrpg/tags/item/class_weapons/` 직업 무기 태그, `fantasyrpg/weapon_attributes/` Better Combat 동작, 바닐라 갑옷 부위 태그(인챈트용)에 계열 방어구 추가 |
 | `core-mod/src/main/resources/assets/` | 언어(ko·en), 계열 방어구 아이템 모델(바닐라 모델을 부모로) |
-| `core-mod/src/test/` | JUnit 60개: 스킬트리·부록 A-2(`SkillTreeRulesTest`), 기본 공격 수치·직업 간 화력 ±15%(`CombatSettingsTest`), 성장(`ProgressionMathTest`), 룬석 규칙(`RuneRulesTest`), 부록 A-1, 4.3장 표, 계산 순서, 저항 파싱·판정, 계열 방어구 수치표·배분·바닐라 대비·받는 피해(`ArmorStatTableTest`), 무기 권한, 기본 공격 입력 |
+| `core-mod/src/test/` | JUnit 67개: 전사·마법사 데이터·수치·순수 계산(`WarriorMageSkillsTest`), 스킬트리·부록 A-2(`SkillTreeRulesTest`), 기본 공격 수치·직업 간 화력 ±15%(`CombatSettingsTest`), 성장(`ProgressionMathTest`), 룬석 규칙(`RuneRulesTest`), 부록 A-1, 4.3장 표, 계산 순서, 저항 파싱·판정, 계열 방어구 수치표·배분·바닐라 대비·받는 피해(`ArmorStatTableTest`), 무기 권한, 기본 공격 입력 |
 | `tools/check_mods.py` | mods 폴더 의존성 검사 (자체 검사 `tools/test_check_mods.py`, CI) |
 | `modpack/mods.lock.json`, `tools/fetch_mods.py`, `tools/smoke_server.py`, `.github/workflows/modpack-smoke.yml` | 1차 외부 모드 고정 목록과 혼합 서버 기동 검사 (1단계 우리 모드만 → 전체 20개) |
 | `modpack/datapacks/fantasyrpg_content` | 실제 콘텐츠 데이터 (지금은 형식 견본만) |
@@ -141,6 +144,11 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 | 11-18 | 공통 패시브: 직업 트리와 별도 트리·별도 포인트(등급마다 2, 최대 12), 직업 변경해도 유지 | 사용자 결정 |
 | 11-18 | 코어 현재값은 저장하지 않음(접속·부활·직업 변경 때 시작값) | 전투 상태라서 [제안] |
 | 11-18 | 혼합 노드는 화면에서 첫 방향 열에 그림 | 화면 배치 [초안] |
+| 11-18 | 스킬 노드·코어 기본 데이터를 모드 jar에 넣음(데이터팩으로 덮어쓰기). 시험 데이터팩의 전사·마법사 시험 코어는 지움 | 계열 방어구와 같은 방식. 같은 직업 코어가 둘이면 어느 쪽이 쓰일지 정해지지 않아서 |
+| 11-18 | 스킬은 직업 무기를 들어야 씀. 한 대상 스킬은 플레이어가 아닌 모든 생물, 범위 스킬은 적대 몬스터만 | 정책 P1, 마을에서 주민·가축 보호 [초안] |
+| 11-18 | 경직·느림·밀쳐내기 면역(보스) = 엔티티 태그 `c:bosses` + magiccity 보스 스코어보드 태그 + 최대 체력 100 이상 (`skill_settings/control.json`) | magiccity 보스 태그가 통일돼 있지 않아서 [초안] |
+| 11-18 | 쿨타임·지속 효과는 서버 메모리(저장 안 함), 서버 틱 수 기준. 대상이 없거나 막혀서 못 쓰면 비용·쿨타임 없음 | |
+| 11-18 | 흡수 체력은 최대 흡수 체력 속성에 임시 수정자를 붙여 채우고 시간이 지나면 거둠. 투지 5랭크 흡수 체력 지속 10초 | 1.21에서 흡수 체력은 최대치 속성이 필요. 10초는 초안 표에 없던 값 [초안] |
 | 11-17 | 플레이어가 받는 피해에 `fantasyrpg:rpg` 유형을 쓰지 않음 | 방어 무시라서 방어 투자가 무의미해짐 |
 | 11-17 | 직업 외 무기로는 RPG 피해 없음, 도구로 공격 차단, 맨손은 최소 피해, 예외 권한 자리 마련 (정책 P1) | 프로젝트 결정 (`claude/혼합개발_연동설계_v1.md` 0절) |
 | 11-17 | 바닐라 전투 인챈트는 RPG 전투에서 제외, 보호 인챈트는 유지하고 밸런스 v1.0 수치로 재정의 (P2) | 프로젝트 결정. 보호 인챈트 재정의는 아직 구현 안 함 |
@@ -166,6 +174,12 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 ---
 
 ## 작업 기록
+
+### 2026-11-18 — 전사·마법사 1~2단 스킬 (브랜치 `claude/warrior-mage-skills`)
+- 사용자 결정: 범위 1~2단, 초안 먼저 보여 주고 승인("진행하자"), 연출은 입자·소리만. 초안 프로젝트 문서 `claude/전사마법사_스킬_초안.md`
+- 추가: 노드 수치 형식(`SkillValues`), 사용 흐름(무기·쿨타임·코어·연쇄), 전사·마법사 액티브 8개·패시브 8개, 쿨타임 패킷·HUD 표시·설명 툴팁, 데이터(노드 16·코어 2·제어 면역 설정), JUnit 7개(로컬 shim 통과)
+- 중간에 GitHub 쓰기 권한이 끊겨(push 403) 사용자가 claude.ai에서 GitHub를 다시 연결한 뒤 push. 첫 CI에서 컴파일 오류 1건(실행 상태 필드 접근 범위) 수정 → JUnit 67개·서버 기동 검사 통과
+- 게임 확인: 하지 않음 → `docs/TESTING.md` v0.8 K1~K18
 
 ### 2026-11-18 — 스킬트리 틀 (브랜치 `claude/skilltree-frame`)
 - 사용자 결정: 되돌리기 "1번 기조 + 엔딩 후 3번", 공통 패시브 별도 트리·포인트(등급마다), 조작 K 화면 + Z X C V + B, 범위 "틀만"

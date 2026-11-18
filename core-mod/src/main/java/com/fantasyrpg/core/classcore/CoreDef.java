@@ -22,6 +22,12 @@ public record CoreDef(String id, String classId, double max, double start, Map<S
         gain = Map.copyOf(gain);
     }
 
+    /** 최대치만 바꾼 사본 (패시브로 최대치가 늘 때) */
+    public CoreDef withMax(double newMax) {
+        return newMax == max ? this : new CoreDef(id, classId, newMax, Math.min(start, newMax), gain, regenPerSecond,
+                decayDelayTicks, decayPerSecond);
+    }
+
     public double gainFor(String event) {
         return gain.getOrDefault(event, 0.0);
     }

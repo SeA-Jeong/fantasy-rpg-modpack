@@ -1,0 +1,15 @@
+{
+  "_comment": "[초안] 수치는 claude/전사마법사_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:momentum",
+  "name": "기세",
+  "class": "warrior",
+  "max": 100,
+  "start": 0,
+  "gain": {
+    "basic_attack_hit": 8
+  },
+  "decay": {
+    "delay_ticks": 100,
+    "per_second": 10
+  }
+}

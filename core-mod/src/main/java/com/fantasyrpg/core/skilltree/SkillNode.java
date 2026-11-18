@@ -23,9 +23,12 @@ import java.util.Set;
  * @param directions 방향 1개(일반) 또는 2개(혼합)
  * @param tier 칸 번호 1~6 (혼합 노드는 0)
  * @param effect 스킬 구현 id (없으면 빈 문자열 = 효과 없음)
+ * @param description 화면 설명 (없으면 빈 문자열)
+ * @param values 랭크별 수치 ("values" 객체와 최상위 "cooldown_ticks"·"cost"), {@link SkillValues}
  */
 public record SkillNode(String id, String classId, String name, Set<Direction> directions, int tier, Kind kind,
-                        int maxRank, int requiredLevel, int requiredDirectionSp, String effect) {
+                        int maxRank, int requiredLevel, int requiredDirectionSp, String effect,
+                        String description, SkillValues values) {
 
     public enum Direction {
         ATTACK, SPELL, GUARD, FINESSE;
@@ -57,6 +60,26 @@ public record SkillNode(String id, String classId, String name, Set<Direction> d
 
     public SkillNode {
         directions = Set.copyOf(directions);
+        if (description == null) description = "";
+        if (values == null) values = SkillValues.EMPTY;
+    }
+
+    /** 수치 없는 노드 (시험·테스트용) */
+    public SkillNode(String id, String classId, String name, Set<Direction> directions, int tier, Kind kind,
+                     int maxRank, int requiredLevel, int requiredDirectionSp, String effect) {
+        this(id, classId, name, directions, tier, kind, maxRank, requiredLevel, requiredDirectionSp, effect, "", SkillValues.EMPTY);
+    }
+
+    public double value(String key, int rank) {
+        return values.get(key, rank, 0.0);
+    }
+
+    public int cooldownTicks(int rank) {
+        return (int) Math.round(values.get(SkillValues.COOLDOWN, rank, 0.0));
+    }
+
+    public double cost(int rank) {
+        return values.get(SkillValues.COST, rank, 0.0);
     }
 
     public boolean mixed() {
@@ -89,7 +112,14 @@ public record SkillNode(String id, String classId, String name, Set<Direction> d
         if (level < 1 || dirSp < 0) throw new IllegalArgumentException(id + ": 요구 레벨 1 이상, 선행 SP 0 이상");
         String name = json.has("name") ? json.get("name").getAsString() : id;
         String effect = json.has("effect") ? json.get("effect").getAsString() : "";
-        return new SkillNode(id, cls, name, dirs, tier, kind, maxRank, level, dirSp, effect);
+        String description = json.has("description") ? json.get("description").getAsString() : "";
+        SkillValues values;
+        try {
+            values = SkillValues.parse(json, maxRank);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(id + ": " + e.getMessage());
+        }
+        return new SkillNode(id, cls, name, dirs, tier, kind, maxRank, level, dirSp, effect, description, values);
     }
 
     private static JsonElement req(JsonObject o, String key) {

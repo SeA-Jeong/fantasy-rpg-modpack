@@ -70,6 +70,20 @@ public final class RpgNetwork {
         }
     }
 
+    /** 스킬 쿨타임 시작 (남은 틱) */
+    public record Cooldown(String nodeId, int ticks) implements CustomPacketPayload {
+        public static final Type<Cooldown> TYPE = new Type<>(id("cooldown"));
+        public static final StreamCodec<ByteBuf, Cooldown> CODEC = StreamCodec.composite(
+                ByteBufCodecs.STRING_UTF8, Cooldown::nodeId,
+                ByteBufCodecs.VAR_INT, Cooldown::ticks,
+                Cooldown::new);
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
     /** 클라 → 서버 요청. action: {@link SkillService.ActionType} 순서 번호 */
     public record Action(int action, String nodeId, int slot) implements CustomPacketPayload {
         public static final Type<Action> TYPE = new Type<>(id("action"));
@@ -94,6 +108,7 @@ public final class RpgNetwork {
         r.playToClient(State.TYPE, State.CODEC, (p, ctx) -> ctx.enqueueWork(() -> ClientRpgState.acceptState(p.tag())));
         r.playToClient(Defs.TYPE, Defs.CODEC, (p, ctx) -> ctx.enqueueWork(() -> ClientRpgState.acceptDefs(p.classId(), p.nodes(), p.passives())));
         r.playToClient(Core.TYPE, Core.CODEC, (p, ctx) -> ctx.enqueueWork(() -> ClientRpgState.acceptCore(p.coreId(), p.value(), p.max())));
+        r.playToClient(Cooldown.TYPE, Cooldown.CODEC, (p, ctx) -> ctx.enqueueWork(() -> ClientRpgState.acceptCooldown(p.nodeId(), p.ticks())));
         r.playToServer(Action.TYPE, Action.CODEC, (p, ctx) -> ctx.enqueueWork(() -> {
             if (ctx.player() instanceof ServerPlayer sp) SkillService.handle(sp, p.action(), p.nodeId(), p.slot());
         }));
