@@ -1,0 +1,13 @@
+{
+  "_comment": "시험용 노드(규칙 확인 전용, 효과 없음). 배포판에는 넣지 않음",
+  "id": "fantasyrpg:test/mage/attack_guard",
+  "name": "시험 혼합",
+  "directions": [
+    "attack",
+    "guard"
+  ],
+  "kind": "active",
+  "max_rank": 3,
+  "required_level": 30,
+  "required_direction_sp": 8
+}
