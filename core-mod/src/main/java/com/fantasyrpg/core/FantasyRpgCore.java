@@ -1,11 +1,9 @@
 package com.fantasyrpg.core;
 
 import com.fantasyrpg.core.command.RpgCommands;
-import com.fantasyrpg.core.gear.armorcap.ArmorCapService;
-import com.fantasyrpg.core.gear.armorcap.VanillaArmorTuning;
+import com.fantasyrpg.core.gear.vanilla.VanillaArmorTuning;
 import com.fantasyrpg.core.resist.MobResistanceManager;
 import com.mojang.logging.LogUtils;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -31,9 +29,6 @@ public final class FantasyRpgCore {
         NeoForge.EVENT_BUS.addListener(FantasyRpgCore::onAddReloadListeners);
         NeoForge.EVENT_BUS.addListener(FantasyRpgCore::onRegisterCommands);
 
-        // 방어 등급 상한 (서버): 매 틱 끝 + 피격 직전(다른 모드 처리 뒤에 최신 속성으로 맞추도록 가장 낮은 우선순위)
-        NeoForge.EVENT_BUS.addListener(ArmorCapService::onPlayerTick);
-        NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, ArmorCapService::onIncomingDamage);
         // 바닐라 다이아·네더라이트 갑옷 능력치 조정 (아이템은 그대로)
         NeoForge.EVENT_BUS.addListener(VanillaArmorTuning::onItemAttributes);
         // TODO: playerdata 첨부 데이터, skilltree 데이터 로더 등록

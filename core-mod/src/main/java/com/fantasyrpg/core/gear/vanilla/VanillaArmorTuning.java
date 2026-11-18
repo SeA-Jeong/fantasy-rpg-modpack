@@ -1,4 +1,4 @@
-package com.fantasyrpg.core.gear.armorcap;
+package com.fantasyrpg.core.gear.vanilla;
 
 import com.fantasyrpg.core.RpgConfig;
 import net.minecraft.core.Holder;
@@ -21,7 +21,7 @@ import java.util.List;
  * 수정자의 값만 바꾼다. 수정자의 id·연산·장착 칸은 원래 것을 그대로 쓴다. 철 갑옷(15/0)은 바닐라와 같아서 건드리지 않는다.
  * 넉백 저항은 바꾸지 않는다.
  *
- * <p>착용자 전체 상한({@link ArmorCapService})과는 따로 동작한다. 여기서 바꾼 값이 상한 계산의 입력이 되므로 두 번 깎이지 않는다.
+ * <p>2026-11-18 방어 등급 상한을 없앴다. 이 조정은 모드 계열 방어구가 바닐라보다 높은 능력치를 갖게 하는 기준선으로 남긴다.
  */
 public final class VanillaArmorTuning {
     private VanillaArmorTuning() {

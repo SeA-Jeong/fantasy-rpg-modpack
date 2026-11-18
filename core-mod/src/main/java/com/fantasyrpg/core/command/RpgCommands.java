@@ -33,7 +33,6 @@ import static net.minecraft.commands.Commands.literal;
  * /rpg simulate &lt;W&gt; &lt;Cp&gt; &lt;Cm&gt; &lt;Rp&gt; &lt;Rm&gt; [Pp] [Pm] [치명타배율]   — 숫자만으로 계산
  * /rpg resist &lt;대상&gt;                                       — 대상의 저항 데이터
  * /rpg hit &lt;대상&gt; &lt;W&gt; &lt;Cp&gt; &lt;Cm&gt; [Pp] [Pm] [치명타배율]        — 대상 저항으로 계산 후 실제 피해
- * /rpg armorcap info|grade|refresh ...                       — 방어 등급 상한 ({@link ArmorCapCommands})
  * </pre>
  * 비율 값은 0~1로 입력한다 (예: 25% → 0.25).
  */
@@ -59,8 +58,7 @@ public final class RpgCommands {
                                 .then(argument("W", doubleArg(0))
                                         .then(argument("Cp", doubleArg(0))
                                                 .then(withOptionalTail(argument("Cm", doubleArg(0)),
-                                                        RpgCommands::hit))))))
-                .then(ArmorCapCommands.node()));
+                                                        RpgCommands::hit)))))));
     }
 
     /** [Pp] [Pm] [치명타배율] 선택 인자를 붙인다. 각 단계에서 실행 가능. */
