@@ -41,7 +41,7 @@ public final class SkillService {
     private SkillService() {
     }
 
-    public enum ActionType { INVEST, REFUND, FULL_RESET, EQUIP, UNEQUIP, PASSIVE_INVEST, PASSIVE_REFUND, CAST }
+    public enum ActionType { INVEST, REFUND, FULL_RESET, EQUIP, UNEQUIP, PASSIVE_INVEST, PASSIVE_REFUND, CAST, SET_MASTERY }
 
     public static void handle(ServerPlayer p, int action, String id, int slot) {
         if (action < 0 || action >= ActionType.values().length) return;
@@ -54,6 +54,7 @@ public final class SkillService {
             case PASSIVE_INVEST -> passiveInvest(p, id);
             case PASSIVE_REFUND -> passiveRefund(p, id);
             case CAST -> cast(p, slot);
+            case SET_MASTERY -> setMastery(p, id);
         }
     }
 
@@ -78,7 +79,40 @@ public final class SkillService {
             fail(p, r);
             return false;
         }
-        RpgProgress.set(p, d.withNodeRanks(SkillTreeRules.withRank(d.nodeRanks(), nodeId, 1), d.slots()));
+        RpgPlayerData next = d.withNodeRanks(SkillTreeRules.withRank(d.nodeRanks(), nodeId, 1), d.slots());
+        // 처음 배운 마스터리는 자동 활성
+        if (nodes.get(nodeId).kind() == SkillNode.Kind.MASTERY && next.activeMastery().isEmpty()) next = next.withActiveMastery(nodeId);
+        RpgProgress.set(p, next);
+        return true;
+    }
+
+    /** 안전 판정 반경·시간 [초안]: 16칸 안 적대 몬스터 없음 + 10초 동안 피해 없음 */
+    public static final double SAFE_RADIUS = 16;
+    public static final int SAFE_TICKS = 200;
+
+    public static boolean isSafe(ServerPlayer p) {
+        if (SkillRuntime.now(p) - SkillRuntime.state(p).lastHurtTick < SAFE_TICKS) return false;
+        return p.level().getEntitiesOfClass(net.minecraft.world.entity.Mob.class, p.getBoundingBox().inflate(SAFE_RADIUS),
+                m -> m instanceof net.minecraft.world.entity.monster.Enemy && m.isAlive()).isEmpty();
+    }
+
+    /** 활성 마스터리 바꾸기 (기획 2.4: 활성 1개, 안전할 때만) */
+    public static boolean setMastery(ServerPlayer p, String nodeId) {
+        RpgPlayerData d = RpgProgress.get(p);
+        RpgClass c = d.classOrNull();
+        if (c == null) return false;
+        SkillNode n = SkillData.nodes(c.id()).get(nodeId);
+        if (n == null || n.kind() != SkillNode.Kind.MASTERY || d.nodeRanks().getOrDefault(nodeId, 0) <= 0) {
+            tell(p, "message.fantasyrpg.skill.not_learned", ChatFormatting.RED);
+            return false;
+        }
+        if (nodeId.equals(d.activeMastery())) return true;
+        if (!isSafe(p)) {
+            tell(p, "message.fantasyrpg.skill.mastery_unsafe", ChatFormatting.RED);
+            return false;
+        }
+        RpgProgress.set(p, d.withActiveMastery(nodeId));
+        tell(p, "message.fantasyrpg.skill.mastery_set", ChatFormatting.GREEN, n.name());
         return true;
     }
 
@@ -312,6 +346,7 @@ public final class SkillService {
         t.putInt("passive_points", PassiveNode.points(grade));
         t.putInt("passive_spent", SkillTreeRules.spent(d.passiveRanks()));
         t.putInt("free_resets", freeResets(p, d));
+        t.putString("active_mastery", d.activeMastery());
         CompoundTag ranks = new CompoundTag();
         d.nodeRanks().forEach(ranks::putInt);
         t.put("ranks", ranks);

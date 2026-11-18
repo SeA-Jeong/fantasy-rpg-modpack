@@ -39,6 +39,12 @@ public final class SkillPassives {
         }
     }
 
+    /** 효과가 있는 랭크: 마스터리는 활성 1개만 (기획 2.4) */
+    public static int rankOf(RpgPlayerData d, SkillNode n) {
+        if (n.kind() == SkillNode.Kind.MASTERY && !n.id().equals(d.activeMastery())) return 0;
+        return d.nodeRanks().getOrDefault(n.id(), 0);
+    }
+
     /** 배운 노드 전부 */
     public static List<Learned> allLearned(ServerPlayer p) {
         RpgPlayerData d = RpgProgress.get(p);
@@ -46,7 +52,7 @@ public final class SkillPassives {
         if (c == null || d.nodeRanks().isEmpty()) return List.of();
         List<Learned> out = new java.util.ArrayList<>();
         for (SkillNode n : SkillData.nodes(c.id()).values()) {
-            int r = d.nodeRanks().getOrDefault(n.id(), 0);
+            int r = rankOf(d, n);
             if (r > 0) out.add(new Learned(n, r, p));
         }
         return out;
@@ -58,7 +64,7 @@ public final class SkillPassives {
         if (c == null) return null;
         for (SkillNode n : SkillData.nodes(c.id()).values()) {
             if (!effectId.equals(n.effect())) continue;
-            int r = d.nodeRanks().getOrDefault(n.id(), 0);
+            int r = rankOf(d, n);
             if (r > 0) return new Learned(n, r, p);
         }
         return null;
@@ -73,7 +79,7 @@ public final class SkillPassives {
         double total = 0;
         for (SkillNode n : SkillData.nodes(c.id()).values()) {
             if (n.mods().isEmpty()) continue;
-            int r = d.nodeRanks().getOrDefault(n.id(), 0);
+            int r = rankOf(d, n);
             if (r <= 0) continue;
             for (SkillNode.Mod m : n.mods()) if (m.effect().equals(effect) && m.key().equals(key)) total += m.at(r);
         }

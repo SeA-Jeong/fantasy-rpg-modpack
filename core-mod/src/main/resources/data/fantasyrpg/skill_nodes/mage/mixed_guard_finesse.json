@@ -1,0 +1,23 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_마스터리_혼합_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:mage/mixed_guard_finesse",
+  "name": "결계 도약",
+  "description": "점멸하면 흡수 체력 3(5초).",
+  "directions": [
+    "guard",
+    "finesse"
+  ],
+  "kind": "passive",
+  "max_rank": 1,
+  "required_level": 1,
+  "required_direction_sp": 8,
+  "effect": "fantasyrpg:mage_mixed_barrier_blink",
+  "values": {},
+  "modifies": [
+    {
+      "effect": "fantasyrpg:mage_blink",
+      "key": "blink_absorption",
+      "add": 3
+    }
+  ]
+}

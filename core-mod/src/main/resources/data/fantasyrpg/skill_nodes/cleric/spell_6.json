@@ -1,0 +1,25 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_마스터리_혼합_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:cleric/spell_6",
+  "name": "대사제",
+  "description": "회복량 +15/25/35%, 스킬 마법 피해 +4/6/8%.",
+  "direction": "spell",
+  "tier": 6,
+  "kind": "mastery",
+  "max_rank": 3,
+  "required_level": 60,
+  "required_direction_sp": 20,
+  "effect": "fantasyrpg:cleric_mastery_high_priest",
+  "values": {
+    "heal_bonus": [
+      0.15,
+      0.25,
+      0.35
+    ],
+    "skill_magic_bonus": [
+      0.04,
+      0.06,
+      0.08
+    ]
+  }
+}

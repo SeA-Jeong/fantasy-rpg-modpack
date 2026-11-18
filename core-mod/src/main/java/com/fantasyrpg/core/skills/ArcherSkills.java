@@ -52,7 +52,7 @@ public final class ArcherSkills {
         p.serverLevel().playSound(null, p.blockPosition(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 0.7F);
         boolean first = true;
         for (LivingEntity t : line) {
-            c.hit(t, c.v("physical"), 0, mult, false);
+            c.hit(t, c.v("physical"), c.v("magic"), mult, false); // magic: 혼합 노드 원소 관통
             if (first) SkillTargets.slow(t, (int) c.v("stun_ticks"), 3);
             first = false;
         }

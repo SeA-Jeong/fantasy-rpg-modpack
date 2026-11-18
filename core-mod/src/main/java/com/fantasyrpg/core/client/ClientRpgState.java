@@ -40,6 +40,7 @@ public final class ClientRpgState {
     public static volatile float coreValue;
     public static volatile float coreMax;
     public static volatile boolean received;
+    public static volatile String activeMastery = "";
     /** 노드 id → 쿨타임 끝나는 시각(ms) */
     public static final Map<String, Long> cooldownEnd = new java.util.concurrent.ConcurrentHashMap<>();
 
@@ -48,7 +49,7 @@ public final class ClientRpgState {
         double total = 0;
         for (SkillNode n : nodes.values()) {
             int r = ranks.getOrDefault(n.id(), 0);
-            if (r <= 0) continue;
+            if (r <= 0 || (n.kind() == SkillNode.Kind.MASTERY && !n.id().equals(activeMastery))) continue;
             for (SkillNode.Mod m : n.mods()) if (m.effect().equals(effect) && m.key().equals(key)) total += m.at(r);
         }
         return total;
@@ -59,7 +60,7 @@ public final class ClientRpgState {
         List<String> out = new ArrayList<>();
         for (SkillNode n : nodes.values()) {
             int r = ranks.getOrDefault(n.id(), 0);
-            if (r <= 0) continue;
+            if (r <= 0 || (n.kind() == SkillNode.Kind.MASTERY && !n.id().equals(activeMastery))) continue;
             for (SkillNode.Mod m : n.mods()) {
                 if (m.effect().equals(effect) && m.at(r) != 0) {
                     out.add(n.name() + " " + r);
@@ -91,6 +92,7 @@ public final class ClientRpgState {
         passivePoints = t.getInt("passive_points");
         passiveSpent = t.getInt("passive_spent");
         freeResets = t.getInt("free_resets");
+        activeMastery = t.getString("active_mastery");
         ranks = readMap(t.getCompound("ranks"));
         passiveRanks = readMap(t.getCompound("passive_ranks"));
         List<String> s = new ArrayList<>();

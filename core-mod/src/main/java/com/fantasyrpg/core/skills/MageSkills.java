@@ -146,6 +146,7 @@ public final class MageSkills {
         p.resetFallDistance();
         l.sendParticles(ParticleTypes.REVERSE_PORTAL, best.x, best.y + 1, best.z, 30, 0.3, 0.6, 0.3, 0.1);
         l.playSound(null, best.x, best.y, best.z, SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 0.7F, 1.4F);
+        SkillPassives.grantAbsorption(p, "blink", c.v("blink_absorption"), 100); // 혼합 노드 결계 도약
         double after = c.v("afterimage_magic");
         if (after > 0) {
             double r = c.v("afterimage_radius");

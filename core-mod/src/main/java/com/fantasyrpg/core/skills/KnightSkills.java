@@ -121,6 +121,11 @@ public final class KnightSkills {
             int left = SkillRuntime.cooldownLeft(p, guard.node().id());
             SkillRuntime.setCooldown(p, guard.node().id(), (int) Math.round(left * guard.v("parry_cooldown_ratio")));
         }
+        // 혼합 노드 돌격 방벽: 패리하면 창돌진 쿨타임 초기화
+        if (SkillPassives.sum(p, "parry_reset_charge") > 0) {
+            SkillPassives.Learned charge = SkillPassives.learned(p, SkillIds.K_CHARGE);
+            if (charge != null) SkillRuntime.setCooldown(p, charge.node().id(), 0);
+        }
         SkillPassives.Learned rhythm = SkillPassives.learned(p, SkillIds.K_BATTLE_RHYTHM, 5);
         if (rhythm != null) st.forceCritBasic = true;
         // 철벽 숙련 3랭크: 흡수 체력
@@ -153,7 +158,7 @@ public final class KnightSkills {
         for (int i = 0; i < hits; i++) {
             Runnable thrust = () -> {
                 if (p.isRemoved() || !p.isAlive() || !t.isAlive() || t.distanceTo(p) > c.v("range") + 1.5) return;
-                c.hit(t, c.v("physical"), 0, mult, false);
+                c.hit(t, c.v("physical"), c.v("magic"), mult, false); // magic: 혼합 노드 마력 반격
                 p.serverLevel().sendParticles(afterParry ? ParticleTypes.CRIT : ParticleTypes.ENCHANTED_HIT,
                         t.getX(), t.getY(0.6), t.getZ(), 10, 0.2, 0.2, 0.2, 0.2);
                 p.serverLevel().playSound(null, t.blockPosition(), SoundEvents.TRIDENT_HIT, SoundSource.PLAYERS, 0.8F, 1.3F);

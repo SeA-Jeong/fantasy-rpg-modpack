@@ -103,6 +103,11 @@ public final class RogueSkills {
     static void evaded(ServerPlayer p, SkillPassives.Learned evade, LivingEntity attacker) {
         CoreService.gain(p, evade.v("evade_core"));
         SkillRuntime.state(p).lastEvadeSuccessTick = SkillRuntime.now(p);
+        // 혼합 노드 그림자 은신: 투명·다음 스킬 피해
+        int invis = (int) SkillPassives.sum(p, "evade_invis_ticks");
+        if (invis > 0) p.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.INVISIBILITY, invis, 0, false, false));
+        double next = SkillPassives.sum(p, "evade_next_bonus");
+        if (next > 0) SkillRuntime.state(p).nextSkillBonus = Math.max(SkillRuntime.state(p).nextSkillBonus, next);
         // 그림자 몸놀림 5랭크: 이동 속도
         SkillPassives.timedAttribute(p, "evade_speed", net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED,
                 evade.v("evade_speed"), net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL, 40);

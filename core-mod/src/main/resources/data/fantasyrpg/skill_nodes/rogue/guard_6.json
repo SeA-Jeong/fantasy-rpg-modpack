@@ -1,0 +1,31 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_마스터리_혼합_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:rogue/guard_6",
+  "name": "유령",
+  "description": "그림자 회피 +0.1/0.2/0.3초, 체력 35% 이하일 때 받는 피해 −5/10/15%.",
+  "direction": "guard",
+  "tier": 6,
+  "kind": "mastery",
+  "max_rank": 3,
+  "required_level": 60,
+  "required_direction_sp": 20,
+  "effect": "fantasyrpg:rogue_mastery_phantom",
+  "values": {
+    "low_health_reduction": [
+      0.05,
+      0.1,
+      0.15
+    ]
+  },
+  "modifies": [
+    {
+      "effect": "fantasyrpg:rogue_shadow_evade",
+      "key": "evade_ticks",
+      "add": [
+        2,
+        4,
+        6
+      ]
+    }
+  ]
+}

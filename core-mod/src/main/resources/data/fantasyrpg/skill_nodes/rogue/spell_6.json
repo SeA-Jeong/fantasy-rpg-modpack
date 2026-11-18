@@ -1,0 +1,31 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_마스터리_혼합_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:rogue/spell_6",
+  "name": "그림자술사",
+  "description": "스킬 마법 피해 +8/12/16%, 그림자 분신 +1/2/3초.",
+  "direction": "spell",
+  "tier": 6,
+  "kind": "mastery",
+  "max_rank": 3,
+  "required_level": 60,
+  "required_direction_sp": 20,
+  "effect": "fantasyrpg:rogue_mastery_shadowmancer",
+  "values": {
+    "skill_magic_bonus": [
+      0.08,
+      0.12,
+      0.16
+    ]
+  },
+  "modifies": [
+    {
+      "effect": "fantasyrpg:rogue_ult_shadow_clone",
+      "key": "duration_ticks",
+      "add": [
+        20,
+        40,
+        60
+      ]
+    }
+  ]
+}
