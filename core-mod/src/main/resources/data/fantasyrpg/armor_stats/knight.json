@@ -1,0 +1,17 @@
+{
+  "_comment": "2026-11-18 확정 수치 (claude/장비등급제한_설계.md v3 1-4·1-5). 세트 합계만 적고 부위 값은 3:8:6:3으로 자동 배분. 데이터팩에 같은 경로 파일을 두면 덮어씀.",
+  "family": "knight",
+  "class": "heavy",
+  "tiers": [
+    {"tier": 1, "armor": 13, "toughness": 1, "knockback": 0},
+    {"tier": 2, "armor": 16, "toughness": 2, "knockback": 0},
+    {"tier": 3, "armor": 21, "toughness": 9, "knockback": 0.05},
+    {"tier": 4, "armor": 22, "toughness": 9, "knockback": 0.05},
+    {"tier": 5, "armor": 23, "toughness": 10, "knockback": 0.1},
+    {"tier": 6, "armor": 24, "toughness": 11, "knockback": 0.15},
+    {"tier": 7, "armor": 26, "toughness": 13, "knockback": 0.2},
+    {"tier": 8, "armor": 27, "toughness": 14, "knockback": 0.25},
+    {"tier": 9, "armor": 28, "toughness": 15, "knockback": 0.3},
+    {"tier": 10, "armor": 30, "toughness": 16, "knockback": 0.35}
+  ]
+}

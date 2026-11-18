@@ -1,0 +1,17 @@
+{
+  "_comment": "2026-11-18 확정 수치 (claude/장비등급제한_설계.md v3 1-4·1-5). 세트 합계만 적고 부위 값은 3:8:6:3으로 자동 배분. 데이터팩에 같은 경로 파일을 두면 덮어씀.",
+  "family": "arcane",
+  "class": "light",
+  "tiers": [
+    {"tier": 1, "armor": 12, "toughness": 0, "knockback": 0},
+    {"tier": 2, "armor": 15, "toughness": 1, "knockback": 0},
+    {"tier": 3, "armor": 19, "toughness": 6, "knockback": 0},
+    {"tier": 4, "armor": 20, "toughness": 7, "knockback": 0},
+    {"tier": 5, "armor": 20, "toughness": 8, "knockback": 0},
+    {"tier": 6, "armor": 21, "toughness": 9, "knockback": 0},
+    {"tier": 7, "armor": 22, "toughness": 10, "knockback": 0},
+    {"tier": 8, "armor": 22, "toughness": 11, "knockback": 0},
+    {"tier": 9, "armor": 23, "toughness": 12, "knockback": 0},
+    {"tier": 10, "armor": 24, "toughness": 12, "knockback": 0}
+  ]
+}
