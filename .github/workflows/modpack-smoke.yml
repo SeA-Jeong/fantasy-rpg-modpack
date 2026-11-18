@@ -68,6 +68,8 @@ jobs:
             --command "rpg simulate 100 2.0 0 0.25 0=>150"
           mkdir -p smoke-logs/stage1 && cp -r server/logs smoke-logs/stage1/ 2>/dev/null || true
           cp -r server/crash-reports smoke-logs/stage1/ 2>/dev/null || true
+          # 계열 방어구 수치표 5계열이 오류 없이 로드됐는지
+          grep -E "\[방어구\] 계열 수치표 5개 로드, 오류 0건" server/logs/latest.log
 
       - name: "통합 팩(.mrpack) 만들기·설치"
         run: |
