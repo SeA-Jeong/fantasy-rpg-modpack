@@ -7,6 +7,7 @@ import com.fantasyrpg.core.playerdata.RpgClass;
 import com.fantasyrpg.core.playerdata.RpgProgress;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import com.fantasyrpg.core.classcore.CoreService;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -74,6 +75,7 @@ public final class CombatEvents {
             }
             RpgDamage.apply(target, p, in);
             p.setLastHurtMob(target);
+            if (v != WeaponPermission.Verdict.UNARMED) CoreService.onEvent(p, CoreService.BASIC_ATTACK_HIT);
         } finally {
             p.resetAttackStrengthTicker(); // 취소로 빠진 바닐라 쿨타임 초기화를 대신함
         }
@@ -129,6 +131,7 @@ public final class CombatEvents {
                 shot.getDouble("magic"), shot.getDouble("power"), p);
         RpgDamage.apply(target, p, in);
         p.setLastHurtMob(target);
+        CoreService.onEvent(p, CoreService.BASIC_ATTACK_HIT);
     }
 
     // ── 다른 원거리 무기 사용 막기 ──

@@ -1,0 +1,10 @@
+{
+  "_comment": "시험용 공통 패시브. 배포판에는 넣지 않음",
+  "id": "fantasyrpg:test/swiftness",
+  "name": "시험 질주",
+  "max_rank": 3,
+  "required_grade": 2,
+  "attribute": "minecraft:generic.movement_speed",
+  "operation": "add_multiplied_base",
+  "per_rank": 0.02
+}

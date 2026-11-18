@@ -1,6 +1,8 @@
 package com.fantasyrpg.core.playerdata;
 
 import com.fantasyrpg.core.FantasyRpgCore;
+import com.fantasyrpg.core.classcore.CoreService;
+import com.fantasyrpg.core.skilltree.SkillService;
 import io.github.aswq0258.magiccity.api.ChapterFirstClearEvent;
 import io.github.aswq0258.magiccity.api.MagicCityApi;
 import net.minecraft.ChatFormatting;
@@ -49,8 +51,16 @@ public final class RpgProgress {
         return p.getData(PLAYER);
     }
 
-    private static void set(ServerPlayer p, RpgPlayerData d) {
+    /** 저장하고 클라이언트에 상태를 보낸다 (스킬트리 화면·HUD) */
+    public static void set(ServerPlayer p, RpgPlayerData d) {
+        RpgPlayerData before = p.getData(PLAYER);
         p.setData(PLAYER, d);
+        if (p.connection == null) return; // 접속 처리 중
+        SkillService.syncState(p);
+        if (!before.rpgClass().equals(d.rpgClass())) {
+            SkillService.syncDefs(p);
+            CoreService.reset(p);
+        }
     }
 
     private static ProgressionSettings settings() {
@@ -128,6 +138,7 @@ public final class RpgProgress {
 
     public static void reset(ServerPlayer p) {
         set(p, RpgPlayerData.DEFAULT);
+        SkillService.applyPassives(p);
     }
 
     // ── 이벤트 ──
@@ -154,6 +165,16 @@ public final class RpgProgress {
         if (event.getEntity() instanceof ServerPlayer p) {
             reconcileClearBonus(p);
             applyHeldXp(p);
+            SkillService.refreshAll(p);
         }
+    }
+
+    /** 부활·차원 이동 뒤: 임시 수정자(공통 패시브)와 클라이언트 상태를 다시 */
+    public static void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        if (event.getEntity() instanceof ServerPlayer p) SkillService.refreshAll(p);
+    }
+
+    public static void onChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+        if (event.getEntity() instanceof ServerPlayer p) SkillService.refreshAll(p);
     }
 }
