@@ -7,6 +7,8 @@ import com.fantasyrpg.core.gear.armor.GearRegistry;
 import com.fantasyrpg.core.gear.rune.RuneEvents;
 import com.fantasyrpg.core.gear.rune.RuneRegistry;
 import com.fantasyrpg.core.gear.rune.RuneStatManager;
+import com.fantasyrpg.core.playerdata.ProgressionManager;
+import com.fantasyrpg.core.playerdata.RpgProgress;
 import com.fantasyrpg.core.resist.MobResistanceManager;
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
@@ -42,13 +44,19 @@ public final class FantasyRpgCore {
         NeoForge.EVENT_BUS.addListener(RuneEvents::onAnvil);
         NeoForge.EVENT_BUS.addListener(RuneEvents::onTooltip);
 
-        // TODO: playerdata 첨부 데이터, skilltree 데이터 로더 등록
+        // 플레이어 성장: 데이터 첨부(직업·레벨·경험치·SP), 몬스터 처치·챕터 첫 완료 경험치, 접속 때 보너스 SP 맞추기
+        RpgProgress.register(modEventBus);
+        NeoForge.EVENT_BUS.addListener(RpgProgress::onLivingDeath);
+        NeoForge.EVENT_BUS.addListener(RpgProgress::onChapterFirstClear);
+        NeoForge.EVENT_BUS.addListener(RpgProgress::onLogin);
+        // TODO: skilltree 데이터 로더 등록
     }
 
     private static void onAddReloadListeners(AddReloadListenerEvent event) {
         event.addListener(MobResistanceManager.INSTANCE);
         event.addListener(ArmorStatManager.INSTANCE);
         event.addListener(RuneStatManager.INSTANCE);
+        event.addListener(ProgressionManager.INSTANCE);
     }
 
     private static void onRegisterCommands(RegisterCommandsEvent event) {

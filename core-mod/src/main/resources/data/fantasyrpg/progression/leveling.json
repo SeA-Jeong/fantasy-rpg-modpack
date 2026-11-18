@@ -1,0 +1,6 @@
+{
+  "_comment": "[초안] 레벨 곡선과 챕터 최초 완료 경험치 (claude/플레이어성장_설계.md 4절). need(L) = base + step × (L − 1). 데이터팩에 같은 경로 파일을 두면 덮어씀.",
+  "curve": {"base": 100, "step": 20},
+  "max_level": 60,
+  "chapter_clear_xp_per_grade": 400
+}

@@ -42,5 +42,15 @@
   "armor.fantasyrpg.part.helmet": "투구",
   "armor.fantasyrpg.part.chestplate": "흉갑",
   "armor.fantasyrpg.part.leggings": "각반",
-  "armor.fantasyrpg.part.boots": "장화"
+  "armor.fantasyrpg.part.boots": "장화",
+  "class.fantasyrpg.warrior": "전사",
+  "class.fantasyrpg.knight": "기사",
+  "class.fantasyrpg.rogue": "도적",
+  "class.fantasyrpg.archer": "궁수",
+  "class.fantasyrpg.mage": "마법사",
+  "class.fantasyrpg.cleric": "전투사제",
+  "message.fantasyrpg.level_up": "레벨 업! Lv.%s (SP +%s)",
+  "message.fantasyrpg.xp_gain": "경험치 +%s (%s/%s)",
+  "message.fantasyrpg.xp_capped": "레벨 상한 Lv.%s — 메인 챕터를 완료하면 상한이 오릅니다",
+  "message.fantasyrpg.clear_bonus_sp": "챕터 완료 보너스 SP +%s"
 }

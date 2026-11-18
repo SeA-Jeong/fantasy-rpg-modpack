@@ -35,6 +35,7 @@ import static net.minecraft.commands.Commands.literal;
  * /rpg hit &lt;대상&gt; &lt;W&gt; &lt;Cp&gt; &lt;Cm&gt; [Pp] [Pm] [치명타배율]        — 대상 저항으로 계산 후 실제 피해
  * /rpg armor give|tier|info                              — 계열 방어구 시험 ({@link ArmorCommands})
  * /rpg rune give|abrasive|extractor|insert|clear         — 룬석 시험 ({@link RuneCommands})
+ * /rpg player info|reset, /rpg class choose|change, /rpg xp add — 성장 시험 ({@link PlayerCommands})
  * </pre>
  * 비율 값은 0~1로 입력한다 (예: 25% → 0.25).
  */
@@ -57,6 +58,9 @@ public final class RpgCommands {
                                 .executes(RpgCommands::resist)))
                 .then(ArmorCommands.node())
                 .then(RuneCommands.node())
+                .then(PlayerCommands.player())
+                .then(PlayerCommands.rpgClass())
+                .then(PlayerCommands.xp())
                 .then(literal("hit")
                         .then(argument("target", EntityArgument.entity())
                                 .then(argument("W", doubleArg(0))

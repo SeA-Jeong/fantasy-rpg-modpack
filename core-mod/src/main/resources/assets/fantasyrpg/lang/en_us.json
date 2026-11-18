@@ -42,5 +42,15 @@
   "armor.fantasyrpg.part.helmet": "Helmet",
   "armor.fantasyrpg.part.chestplate": "Chestplate",
   "armor.fantasyrpg.part.leggings": "Leggings",
-  "armor.fantasyrpg.part.boots": "Boots"
+  "armor.fantasyrpg.part.boots": "Boots",
+  "class.fantasyrpg.warrior": "Warrior",
+  "class.fantasyrpg.knight": "Knight",
+  "class.fantasyrpg.rogue": "Rogue",
+  "class.fantasyrpg.archer": "Archer",
+  "class.fantasyrpg.mage": "Mage",
+  "class.fantasyrpg.cleric": "Battle Cleric",
+  "message.fantasyrpg.level_up": "Level up! Lv.%s (SP +%s)",
+  "message.fantasyrpg.xp_gain": "XP +%s (%s/%s)",
+  "message.fantasyrpg.xp_capped": "Level cap Lv.%s — complete main chapters to raise it",
+  "message.fantasyrpg.clear_bonus_sp": "Chapter clear bonus SP +%s"
 }
