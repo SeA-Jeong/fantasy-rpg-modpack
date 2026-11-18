@@ -10,7 +10,7 @@
 | 항목 | 상태 |
 |---|---|
 | 기준 기획 | `docs/design/직업_전투시스템_v0.4.md` |
-| 구현 진행 | 8.3장 **1단계(피해 계산 엔진) 완료**. 별도 작업으로 **방어 등급 상한 최소 기능(v0.2) 구현, 게임 확인 전** (브랜치 `claude/armor-grade-cap`, 수치는 JUnit으로 재현됨) → 다음은 v0.2 게임 확인. **Better Combat 연동 실험 준비**(순수 로직·컴파일 의존성)는 브랜치 `claude/combat-experiment-prep` |
+| 구현 진행 | 8.3장 **1단계(피해 계산 엔진) 완료**. **방어 등급 상한은 2026-11-18 폐지**(코드 삭제, 게임 확인에서 1~9번 통과했던 판). 남은 것은 바닐라 다이아·네더라이트 조정. **Better Combat 연동 준비**(순수 로직·컴파일 의존성)는 `main`에 있음 |
 | 플랫폼 | Minecraft 1.21.1 / NeoForge **21.1.266** / Java 21 / ModDevGradle 2.0.141. **필수 의존 모드 magiccity** (JitPack `com.github.aswq0258:magic-city-mod:7eb93cc`, `gradle.properties`의 `magiccity_commit`) |
 | CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄). 모드 구성이 바뀌면 `modpack smoke`가 외부 모드 18개 + 우리 모드 2개로 **NeoForge 전용 서버를 실제 기동** |
 | 1차 외부 모드 구성 | `modpack/mods.lock.json` (필수 13 + 권장 5, 버전 고정). 2026-11-17 전용 서버 기동 통과 (run 44061047052). 클라이언트 실행은 아직 확인 안 함 |
@@ -30,7 +30,7 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - 필수 챕터 보스 저항 차이 검사 (기본 15%p 초과 시 경고, 20%p 초과 시 오류 로그)
 - RPG 피해 유형 `fantasyrpg:rpg`: 바닐라 방어구·보호 마법부여·무적 시간을 무시
 - 커맨드: `/rpg simulate`, `/rpg resist`, `/rpg hit` (권한 2)
-- **(v0.2, 게임 확인 전) 방어 등급 상한:** 플레이어 ARMOR·ARMOR_TOUGHNESS에 등급별 상한(1급 12/0 … 10급 20/12). 장신구·스킬·다른 모드 수정자 포함. 최종 곱셈형 임시 수정자 `fantasyrpg:grade_limit` 하나로 맞춤, 매 틱(상태가 바뀔 때만)과 피격 직전 갱신. `/rpg armorcap info|grade|refresh`
+- **방어 등급 상한: 2026-11-18 폐지.** 입은 갑옷 수치가 진행 등급과 무관하게 그대로 적용됨. 이전 구현(`gear/armorcap`, `/rpg armorcap`)은 커밋 `56c5bf0` 이전 기록과 복구 지점 `backup/main-before-cap-removal-2026-11-18`에 남음
 - **(v0.2, 게임 확인 전) 바닐라 갑옷 조정:** 다이아 18/2, 네더라이트 20/6 (아이템은 그대로, 능력치만). 철 15/0은 바닐라와 같음
 
 - **(준비, 게임 연결 없음) 무기 사용 권한·기본 공격 입력:** `combat/WeaponPermission`(정책 P1 판정), `combat/BasicAttackMath`(콤보 배율 정리·바닐라 충전 곡선). 아직 어떤 이벤트에도 연결하지 않음
@@ -57,19 +57,14 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 | `resist/MobResistanceManager` | 데이터팩 저항 로더 (싱글턴, 리로드 리스너) |
 | `resist/MobResistanceParser`, `ResistanceRules` | JSON 파싱, 보스 저항 차이 판정 (순수) |
 | `command/RpgCommands` | `/rpg` 커맨드 |
-| `command/ArmorCapCommands` | `/rpg armorcap` (상한 진단, 테스트용 등급 덮어쓰기) |
-| `gear/armorcap/ArmorCapDefaults` | **순수** 기본값(등급 상한·다이아·네더라이트). `RpgConfig` 기본값이 이를 가리킴 |
 | `combat/WeaponPermission`, `combat/BasicAttackMath` | **순수** 무기 사용 권한(P1)·기본 공격 입력 (연동 실험 준비, 미연결) |
-| `gear/armorcap/ArmorCapMath` | **순수 계산** (MC 비의존): 가상 교체 → 바닐라 순서 재계산(클램프 전 값) → 상한 → 최종 곱셈 보정 k, 적용 후 ulp 조정(`refine`) |
-| `gear/armorcap/ArmorCapService` | 플레이어 속성에 보정 수정자 적용. 상태값(등급·상한·기본값·수정자 목록·현재 보정) 비교, 재진입 방지, 40틱 연속 변경 시 호환성 경고(5분 1회) |
-| `gear/armorcap/VanillaArmorTuning` | `ItemAttributeModifierEvent`로 바닐라 다이아·네더라이트 갑옷 수정자 값 교체 |
-| `gear/armorcap/GradeSource` | 장비 등급 = `MagicCityApi.grade`(지금 1~6) + 테스트 덮어쓰기. magiccity에 `gearGrade`가 생기면 여기만 바꿈 |
+| `gear/vanilla/VanillaArmorTuning`, `VanillaArmorDefaults` | `ItemAttributeModifierEvent`로 바닐라 다이아(18/2)·네더라이트(20/6) 갑옷 수정자 값 교체. 기본값은 **순수** 클래스(`RpgConfig` 기본값이 가리킴). 모드 계열 방어구가 바닐라보다 높게 설계되는 기준선 |
 | `core-mod/src/main/resources/data/` | 피해 유형 정의, 바닐라 피해 태그 추가 |
-| `core-mod/src/test/` | JUnit 51개: 부록 A-1, 4.3장 표, 계산 순서, 저항 파싱·판정, 방어 상한 계산·v0.2 게임 수치 재현(`ArmorCapScenarioTest`), 무기 권한, 기본 공격 입력 |
+| `core-mod/src/test/` | JUnit 33개: 부록 A-1, 4.3장 표, 계산 순서, 저항 파싱·판정, 바닐라 조정값·피해(`VanillaArmorDamageTest`), 무기 권한, 기본 공격 입력 |
 | `tools/check_mods.py` | mods 폴더 의존성 검사 (자체 검사 `tools/test_check_mods.py`, CI) |
 | `modpack/mods.lock.json`, `tools/fetch_mods.py`, `tools/smoke_server.py`, `.github/workflows/modpack-smoke.yml` | 1차 외부 모드 고정 목록과 혼합 서버 기동 검사 (1단계 우리 모드만 → 전체 20개) |
 | `modpack/datapacks/fantasyrpg_content` | 실제 콘텐츠 데이터 (지금은 형식 견본만) |
-| `modpack/datapacks/fantasyrpg_test` | 테스트 전용 데이터 (좀비·스켈레톤·철골렘 저항, `function/armorcap/*` 방어 상한 시험 함수) |
+| `modpack/datapacks/fantasyrpg_test` | 테스트 전용 데이터 (좀비·스켈레톤·철골렘 저항, `function/armor/hit10` 피해 시험(받은 피해×1000 표시), 시험용 장신구 칸 반지·목걸이) |
 
 ## 데이터 형식
 
@@ -94,12 +89,9 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 | 11-16 | 치명타 확률 판정은 계산기 밖에서, 계산기는 배율만 받음 | 순수 계산의 재현성·테스트 용이성 |
 | 11-16 | RPG 피해는 무적 시간(i-frame)을 무시 | 다단 히트 스킬이 바닐라 0.5초 무적에 막히지 않게. 연타 제한은 스킬 쿨다운으로 관리 |
 | 11-16 | 보스 저항 차이 상한은 config 값 (0.15/0.20) | 8.4장: 테스트로 확정할 값 |
-| 11-17 | 방어구·작업대·방어 상한은 이 모드가 담당, magiccity는 진행도만 | 프로젝트 결정(통합문서 1절) |
-| 11-17 | 방어 상한은 피해량이 아니라 **속성값**을 맞춤 (최종 곱셈 임시 수정자) | 바닐라 방어 공식이 한 번만 계산, HUD와 서버 값 일치. 피해 이벤트에서 방어 공식을 다시 계산하지 않음 |
-| 11-17 | 보정 k는 첫 추정 뒤 **실제 getValue()로 다시 읽어 ulp 단위 조정** | 방어력은 정수 내림으로 쓰여 부동소수 오차로 1이 깎일 수 있음. Java 시뮬레이션 50만 건에서 첫 추정이 틀린 경우 약 10%, 조정 후 불일치 0 |
-| 11-17 | 계산 횟수 제한 없음, 상태가 바뀌면 같은 틱에도 다시 계산 | 피해 계산 시점의 정확성 우선 (프로젝트 결정) |
-| 11-17 | 등급은 지금 `MagicCityApi.grade`(1~6). 7~10급은 `/rpg armorcap grade`로만 시험 | magiccity에 `gearGrade` 미구현 (네더 원정 전에는 두 값이 같음) |
-| 11-17 | 플레이어가 받는 피해에 `fantasyrpg:rpg` 유형을 쓰지 않음 | 방어 무시라서 상한·방어 투자가 무의미해짐 |
+| 11-17 | 방어구·작업대는 이 모드가 담당, magiccity는 진행도만 | 프로젝트 결정(통합문서 1절) |
+| 11-18 | **방어 등급 상한 폐지** (11-17 "상위 방어구 조기 획득 방지"의 방어력·강도 상한 부분 취소). 바닐라 다이아·네더라이트 조정은 유지. 모드에서 만드는 방어구가 바닐라보다 상위 능력치를 갖도록 설계 | 사용자 결정 2026-11-18 (게임 확인 뒤 "갑옷을 입는 의미가 없다"). 기획 반영: 프로젝트 통합문서 5절 |
+| 11-17 | 플레이어가 받는 피해에 `fantasyrpg:rpg` 유형을 쓰지 않음 | 방어 무시라서 방어 투자가 무의미해짐 |
 | 11-17 | 직업 외 무기로는 RPG 피해 없음, 도구로 공격 차단, 맨손은 최소 피해, 예외 권한 자리 마련 (정책 P1) | 프로젝트 결정 (`claude/혼합개발_연동설계_v1.md` 0절) |
 | 11-17 | 바닐라 전투 인챈트는 RPG 전투에서 제외, 보호 인챈트는 유지하고 밸런스 v1.0 수치로 재정의 (P2) | 프로젝트 결정. 보호 인챈트 재정의는 아직 구현 안 함 |
 | 11-17 | PvP 1차 완전 비활성 | 프로젝트 결정 |
@@ -124,6 +116,14 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 ---
 
 ## 작업 기록
+
+### 2026-11-18 — 방어 등급 상한 폐지
+- 사용자 결정: 방어 상한을 완전히 없앰. 모드 제작 방어구가 바닐라보다 상위 능력치를 갖게 설계
+- 삭제: `gear/armorcap`(`ArmorCapMath`·`ArmorCapService`·`GradeSource`·`ArmorCapDefaults`), `/rpg armorcap`, 설정 `armorCap`, JUnit `ArmorCapMathTest`·`ArmorCapScenarioTest`, 시험 함수 `ring`·`multiplier`·`same_tick`
+- 유지·이동: 바닐라 조정 → `gear/vanilla/VanillaArmorTuning`·`VanillaArmorDefaults`, 시험 함수 `armorcap/hit10` → `armor/hit10`. 새 JUnit `VanillaArmorDamageTest` 3개
+- 기존 월드: 보정 수정자는 임시(transient) 수정자라 저장되지 않아 남는 것 없음. 설정 파일의 `[armorCap]` 절은 NeoForge가 모르는 항목으로 무시
+- 폐지 전 게임 확인 결과(v0.2.0-test.3, 사용자): 1·2·3·4·5·6·7·8·9·15번 통과 (2급 14.0, 3급 다이아 15.6, 6급 16.666666, 7급 16.857143, 1급 12.799999)
+- 복구 지점: `backup/main-before-cap-removal-2026-11-18`
 
 ### 2026-11-18 — 첫 게임 안 확인 (사용자, 통합 팩 v0.2.0-test.1, Prism Launcher 11.1.1)
 - 통합 팩 가져오기·실행 정상, 모드 목록 26개(우리 3 + 외부 18 + 함께 들어오는 3 + MC·NeoForge)
