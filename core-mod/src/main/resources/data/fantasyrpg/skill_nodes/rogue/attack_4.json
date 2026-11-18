@@ -1,0 +1,42 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_3-4단_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:rogue/attack_4",
+  "name": "급소 숙달",
+  "description": "물리 스킬 피해가 오릅니다. 3랭크: 급소 난무 쿨타임 −2초. 5랭크: 표식을 쓰는 스킬이 쓴 표식의 절반을 돌려줌.",
+  "direction": "attack",
+  "tier": 4,
+  "kind": "passive",
+  "max_rank": 5,
+  "required_level": 30,
+  "required_direction_sp": 10,
+  "effect": "fantasyrpg:rogue_vital_mastery",
+  "values": {
+    "skill_physical_bonus": [
+      0.04,
+      0.06,
+      0.08,
+      0.1,
+      0.12
+    ],
+    "mark_refund_ratio": [
+      0,
+      0,
+      0,
+      0,
+      0.5
+    ]
+  },
+  "modifies": [
+    {
+      "effect": "fantasyrpg:rogue_vital_flurry",
+      "key": "cooldown_ticks",
+      "add": [
+        0,
+        0,
+        -40,
+        -40,
+        -40
+      ]
+    }
+  ]
+}

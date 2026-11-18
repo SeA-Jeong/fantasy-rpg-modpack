@@ -28,7 +28,18 @@ import java.util.Set;
  */
 public record SkillNode(String id, String classId, String name, Set<Direction> directions, int tier, Kind kind,
                         int maxRank, int requiredLevel, int requiredDirectionSp, String effect,
-                        String description, SkillValues values) {
+                        String description, SkillValues values, java.util.List<Mod> mods) {
+
+    /**
+     * 다른 스킬의 수치를 바꾸는 패시브 항목 ("modifies"). add는 이 노드의 랭크별(1부터), 음수 가능.
+     * <pre>"modifies": [{"effect": "fantasyrpg:mage_arcane_burst", "key": "radius", "add": [0, 0, 1, 1, 1]}]</pre>
+     */
+    public record Mod(String effect, String key, double[] add) {
+        public double at(int rank) {
+            if (add.length == 0) return 0;
+            return add[Math.max(0, Math.min(add.length - 1, rank - 1))];
+        }
+    }
 
     public enum Direction {
         ATTACK, SPELL, GUARD, FINESSE;
@@ -62,12 +73,13 @@ public record SkillNode(String id, String classId, String name, Set<Direction> d
         directions = Set.copyOf(directions);
         if (description == null) description = "";
         if (values == null) values = SkillValues.EMPTY;
+        mods = mods == null ? java.util.List.of() : java.util.List.copyOf(mods);
     }
 
     /** 수치 없는 노드 (시험·테스트용) */
     public SkillNode(String id, String classId, String name, Set<Direction> directions, int tier, Kind kind,
                      int maxRank, int requiredLevel, int requiredDirectionSp, String effect) {
-        this(id, classId, name, directions, tier, kind, maxRank, requiredLevel, requiredDirectionSp, effect, "", SkillValues.EMPTY);
+        this(id, classId, name, directions, tier, kind, maxRank, requiredLevel, requiredDirectionSp, effect, "", SkillValues.EMPTY, null);
     }
 
     public double value(String key, int rank) {
@@ -119,7 +131,25 @@ public record SkillNode(String id, String classId, String name, Set<Direction> d
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(id + ": " + e.getMessage());
         }
-        return new SkillNode(id, cls, name, dirs, tier, kind, maxRank, level, dirSp, effect, description, values);
+        java.util.List<Mod> mods = new java.util.ArrayList<>();
+        if (json.has("modifies")) {
+            for (JsonElement e : json.getAsJsonArray("modifies")) {
+                JsonObject m = e.getAsJsonObject();
+                if (!m.has("effect") || !m.has("key") || !m.has("add")) throw new IllegalArgumentException(id + ": modifies 항목에 effect·key·add 필요");
+                JsonElement a = m.get("add");
+                double[] add;
+                if (a.isJsonArray()) {
+                    if (a.getAsJsonArray().size() != maxRank) throw new IllegalArgumentException(id + ": modifies add 배열 길이 ≠ max_rank");
+                    add = new double[maxRank];
+                    for (int i = 0; i < maxRank; i++) add[i] = a.getAsJsonArray().get(i).getAsDouble();
+                } else {
+                    add = new double[]{a.getAsDouble()};
+                }
+                for (double d : add) if (!Double.isFinite(d)) throw new IllegalArgumentException(id + ": modifies 값");
+                mods.add(new Mod(m.get("effect").getAsString(), m.get("key").getAsString(), add));
+            }
+        }
+        return new SkillNode(id, cls, name, dirs, tier, kind, maxRank, level, dirSp, effect, description, values, mods);
     }
 
     private static JsonElement req(JsonObject o, String key) {

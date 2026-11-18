@@ -1,0 +1,41 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_3-4단_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:rogue/spell_3",
+  "name": "그림자 소용돌이",
+  "description": "주변에 그림자 칼날 소용돌이를 일으킵니다. 3랭크: 맞은 적마다 표식 +1(최대 2). 5랭크: 끝나면 0.3초 회피.",
+  "direction": "spell",
+  "tier": 3,
+  "kind": "active",
+  "max_rank": 5,
+  "required_level": 20,
+  "required_direction_sp": 5,
+  "effect": "fantasyrpg:rogue_shadow_vortex",
+  "cooldown_ticks": 200,
+  "cost": 0,
+  "values": {
+    "magic": [
+      0.35,
+      0.4,
+      0.45,
+      0.5,
+      0.55
+    ],
+    "radius": 3,
+    "pulses": 4,
+    "pulse_interval": 5,
+    "max_marks": [
+      0,
+      0,
+      2,
+      2,
+      2
+    ],
+    "end_evade_ticks": [
+      0,
+      0,
+      0,
+      0,
+      6
+    ]
+  }
+}

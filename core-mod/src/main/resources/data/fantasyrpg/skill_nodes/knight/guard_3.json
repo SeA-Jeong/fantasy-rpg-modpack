@@ -1,0 +1,41 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_3-4단_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:knight/guard_3",
+  "name": "방패 강타",
+  "description": "바라보는 적을 방패로 쳐서 경직시킵니다. 3초 안에 패리했으면 ×1.5·결의 비용 없음. 3랭크: 경직 1.5초. 5랭크: 주변 2칸에도 50%.",
+  "direction": "guard",
+  "tier": 3,
+  "kind": "active",
+  "max_rank": 5,
+  "required_level": 20,
+  "required_direction_sp": 5,
+  "effect": "fantasyrpg:knight_shield_bash",
+  "cooldown_ticks": 160,
+  "cost": 20,
+  "values": {
+    "physical": [
+      1.2,
+      1.35,
+      1.5,
+      1.65,
+      1.8
+    ],
+    "range": 4,
+    "stun_ticks": [
+      20,
+      20,
+      30,
+      30,
+      30
+    ],
+    "parry_window_ticks": 60,
+    "parry_mult": 1.5,
+    "splash_ratio": [
+      0,
+      0,
+      0,
+      0,
+      0.5
+    ]
+  }
+}

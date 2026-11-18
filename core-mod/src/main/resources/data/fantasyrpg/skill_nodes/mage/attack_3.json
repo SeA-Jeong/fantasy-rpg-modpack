@@ -1,0 +1,41 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_3-4단_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:mage/attack_3",
+  "name": "마탄 연사",
+  "description": "마탄 5발을 빠르게 쏩니다. 3랭크: 맞은 탄마다 마나 +2. 5랭크: 5발 모두 같은 적이면 마지막 탄 ×2.",
+  "direction": "attack",
+  "tier": 3,
+  "kind": "active",
+  "max_rank": 5,
+  "required_level": 20,
+  "required_direction_sp": 5,
+  "effect": "fantasyrpg:mage_bolt_barrage",
+  "cooldown_ticks": 200,
+  "cost": 30,
+  "values": {
+    "physical": [
+      0.45,
+      0.5,
+      0.55,
+      0.6,
+      0.65
+    ],
+    "bolts": 5,
+    "interval_ticks": 2,
+    "range": 20,
+    "hit_core": [
+      0,
+      0,
+      2,
+      2,
+      2
+    ],
+    "final_mult": [
+      0,
+      0,
+      0,
+      0,
+      2
+    ]
+  }
+}

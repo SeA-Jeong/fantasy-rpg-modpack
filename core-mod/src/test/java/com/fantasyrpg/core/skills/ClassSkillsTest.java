@@ -97,7 +97,7 @@ class ClassSkillsTest {
         Set<String> effects = new HashSet<>();
         for (String cls : List.of("warrior", "mage", "knight", "rogue", "archer", "cleric")) {
             Map<String, SkillNode> nodes = load(cls);
-            assertEquals(8, nodes.size(), cls);
+            assertEquals(16, nodes.size(), cls);
             for (SkillNode.Direction d : SkillNode.Direction.values()) {
                 for (int tier = 1; tier <= 2; tier++) {
                     final int t = tier;
@@ -116,6 +116,62 @@ class ClassSkillsTest {
         }
         assertEquals(48, effects.size());
         assertEquals(REQUIRED.keySet(), effects);
+    }
+
+    @Test
+    @DisplayName("3~4단: 직업마다 4방향 × (3단 액티브 Lv.20·선행 5SP, 4단 패시브 Lv.30·선행 10SP), 효과 id는 SkillIds에 있고 96개 모두 다름, modifies 대상은 실제 효과")
+    void tier34() throws Exception {
+        Set<String> known = new HashSet<>();
+        for (java.lang.reflect.Field f : SkillIds.class.getFields()) {
+            if (f.getType() == String.class) known.add((String) f.get(null));
+        }
+        Set<String> all = new HashSet<>();
+        Map<String, SkillNode> everything = new HashMap<>();
+        for (String cls : List.of("warrior", "mage", "knight", "rogue", "archer", "cleric")) {
+            Map<String, SkillNode> nodes = load(cls);
+            everything.putAll(nodes);
+            for (SkillNode.Direction d : SkillNode.Direction.values()) {
+                SkillNode t3 = nodes.values().stream().filter(x -> x.directions().equals(Set.of(d)) && x.tier() == 3).findFirst().orElseThrow();
+                SkillNode t4 = nodes.values().stream().filter(x -> x.directions().equals(Set.of(d)) && x.tier() == 4).findFirst().orElseThrow();
+                assertEquals(SkillNode.Kind.ACTIVE, t3.kind(), t3.id());
+                assertEquals(20, t3.requiredLevel(), t3.id());
+                assertEquals(5, t3.requiredDirectionSp(), t3.id());
+                assertTrue(t3.cooldownTicks(1) > 0, t3.id());
+                assertEquals(SkillNode.Kind.PASSIVE, t4.kind(), t4.id());
+                assertEquals(30, t4.requiredLevel(), t4.id());
+                assertEquals(10, t4.requiredDirectionSp(), t4.id());
+                assertTrue(!t4.values().keys().isEmpty() || !t4.mods().isEmpty(), t4.id() + " 효과 없음");
+            }
+            for (SkillNode n : nodes.values()) {
+                assertTrue(known.contains(n.effect()), n.id() + " 효과 id " + n.effect());
+                all.add(n.effect());
+            }
+        }
+        assertEquals(96, all.size());
+        for (SkillNode n : everything.values()) {
+            for (SkillNode.Mod m : n.mods()) assertTrue(all.contains(m.effect()), n.id() + " → " + m.effect());
+        }
+    }
+
+    @Test
+    @DisplayName("3~4단 대표 수치: 기사 철벽 숙련 패리 6+2=8틱(기획 5.3 범위), 불굴 35%+15%p=50%, 신성 방벽 40%+15%p=55%, 마나 최대 100+20+20")
+    void tier34Numbers() throws IOException {
+        Map<String, SkillNode> k = load("knight");
+        Map<String, SkillNode> w = load("warrior");
+        Map<String, SkillNode> c = load("cleric");
+        Map<String, SkillNode> m = load("mage");
+        assertEquals(8, k.get("fantasyrpg:knight/guard_1").value("parry_ticks", 1) + modAt(k.get("fantasyrpg:knight/guard_4"), "parry_ticks", 5), 1e-9);
+        assertEquals(0.5, w.get("fantasyrpg:warrior/guard_1").value("reduction", 5) + modAt(w.get("fantasyrpg:warrior/guard_4"), "reduction", 5), 1e-9);
+        assertEquals(0.55, c.get("fantasyrpg:cleric/guard_1").value("reduction", 5) + modAt(c.get("fantasyrpg:cleric/guard_4"), "reduction", 5), 1e-9);
+        assertEquals(140, 100 + m.get("fantasyrpg:mage/spell_2").value("max_core_bonus", 5) + m.get("fantasyrpg:mage/finesse_4").value("max_core_bonus", 5), 1e-9);
+        assertEquals(-80, modAt(w.get("fantasyrpg:warrior/guard_4"), "cooldown_ticks", 3), 1e-9);
+        assertEquals(0, modAt(w.get("fantasyrpg:warrior/guard_4"), "cooldown_ticks", 2), 1e-9);
+    }
+
+    private static double modAt(SkillNode n, String key, int rank) {
+        double t = 0;
+        for (SkillNode.Mod m : n.mods()) if (m.key().equals(key)) t += m.at(rank);
+        return t;
     }
 
     @Test

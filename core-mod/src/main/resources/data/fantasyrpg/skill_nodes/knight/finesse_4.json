@@ -1,0 +1,42 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_3-4단_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:knight/finesse_4",
+  "name": "반격 숙달",
+  "description": "패리에 성공하면 모든 스킬 쿨타임이 줄어듭니다. 3랭크: 패리 뒤 3초 동안 모든 피해 +10%. 5랭크: 반격 찌르기 쿨타임 −2초.",
+  "direction": "finesse",
+  "tier": 4,
+  "kind": "passive",
+  "max_rank": 5,
+  "required_level": 30,
+  "required_direction_sp": 10,
+  "effect": "fantasyrpg:knight_counter_mastery",
+  "values": {
+    "parry_cooldown_all": [
+      10.0,
+      15.0,
+      20.0,
+      25.0,
+      30.0
+    ],
+    "after_parry_bonus": [
+      0,
+      0,
+      0.1,
+      0.1,
+      0.1
+    ]
+  },
+  "modifies": [
+    {
+      "effect": "fantasyrpg:knight_riposte",
+      "key": "cooldown_ticks",
+      "add": [
+        0,
+        0,
+        0,
+        0,
+        -40
+      ]
+    }
+  ]
+}

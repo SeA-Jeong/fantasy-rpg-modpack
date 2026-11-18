@@ -1,0 +1,49 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_3-4단_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:archer/finesse_4",
+  "name": "속사 숙련",
+  "description": "이동 속사가 강해집니다. 3랭크: 간격 0.15초. 5랭크: 화살 +1.",
+  "direction": "finesse",
+  "tier": 4,
+  "kind": "passive",
+  "max_rank": 5,
+  "required_level": 30,
+  "required_direction_sp": 10,
+  "effect": "fantasyrpg:archer_rapid_mastery",
+  "values": {},
+  "modifies": [
+    {
+      "effect": "fantasyrpg:archer_rapid_fire",
+      "key": "physical",
+      "add": [
+        0.03,
+        0.05,
+        0.07,
+        0.09,
+        0.1
+      ]
+    },
+    {
+      "effect": "fantasyrpg:archer_rapid_fire",
+      "key": "interval_ticks",
+      "add": [
+        0,
+        0,
+        -2,
+        -2,
+        -2
+      ]
+    },
+    {
+      "effect": "fantasyrpg:archer_rapid_fire",
+      "key": "shots",
+      "add": [
+        0,
+        0,
+        0,
+        0,
+        1
+      ]
+    }
+  ]
+}

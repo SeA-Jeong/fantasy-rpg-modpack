@@ -246,26 +246,29 @@ public final class SkillService {
     private static void run(ServerPlayer p, SkillNode n, int rank, SkillEffects.Effect effect, double cost) {
         SkillRuntime.State st = SkillRuntime.state(p);
         long now = SkillRuntime.now(p);
-        // 주문 연쇄: 다른 스킬을 창 안에 이어 쓰면 연쇄
-        SkillPassives.Learned chain = SkillPassives.learned(p, SkillIds.M_SPELL_CHAIN);
+        // 연쇄(주문 연쇄·연계 숙달): 다른 스킬을 창 안에 이어 쓰면 연쇄
+        SkillPassives.Learned chain = SkillPassives.anyOf(p, SkillIds.CHAIN);
         boolean chained = chain != null && !st.lastCastNode.isEmpty() && !st.lastCastNode.equals(n.id())
                 && now - st.lastCastTick <= chain.v("window_ticks");
-        double bonus = 0;
+        double bonus = chained ? chain.v("chain_damage") : 0;
         if (st.chainBonusReady) {
-            bonus = chain == null ? 0 : chain.v("chain_bonus");
+            bonus += chain == null ? 0 : chain.v("chain_bonus");
             st.chainBonusReady = false;
         }
+        // 쿨타임 비율 감소 (주문 숙련, 광폭화 5랭크: 코어 문턱은 쓰기 전 값으로)
+        double rate = Math.min(0.5, SkillPassives.sum(p, "cooldown_rate"));
         Cast cast = new Cast(p, n, rank, bonus);
         if (!effect.run(cast)) {
             return; // 못 씀: 비용·쿨타임 없음 (연쇄 보너스는 이미 쓴 것으로 봄 — 단순화)
         }
         if (cost > 0 && !cast.free) CoreService.spend(p, cost);
-        int cd = Math.max(0, n.cooldownTicks(rank) - SkillPassives.cooldownCut(p, n));
+        int cd = Math.max(0, cast.cooldownTicks() - SkillPassives.cooldownCut(p, n));
+        cd = (int) Math.round(cd * (1.0 - rate) * cast.cooldownMult);
         if (chained) {
             cd = SkillMath.chainedCooldown(cd, chain.v("cooldown_cut"));
             st.chainCount++;
-            if (chain.rank() >= 3) CoreService.gain(p, chain.v("chain_core"));
-            if (chain.rank() >= 5 && st.chainCount >= (int) chain.v("chain_count")) {
+            CoreService.gain(p, chain.v("chain_core"));
+            if (chain.v("chain_count") > 0 && st.chainCount >= (int) chain.v("chain_count") && chain.v("chain_bonus") > 0) {
                 st.chainBonusReady = true;
                 st.chainCount = 0;
             }

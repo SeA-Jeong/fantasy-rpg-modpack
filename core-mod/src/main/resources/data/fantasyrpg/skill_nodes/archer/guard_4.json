@@ -1,0 +1,48 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_3-4단_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:archer/guard_4",
+  "name": "생존 본능",
+  "description": "8칸 안에 적대 몬스터가 2마리 이상이면 받는 피해가 줄어듭니다. 3랭크: 후퇴 사격 쿨타임 −3초. 5랭크: 덫이 터지면 집중 +20.",
+  "direction": "guard",
+  "tier": 4,
+  "kind": "passive",
+  "max_rank": 5,
+  "required_level": 30,
+  "required_direction_sp": 10,
+  "effect": "fantasyrpg:archer_survival",
+  "values": {
+    "crowd_range": 8,
+    "crowd_count": 2,
+    "crowd_reduction": [
+      0.03,
+      0.045,
+      0.06,
+      0.075,
+      0.09
+    ]
+  },
+  "modifies": [
+    {
+      "effect": "fantasyrpg:archer_retreat_shot",
+      "key": "cooldown_ticks",
+      "add": [
+        0,
+        0,
+        -60,
+        -60,
+        -60
+      ]
+    },
+    {
+      "effect": "fantasyrpg:archer_trap",
+      "key": "trigger_core",
+      "add": [
+        0,
+        0,
+        0,
+        0,
+        20
+      ]
+    }
+  ]
+}

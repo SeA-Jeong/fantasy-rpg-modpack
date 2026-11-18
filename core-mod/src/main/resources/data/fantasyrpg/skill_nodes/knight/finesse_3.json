@@ -1,0 +1,43 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_3-4단_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:knight/finesse_3",
+  "name": "연속 찌르기",
+  "description": "바라보는 적을 4연타하고 마지막에 밀쳐냅니다. 3랭크: 3초 안에 패리했으면 6연타. 5랭크: 모두 맞으면 결의 15 돌려받음.",
+  "direction": "finesse",
+  "tier": 3,
+  "kind": "active",
+  "max_rank": 5,
+  "required_level": 20,
+  "required_direction_sp": 5,
+  "effect": "fantasyrpg:knight_thrust_flurry",
+  "cooldown_ticks": 180,
+  "cost": 20,
+  "values": {
+    "physical": [
+      0.45,
+      0.5,
+      0.55,
+      0.6,
+      0.65
+    ],
+    "range": 5,
+    "hits": 4,
+    "parry_hits": [
+      0,
+      0,
+      6,
+      6,
+      6
+    ],
+    "parry_window_ticks": 60,
+    "interval_ticks": 3,
+    "knockback": 0.5,
+    "refund_core": [
+      0,
+      0,
+      0,
+      0,
+      15
+    ]
+  }
+}

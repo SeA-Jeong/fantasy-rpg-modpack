@@ -1,0 +1,37 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_3-4단_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:warrior/finesse_4",
+  "name": "연계 숙달",
+  "description": "스킬을 쓰고 3초 안에 다른 스킬을 쓰면 그 스킬 피해가 오릅니다. 3랭크: 그때 기세 +5. 5랭크: 그 스킬 쿨타임 −10%.",
+  "direction": "finesse",
+  "tier": 4,
+  "kind": "passive",
+  "max_rank": 5,
+  "required_level": 30,
+  "required_direction_sp": 10,
+  "effect": "fantasyrpg:warrior_combo_mastery",
+  "values": {
+    "window_ticks": 60,
+    "chain_damage": [
+      0.04,
+      0.06,
+      0.08,
+      0.1,
+      0.12
+    ],
+    "chain_core": [
+      0,
+      0,
+      5,
+      5,
+      5
+    ],
+    "cooldown_cut": [
+      0,
+      0,
+      0,
+      0,
+      0.1
+    ]
+  }
+}

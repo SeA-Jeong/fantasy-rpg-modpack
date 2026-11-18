@@ -1,0 +1,42 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_3-4단_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:archer/spell_3",
+  "name": "원소 화살비",
+  "description": "바라보는 지점에 2초 동안 원소 화살비를 내립니다. 3랭크: 느림. 5랭크: 끝날 때 폭발.",
+  "direction": "spell",
+  "tier": 3,
+  "kind": "active",
+  "max_rank": 5,
+  "required_level": 20,
+  "required_direction_sp": 5,
+  "effect": "fantasyrpg:archer_arrow_rain",
+  "cooldown_ticks": 280,
+  "cost": 35,
+  "values": {
+    "magic": [
+      0.2,
+      0.225,
+      0.25,
+      0.275,
+      0.3
+    ],
+    "range": 30,
+    "radius": 4,
+    "pulses": 8,
+    "pulse_interval": 5,
+    "slow_ticks": [
+      0,
+      0,
+      20,
+      20,
+      20
+    ],
+    "end_magic": [
+      0,
+      0,
+      0,
+      0,
+      0.8
+    ]
+  }
+}

@@ -141,7 +141,7 @@ public final class CombatEvents {
                 shot.getDouble("power") * mods.factor(), p, SkillPassives.critBonus(p), false, SkillPassives.critMultBonus(p));
         RpgDamage.apply(target, p, in);
         p.setLastHurtMob(target);
-        if (in.critMultiplier() > 1.0) SkillPassives.onCrit(p);
+        SkillPassives.afterArrow(p, in);
         CoreService.onEvent(p, CoreService.BASIC_ATTACK_HIT);
     }
 

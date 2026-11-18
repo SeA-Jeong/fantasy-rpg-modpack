@@ -1,0 +1,49 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_3-4단_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:mage/guard_4",
+  "name": "순환 결계",
+  "description": "결계 충격 흡수 체력이 늘어납니다. 3랭크: 결계 충격 쿨타임 −3초. 5랭크: 결계가 다 깨지면 마나 +20.",
+  "direction": "guard",
+  "tier": 4,
+  "kind": "passive",
+  "max_rank": 5,
+  "required_level": 30,
+  "required_direction_sp": 10,
+  "effect": "fantasyrpg:mage_cycle_barrier",
+  "values": {},
+  "modifies": [
+    {
+      "effect": "fantasyrpg:mage_barrier_shock",
+      "key": "absorption",
+      "add": [
+        1.0,
+        1.5,
+        2.0,
+        2.5,
+        3.0
+      ]
+    },
+    {
+      "effect": "fantasyrpg:mage_barrier_shock",
+      "key": "cooldown_ticks",
+      "add": [
+        0,
+        0,
+        -60,
+        -60,
+        -60
+      ]
+    },
+    {
+      "effect": "fantasyrpg:mage_barrier_shock",
+      "key": "broken_core",
+      "add": [
+        0,
+        0,
+        0,
+        0,
+        20
+      ]
+    }
+  ]
+}
