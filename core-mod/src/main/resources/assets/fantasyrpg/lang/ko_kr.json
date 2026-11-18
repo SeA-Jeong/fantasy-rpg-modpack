@@ -1,4 +1,26 @@
 {
   "death.attack.fantasyrpg.rpg": "%1$s이(가) 쓰러졌습니다",
-  "death.attack.fantasyrpg.rpg.player": "%1$s이(가) %2$s에게 쓰러졌습니다"
+  "death.attack.fantasyrpg.rpg.player": "%1$s이(가) %2$s에게 쓰러졌습니다",
+  "item.fantasyrpg.knight_helmet": "기사 투구",
+  "item.fantasyrpg.knight_chestplate": "기사 흉갑",
+  "item.fantasyrpg.knight_leggings": "기사 각반",
+  "item.fantasyrpg.knight_boots": "기사 장화",
+  "item.fantasyrpg.dwarf_helmet": "드워프 투구",
+  "item.fantasyrpg.dwarf_chestplate": "드워프 흉갑",
+  "item.fantasyrpg.dwarf_leggings": "드워프 각반",
+  "item.fantasyrpg.dwarf_boots": "드워프 장화",
+  "item.fantasyrpg.dragon_helmet": "고룡 투구",
+  "item.fantasyrpg.dragon_chestplate": "고룡 흉갑",
+  "item.fantasyrpg.dragon_leggings": "고룡 각반",
+  "item.fantasyrpg.dragon_boots": "고룡 장화",
+  "item.fantasyrpg.elf_helmet": "엘프 투구",
+  "item.fantasyrpg.elf_chestplate": "엘프 흉갑",
+  "item.fantasyrpg.elf_leggings": "엘프 각반",
+  "item.fantasyrpg.elf_boots": "엘프 장화",
+  "item.fantasyrpg.arcane_helmet": "마도 투구",
+  "item.fantasyrpg.arcane_chestplate": "마도 흉갑",
+  "item.fantasyrpg.arcane_leggings": "마도 각반",
+  "item.fantasyrpg.arcane_boots": "마도 장화",
+  "item.fantasyrpg.tiered": "%s (%s급)",
+  "itemGroup.fantasyrpg.gear": "판타지 RPG 장비"
 }

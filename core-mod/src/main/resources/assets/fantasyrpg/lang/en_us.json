@@ -1,4 +1,26 @@
 {
   "death.attack.fantasyrpg.rpg": "%1$s was defeated",
-  "death.attack.fantasyrpg.rpg.player": "%1$s was defeated by %2$s"
+  "death.attack.fantasyrpg.rpg.player": "%1$s was defeated by %2$s",
+  "item.fantasyrpg.knight_helmet": "Knight Helmet",
+  "item.fantasyrpg.knight_chestplate": "Knight Chestplate",
+  "item.fantasyrpg.knight_leggings": "Knight Leggings",
+  "item.fantasyrpg.knight_boots": "Knight Boots",
+  "item.fantasyrpg.dwarf_helmet": "Dwarven Helmet",
+  "item.fantasyrpg.dwarf_chestplate": "Dwarven Chestplate",
+  "item.fantasyrpg.dwarf_leggings": "Dwarven Leggings",
+  "item.fantasyrpg.dwarf_boots": "Dwarven Boots",
+  "item.fantasyrpg.dragon_helmet": "Dragon Helmet",
+  "item.fantasyrpg.dragon_chestplate": "Dragon Chestplate",
+  "item.fantasyrpg.dragon_leggings": "Dragon Leggings",
+  "item.fantasyrpg.dragon_boots": "Dragon Boots",
+  "item.fantasyrpg.elf_helmet": "Elven Helmet",
+  "item.fantasyrpg.elf_chestplate": "Elven Chestplate",
+  "item.fantasyrpg.elf_leggings": "Elven Leggings",
+  "item.fantasyrpg.elf_boots": "Elven Boots",
+  "item.fantasyrpg.arcane_helmet": "Arcane Helmet",
+  "item.fantasyrpg.arcane_chestplate": "Arcane Chestplate",
+  "item.fantasyrpg.arcane_leggings": "Arcane Leggings",
+  "item.fantasyrpg.arcane_boots": "Arcane Boots",
+  "item.fantasyrpg.tiered": "%s (Tier %s)",
+  "itemGroup.fantasyrpg.gear": "Fantasy RPG Gear"
 }

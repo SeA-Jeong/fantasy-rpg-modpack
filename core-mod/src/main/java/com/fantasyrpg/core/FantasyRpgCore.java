@@ -1,7 +1,9 @@
 package com.fantasyrpg.core;
 
 import com.fantasyrpg.core.command.RpgCommands;
-import com.fantasyrpg.core.gear.vanilla.VanillaArmorTuning;
+import com.fantasyrpg.core.gear.armor.ArmorStatManager;
+import com.fantasyrpg.core.gear.armor.FamilyArmorAttributes;
+import com.fantasyrpg.core.gear.armor.GearRegistry;
 import com.fantasyrpg.core.resist.MobResistanceManager;
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
@@ -29,13 +31,16 @@ public final class FantasyRpgCore {
         NeoForge.EVENT_BUS.addListener(FantasyRpgCore::onAddReloadListeners);
         NeoForge.EVENT_BUS.addListener(FantasyRpgCore::onRegisterCommands);
 
-        // 바닐라 다이아·네더라이트 갑옷 능력치 조정 (아이템은 그대로)
-        NeoForge.EVENT_BUS.addListener(VanillaArmorTuning::onItemAttributes);
+        // 계열 방어구: 등급 컴포넌트·재질·아이템·창작 탭 등록, 수치표로 능력치 붙이기
+        GearRegistry.register(modEventBus);
+        NeoForge.EVENT_BUS.addListener(FamilyArmorAttributes::onItemAttributes);
+
         // TODO: playerdata 첨부 데이터, skilltree 데이터 로더 등록
     }
 
     private static void onAddReloadListeners(AddReloadListenerEvent event) {
         event.addListener(MobResistanceManager.INSTANCE);
+        event.addListener(ArmorStatManager.INSTANCE);
     }
 
     private static void onRegisterCommands(RegisterCommandsEvent event) {

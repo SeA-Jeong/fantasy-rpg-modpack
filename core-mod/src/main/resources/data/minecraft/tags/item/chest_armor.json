@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "fantasyrpg:knight_chestplate",
+    "fantasyrpg:dwarf_chestplate",
+    "fantasyrpg:dragon_chestplate",
+    "fantasyrpg:elf_chestplate",
+    "fantasyrpg:arcane_chestplate"
+  ]
+}

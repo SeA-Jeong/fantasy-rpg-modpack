@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "fantasyrpg:knight_helmet",
+    "fantasyrpg:dwarf_helmet",
+    "fantasyrpg:dragon_helmet",
+    "fantasyrpg:elf_helmet",
+    "fantasyrpg:arcane_helmet"
+  ]
+}

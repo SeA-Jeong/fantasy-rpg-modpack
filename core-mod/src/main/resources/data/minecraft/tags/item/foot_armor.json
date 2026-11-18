@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "fantasyrpg:knight_boots",
+    "fantasyrpg:dwarf_boots",
+    "fantasyrpg:dragon_boots",
+    "fantasyrpg:elf_boots",
+    "fantasyrpg:arcane_boots"
+  ]
+}
