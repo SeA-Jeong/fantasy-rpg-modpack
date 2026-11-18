@@ -144,6 +144,15 @@ public final class SkillTreeScreen extends Screen {
         g.drawString(font, rank + "/" + n.maxRank(), x + 2, y + 11, 0xFFAAAAAA, false);
     }
 
+    private static String toPlain(FormattedCharSequence seq) {
+        StringBuilder sb = new StringBuilder();
+        seq.accept((i, style, cp) -> {
+            sb.appendCodePoint(cp);
+            return true;
+        });
+        return sb.toString();
+    }
+
     private static String shortName(String s, int n) {
         return s.length() <= n ? s : s.substring(0, n);
     }
@@ -158,6 +167,16 @@ public final class SkillTreeScreen extends Screen {
         if (n.requiredDirectionSp() > 0) {
             t.add(Component.translatable(n.directions().size() > 1 ? "screen.fantasyrpg.node.mixed_sp" : "screen.fantasyrpg.node.dir_sp",
                     n.requiredDirectionSp()));
+        }
+        if (!n.description().isEmpty()) {
+            for (FormattedCharSequence line : font.split(Component.literal(n.description()), 220)) {
+                t.add(Component.literal(toPlain(line)).withStyle(net.minecraft.ChatFormatting.GRAY));
+            }
+        }
+        int r = Math.max(1, ClientRpgState.ranks.getOrDefault(n.id(), 0));
+        if (n.cooldownTicks(r) > 0 || n.cost(r) > 0) {
+            t.add(Component.translatable("screen.fantasyrpg.node.cd_cost", r, String.format("%.1f", n.cooldownTicks(r) / 20.0),
+                    (int) n.cost(r)).withStyle(net.minecraft.ChatFormatting.AQUA));
         }
         if (SkillNodeEffectHint.isEmpty(n)) t.add(Component.translatable("screen.fantasyrpg.node.no_effect").withStyle(net.minecraft.ChatFormatting.DARK_GRAY));
         return t;

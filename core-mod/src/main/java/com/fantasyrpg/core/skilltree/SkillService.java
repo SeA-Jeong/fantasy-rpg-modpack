@@ -6,7 +6,15 @@ import com.fantasyrpg.core.playerdata.ProgressionManager;
 import com.fantasyrpg.core.playerdata.RpgClass;
 import com.fantasyrpg.core.playerdata.RpgPlayerData;
 import com.fantasyrpg.core.playerdata.RpgProgress;
+import com.fantasyrpg.core.combat.RpgAttacks;
+import com.fantasyrpg.core.combat.WeaponPermission;
+import com.fantasyrpg.core.skills.Cast;
+import com.fantasyrpg.core.skills.SkillIds;
+import com.fantasyrpg.core.skills.SkillMath;
+import com.fantasyrpg.core.skills.SkillPassives;
+import com.fantasyrpg.core.skills.SkillRuntime;
 import io.github.aswq0258.magiccity.api.MagicCityApi;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -192,7 +200,7 @@ public final class SkillService {
         if (p.getHealth() > p.getMaxHealth()) p.setHealth(p.getMaxHealth());
     }
 
-    /** 장착칸 사용. 스킬 효과 구현은 다음 단계 — 지금은 장착·습득만 확인하고 안내 */
+    /** 장착칸 사용 (Z X C V B). 모든 판정은 여기서 */
     public static void cast(ServerPlayer p, int slot) {
         RpgPlayerData d = RpgProgress.get(p);
         RpgClass c = d.classOrNull();
@@ -203,13 +211,82 @@ public final class SkillService {
             return;
         }
         SkillNode n = SkillData.nodes(c.id()).get(nodeId);
-        if (n == null) return;
+        int rank = d.nodeRanks().getOrDefault(nodeId, 0);
+        if (n == null || rank <= 0) return;
         SkillEffects.Effect effect = SkillEffects.get(n.effect());
-        if (effect == null) {
+        if (effect == null || !n.kind().equippable()) {
             tell(p, "message.fantasyrpg.skill.no_effect", ChatFormatting.YELLOW, n.name());
             return;
         }
-        effect.run(p, n, d.nodeRanks().getOrDefault(nodeId, 0));
+        if (!holdsClassWeapon(p, c)) {
+            tell(p, "message.fantasyrpg.skill.need_weapon", ChatFormatting.RED);
+            return;
+        }
+        int left = SkillRuntime.cooldownLeft(p, nodeId);
+        if (left > 0) {
+            tell(p, "message.fantasyrpg.skill.cooldown", ChatFormatting.GRAY, n.name(), String.format("%.1f", left / 20.0));
+            return;
+        }
+        double cost = n.cost(rank);
+        if (cost > 0 && CoreService.value(p) < cost) {
+            tell(p, "message.fantasyrpg.skill.no_core", ChatFormatting.RED, n.name(), (int) Math.ceil(cost));
+            return;
+        }
+        run(p, n, rank, effect, cost);
+    }
+
+    /** 비용·무기 확인 없이 (마력 방벽 5랭크의 자동 결계). 쿨타임 중이면 안 나감, 쿨타임은 공유 */
+    public static void castFree(ServerPlayer p, String effectId) {
+        SkillPassives.Learned l = SkillPassives.learned(p, effectId);
+        if (l == null || SkillRuntime.cooldownLeft(p, l.node().id()) > 0) return;
+        SkillEffects.Effect effect = SkillEffects.get(effectId);
+        if (effect != null) run(p, l.node(), l.rank(), effect, 0);
+    }
+
+    private static void run(ServerPlayer p, SkillNode n, int rank, SkillEffects.Effect effect, double cost) {
+        SkillRuntime.State st = SkillRuntime.state(p);
+        long now = SkillRuntime.now(p);
+        // 주문 연쇄: 다른 스킬을 창 안에 이어 쓰면 연쇄
+        SkillPassives.Learned chain = SkillPassives.learned(p, SkillIds.M_SPELL_CHAIN);
+        boolean chained = chain != null && !st.lastCastNode.isEmpty() && !st.lastCastNode.equals(n.id())
+                && now - st.lastCastTick <= chain.v("window_ticks");
+        double bonus = 0;
+        if (st.chainBonusReady) {
+            bonus = chain == null ? 0 : chain.v("chain_bonus");
+            st.chainBonusReady = false;
+        }
+        if (!effect.run(new Cast(p, n, rank, bonus))) {
+            return; // 못 씀: 비용·쿨타임 없음 (연쇄 보너스는 이미 쓴 것으로 봄 — 단순화)
+        }
+        if (cost > 0) CoreService.spend(p, cost);
+        int cd = n.cooldownTicks(rank);
+        if (SkillIds.W_MANA_SLASH.equals(n.effect())) {
+            SkillPassives.Learned blade = SkillPassives.learned(p, SkillIds.W_SPELLBLADE, 5);
+            if (blade != null) cd = Math.max(0, cd - (int) blade.v("mana_slash_cooldown_cut"));
+        }
+        if (chained) {
+            cd = SkillMath.chainedCooldown(cd, chain.v("cooldown_cut"));
+            st.chainCount++;
+            if (chain.rank() >= 3) CoreService.gain(p, chain.v("chain_core"));
+            if (chain.rank() >= 5 && st.chainCount >= (int) chain.v("chain_count")) {
+                st.chainBonusReady = true;
+                st.chainCount = 0;
+            }
+        } else {
+            st.chainCount = 0;
+        }
+        st.lastCastNode = n.id();
+        st.lastCastTick = now;
+        SkillRuntime.setCooldown(p, n.id(), cd);
+    }
+
+    /** 손에 든 것이 내 직업 무기(근접이나 원거리)인지 — 스킬은 직업 무기로만 (정책 P1) */
+    public static boolean holdsClassWeapon(ServerPlayer p, RpgClass c) {
+        ItemStack held = p.getMainHandItem();
+        for (WeaponPermission.AttackKind k : WeaponPermission.AttackKind.values()) {
+            if (RpgAttacks.check(c, k, held) == WeaponPermission.Verdict.ALLOW) return true;
+        }
+        return false;
     }
 
     // ── 클라이언트 동기화 ──
@@ -254,5 +331,6 @@ public final class SkillService {
         syncState(p);
         applyPassives(p);
         CoreService.reset(p);
+        com.fantasyrpg.core.skills.SkillEvents.refresh(p);
     }
 }

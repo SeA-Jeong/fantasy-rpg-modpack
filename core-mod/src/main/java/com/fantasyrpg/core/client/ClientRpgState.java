@@ -40,6 +40,18 @@ public final class ClientRpgState {
     public static volatile float coreValue;
     public static volatile float coreMax;
     public static volatile boolean received;
+    /** 노드 id → 쿨타임 끝나는 시각(ms) */
+    public static final Map<String, Long> cooldownEnd = new java.util.concurrent.ConcurrentHashMap<>();
+
+    public static void acceptCooldown(String nodeId, int ticks) {
+        cooldownEnd.put(nodeId, System.currentTimeMillis() + ticks * 50L);
+    }
+
+    /** 남은 쿨타임(초), 없으면 0 */
+    public static double cooldownLeft(String nodeId) {
+        Long end = cooldownEnd.get(nodeId);
+        return end == null ? 0 : Math.max(0, (end - System.currentTimeMillis()) / 1000.0);
+    }
 
     public static void acceptState(CompoundTag t) {
         rpgClass = t.getString("class");

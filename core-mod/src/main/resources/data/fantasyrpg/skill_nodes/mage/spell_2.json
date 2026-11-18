@@ -1,0 +1,36 @@
+{
+  "_comment": "[초안] 수치는 claude/전사마법사_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:mage/spell_2",
+  "name": "비전 이해",
+  "description": "스킬의 마법 피해가 오릅니다. 3랭크: 마나 최대 +20. 5랭크: 주문 스킬이 적중하면 마나 +5.",
+  "direction": "spell",
+  "tier": 2,
+  "kind": "passive",
+  "max_rank": 5,
+  "required_level": 1,
+  "required_direction_sp": 0,
+  "effect": "fantasyrpg:mage_arcane_insight",
+  "values": {
+    "skill_magic_bonus": [
+      0.04,
+      0.08,
+      0.12,
+      0.16,
+      0.2
+    ],
+    "max_core_bonus": [
+      0,
+      0,
+      20,
+      20,
+      20
+    ],
+    "spell_hit_core": [
+      0,
+      0,
+      0,
+      0,
+      5
+    ]
+  }
+}

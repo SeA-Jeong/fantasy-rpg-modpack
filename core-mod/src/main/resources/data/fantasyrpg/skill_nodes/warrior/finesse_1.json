@@ -1,0 +1,40 @@
+{
+  "_comment": "[초안] 수치는 claude/전사마법사_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:warrior/finesse_1",
+  "name": "쾌검 연격",
+  "description": "바라보는 적을 빠르게 연달아 벱니다. 3랭크: 모두 맞히면 기세 15 돌려받음. 5랭크: 4연타.",
+  "direction": "finesse",
+  "tier": 1,
+  "kind": "active",
+  "max_rank": 5,
+  "required_level": 1,
+  "required_direction_sp": 0,
+  "effect": "fantasyrpg:warrior_flurry",
+  "cooldown_ticks": 140,
+  "cost": 15,
+  "values": {
+    "physical": [
+      0.5,
+      0.55,
+      0.6,
+      0.65,
+      0.7
+    ],
+    "hits": [
+      3,
+      3,
+      3,
+      3,
+      4
+    ],
+    "interval_ticks": 4,
+    "range": 4,
+    "refund_core": [
+      0,
+      0,
+      15,
+      15,
+      15
+    ]
+  }
+}

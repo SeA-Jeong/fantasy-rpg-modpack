@@ -17,6 +17,11 @@ import com.fantasyrpg.core.network.RpgNetwork;
 import com.fantasyrpg.core.resist.MobResistanceManager;
 import com.fantasyrpg.core.skilltree.SkillData;
 import com.fantasyrpg.core.skilltree.SkillService;
+import com.fantasyrpg.core.skills.MageSkills;
+import com.fantasyrpg.core.skills.SkillEvents;
+import com.fantasyrpg.core.skills.SkillRuntime;
+import com.fantasyrpg.core.skills.SkillSettings;
+import com.fantasyrpg.core.skills.WarriorSkills;
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -74,6 +79,13 @@ public final class FantasyRpgCore {
         NeoForge.EVENT_BUS.addListener(CoreService::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(FantasyRpgCore::onLogout);
         NeoForge.EVENT_BUS.addListener(FantasyRpgCore::onDatapackSync);
+        // 전사·마법사 1~2단 스킬: 효과 등록, 받는 피해·틱·예약 실행
+        WarriorSkills.register();
+        MageSkills.register();
+        NeoForge.EVENT_BUS.addListener(SkillEvents::onServerTick);
+        NeoForge.EVENT_BUS.addListener(SkillEvents::onPlayerTick);
+        NeoForge.EVENT_BUS.addListener(SkillEvents::onIncomingDamage);
+        NeoForge.EVENT_BUS.addListener(SkillEvents::onDamagePost);
     }
 
     private static void onAddReloadListeners(AddReloadListenerEvent event) {
@@ -85,10 +97,14 @@ public final class FantasyRpgCore {
         event.addListener(SkillData.NODES);
         event.addListener(SkillData.PASSIVES);
         event.addListener(SkillData.CORES);
+        event.addListener(SkillSettings.INSTANCE);
     }
 
     private static void onLogout(PlayerEvent.PlayerLoggedOutEvent event) {
-        if (event.getEntity() instanceof ServerPlayer p) CoreService.forget(p);
+        if (event.getEntity() instanceof ServerPlayer p) {
+            CoreService.forget(p);
+            SkillRuntime.forget(p);
+        }
     }
 
     /** /reload 뒤(플레이어 null): 접속한 모두에게 정의·상태·패시브를 다시. 접속 때는 onLogin 이 처리 */

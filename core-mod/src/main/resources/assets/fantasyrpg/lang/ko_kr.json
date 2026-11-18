@@ -117,5 +117,11 @@
   "message.fantasyrpg.passive.grade": "등급이 부족합니다",
   "message.fantasyrpg.passive.no_points": "공통 패시브 포인트가 부족합니다",
   "message.fantasyrpg.passive.max_rank": "이미 최대 랭크입니다",
-  "message.fantasyrpg.passive.not_invested": "투자하지 않은 공통 패시브입니다"
+  "message.fantasyrpg.passive.not_invested": "투자하지 않은 공통 패시브입니다",
+  "message.fantasyrpg.skill.no_target": "대상이 없습니다",
+  "message.fantasyrpg.skill.blocked": "앞이 막혀 있습니다",
+  "message.fantasyrpg.skill.need_weapon": "직업 무기를 들어야 스킬을 쓸 수 있습니다",
+  "message.fantasyrpg.skill.cooldown": "%s: %s초 뒤에 쓸 수 있습니다",
+  "message.fantasyrpg.skill.no_core": "%s: 코어가 부족합니다 (%s 필요)",
+  "screen.fantasyrpg.node.cd_cost": "%s랭크: 쿨타임 %s초, 코어 %s"
 }

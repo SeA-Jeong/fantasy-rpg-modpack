@@ -54,7 +54,14 @@ public final class RpgHud {
             if (!nodeId.isEmpty()) {
                 SkillNode n = ClientRpgState.nodes.get(nodeId);
                 String label = n == null ? "?" : n.name().substring(0, Math.min(2, n.name().length()));
-                g.drawCenteredString(font, label, sx + 10, y + 6, 0xFFFFFFFF);
+                double left = ClientRpgState.cooldownLeft(nodeId);
+                if (left > 0) {
+                    g.fill(sx + 1, y + 1, sx + 19, y + 19, 0xB0000000);
+                    String t = left >= 1 ? String.valueOf((int) Math.ceil(left)) : String.format("%.1f", left);
+                    g.drawCenteredString(font, t, sx + 10, y + 6, 0xFFFF8080);
+                } else {
+                    g.drawCenteredString(font, label, sx + 10, y + 6, 0xFFFFFFFF);
+                }
             }
             g.drawString(font, shortKey(i, keys[i]), sx + 1, y + 21, 0xFFAAAAAA, true);
         }

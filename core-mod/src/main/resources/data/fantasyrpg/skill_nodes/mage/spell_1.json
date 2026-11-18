@@ -1,0 +1,40 @@
+{
+  "_comment": "[초안] 수치는 claude/전사마법사_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:mage/spell_1",
+  "name": "비전 폭발",
+  "description": "바라보는 지점에 비전 폭발을 일으킵니다. 3랭크: 범위 4. 5랭크: 1초 뒤 50% 폭발 한 번 더.",
+  "direction": "spell",
+  "tier": 1,
+  "kind": "active",
+  "max_rank": 5,
+  "required_level": 1,
+  "required_direction_sp": 0,
+  "effect": "fantasyrpg:mage_arcane_burst",
+  "cooldown_ticks": 120,
+  "cost": 25,
+  "values": {
+    "magic": [
+      1.2,
+      1.4,
+      1.6,
+      1.8,
+      2.0
+    ],
+    "range": 20,
+    "radius": [
+      3,
+      3,
+      4,
+      4,
+      4
+    ],
+    "echo_delay": 20,
+    "echo_ratio": [
+      0,
+      0,
+      0,
+      0,
+      0.5
+    ]
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "_comment": "[초안] 수치는 claude/전사마법사_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:mage/guard_1",
+  "name": "결계 충격",
+  "description": "주변 적을 밀쳐내고 흡수 체력을 얻습니다. 3랭크: 밀쳐낸 적 느림. 5랭크: 흡수 체력이 있는 동안 맞으면 반사.",
+  "direction": "guard",
+  "tier": 1,
+  "kind": "active",
+  "max_rank": 5,
+  "required_level": 1,
+  "required_direction_sp": 0,
+  "effect": "fantasyrpg:mage_barrier_shock",
+  "cooldown_ticks": 240,
+  "cost": 20,
+  "values": {
+    "magic": [
+      0.8,
+      0.9,
+      1.0,
+      1.1,
+      1.2
+    ],
+    "radius": 4,
+    "knockback": 1.0,
+    "absorption": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "absorption_ticks": 120,
+    "slow_ticks": [
+      0,
+      0,
+      40,
+      40,
+      40
+    ],
+    "reflect_magic": [
+      0,
+      0,
+      0,
+      0,
+      0.3
+    ],
+    "reflect_interval": 20
+  }
+}

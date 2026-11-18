@@ -8,6 +8,7 @@ import com.fantasyrpg.core.playerdata.RpgProgress;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import com.fantasyrpg.core.classcore.CoreService;
+import com.fantasyrpg.core.skills.SkillPassives;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -71,11 +72,17 @@ public final class CombatEvents {
                 if (a == null) return;
                 double combo = betterCombat() ? BetterCombatCompat.comboMultiplier(p) : 1.0;
                 double factor = BasicAttackMath.basicCoefficient(1.0, combo, charge);
-                in = RpgAttacks.basic(s, a.physical(), a.magic(), weapon, factor, p);
+                // 전사 패시브(검술 숙련·마검 공명·연계 감각)
+                SkillPassives.MeleeMods mods = SkillPassives.melee(p, target, a.physical(), a.magic());
+                in = RpgAttacks.basic(s, mods.physical(), mods.magic(), weapon, factor * mods.factor(), p,
+                        SkillPassives.critBonus(p));
             }
             RpgDamage.apply(target, p, in);
             p.setLastHurtMob(target);
-            if (v != WeaponPermission.Verdict.UNARMED) CoreService.onEvent(p, CoreService.BASIC_ATTACK_HIT);
+            if (v != WeaponPermission.Verdict.UNARMED) {
+                CoreService.onEvent(p, CoreService.BASIC_ATTACK_HIT);
+                SkillPassives.afterMelee(p, in.critMultiplier() > 1.0);
+            }
         } finally {
             p.resetAttackStrengthTicker(); // 취소로 빠진 바닐라 쿨타임 초기화를 대신함
         }

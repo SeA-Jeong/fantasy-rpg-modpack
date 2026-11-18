@@ -57,6 +57,14 @@ public final class RpgAttacks {
         return basic(s, s.power(GearRegistry.tierOf(weapon)), physical, magic, factor, p);
     }
 
+    /** 치명타 확률 보너스(연계 감각 등)를 더하는 판 */
+    public static DamageInput basic(CombatSettings s, double physical, double magic, ItemStack weapon, double factor,
+                                    ServerPlayer p, double critBonus) {
+        DamageInput in = DamageInput.of(s.power(GearRegistry.tierOf(weapon)), physical * factor, magic * factor);
+        if (p.getRandom().nextDouble() < s.critChance() + critBonus) in = in.withCrit(s.critMultiplier());
+        return in;
+    }
+
     /** W를 직접 넘기는 판 (쏜 화살처럼 무기 아이템이 손에 없을 때) */
     public static DamageInput basic(CombatSettings s, double weaponPower, double physical, double magic, double factor,
                                     ServerPlayer p) {

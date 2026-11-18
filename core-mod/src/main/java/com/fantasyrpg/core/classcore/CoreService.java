@@ -4,6 +4,7 @@ import com.fantasyrpg.core.network.RpgNetwork;
 import com.fantasyrpg.core.playerdata.RpgClass;
 import com.fantasyrpg.core.playerdata.RpgProgress;
 import com.fantasyrpg.core.skilltree.SkillData;
+import com.fantasyrpg.core.skills.SkillPassives;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -27,13 +28,17 @@ public final class CoreService {
         double value;
         long lastGainTick;
         int lastSentTenths = Integer.MIN_VALUE;
+        int lastSentMax = Integer.MIN_VALUE;
     }
 
     private static final Map<UUID, State> STATES = new ConcurrentHashMap<>();
 
     private static CoreDef def(ServerPlayer p) {
         RpgClass c = RpgProgress.get(p).classOrNull();
-        return c == null ? null : SkillData.core(c.id());
+        CoreDef d = c == null ? null : SkillData.core(c.id());
+        if (d == null) return null;
+        double bonus = SkillPassives.coreMaxBonus(p); // 비전 이해 3랭크
+        return bonus > 0 ? d.withMax(d.max() + bonus) : d;
     }
 
     public static void reset(ServerPlayer p) {
@@ -61,7 +66,28 @@ public final class CoreService {
         send(p, d, s, false);
     }
 
-    /** 스킬이 코어를 쓸 때 (다음 단계). 모자라면 false */
+    /** 패시브·스킬이 코어를 직접 줄 때 (사건 이름 없이) */
+    public static void gain(ServerPlayer p, double amount) {
+        CoreDef d = def(p);
+        if (d == null || amount <= 0) return;
+        State s = STATES.computeIfAbsent(p.getUUID(), k -> new State());
+        s.value = d.add(s.value, amount);
+        s.lastGainTick = p.level().getGameTime();
+        send(p, d, s, false);
+    }
+
+    /** 있는 만큼만 쓰기 (마력 방벽). 쓴 양 */
+    public static double spendUpTo(ServerPlayer p, double amount) {
+        CoreDef d = def(p);
+        State s = STATES.get(p.getUUID());
+        if (d == null || s == null || amount <= 0) return 0;
+        double used = Math.min(s.value, amount);
+        s.value = d.clamp(s.value - used);
+        send(p, d, s, false);
+        return used;
+    }
+
+    /** 스킬이 코어를 쓸 때. 모자라면 false */
     public static boolean spend(ServerPlayer p, double amount) {
         CoreDef d = def(p);
         State s = STATES.get(p.getUUID());
@@ -81,14 +107,20 @@ public final class CoreService {
             return n;
         });
         s.value = d.tick(s.value, p.level().getGameTime() - s.lastGainTick);
-        send(p, d, s, false);
+        send(p, d, s, false, d.max());
     }
 
     private static void send(ServerPlayer p, CoreDef d, State s, boolean force) {
+        send(p, d, s, force, d == null ? 0 : d.max());
+    }
+
+    private static void send(ServerPlayer p, CoreDef d, State s, boolean force, double max) {
         if (p.connection == null) return;
         int tenths = (int) Math.round(s.value * 10);
-        if (!force && tenths == s.lastSentTenths) return;
+        int maxTenths = (int) Math.round(max * 10);
+        if (!force && tenths == s.lastSentTenths && maxTenths == s.lastSentMax) return;
         s.lastSentTenths = tenths;
+        s.lastSentMax = maxTenths;
         PacketDistributor.sendToPlayer(p, new RpgNetwork.Core(d == null ? "" : d.id(), (float) s.value,
                 d == null ? 0f : (float) d.max()));
     }

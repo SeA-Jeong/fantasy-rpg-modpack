@@ -4,6 +4,7 @@ import com.fantasyrpg.core.combat.CombatManager;
 import com.fantasyrpg.core.combat.CombatSettings;
 import com.fantasyrpg.core.combat.DamageInput;
 import com.fantasyrpg.core.combat.RpgAttacks;
+import com.fantasyrpg.core.skills.SkillPassives;
 import com.fantasyrpg.core.combat.RpgDamage;
 import com.fantasyrpg.core.combat.WeaponPermission;
 import com.fantasyrpg.core.gear.armor.GearRegistry;
@@ -70,7 +71,9 @@ public class ClassWeaponItem extends Item {
         CombatSettings.ClassAttack attack = s.forClass(c.id());
         if (attack == null || attack.bolt() == null) return InteractionResultHolder.pass(stack);
         castBolt(p, (ServerLevel) level, stack, s, attack.bolt());
-        p.getCooldowns().addCooldown(this, attack.bolt().cooldownTicks());
+        // 마탄 단련: 대기 시간, N발마다 실체 마탄
+        p.getCooldowns().addCooldown(this, SkillPassives.boltCooldown(p, attack.bolt().cooldownTicks()));
+        SkillPassives.afterBolt(p);
         return InteractionResultHolder.consume(stack);
     }
 
@@ -96,8 +99,10 @@ public class ClassWeaponItem extends Item {
         if (hit == null) return;
         Entity target = hit.getEntity();
         if (target instanceof Player || !(target instanceof LivingEntity living)) return; // PvP 금지
-        DamageInput in = RpgAttacks.basic(s, bolt.physical(), bolt.magic(), staff, 1.0, p);
+        DamageInput in = RpgAttacks.basic(s, bolt.physical() + SkillPassives.boltPhysicalBonus(p), bolt.magic(), staff, 1.0, p,
+                SkillPassives.critBonus(p));
         RpgDamage.apply(living, p, in);
         p.setLastHurtMob(living);
+        if (in.critMultiplier() > 1.0) SkillPassives.onCrit(p);
     }
 }
