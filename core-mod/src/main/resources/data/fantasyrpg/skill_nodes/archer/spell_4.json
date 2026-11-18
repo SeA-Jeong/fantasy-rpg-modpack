@@ -1,0 +1,42 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_3-4단_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:archer/spell_4",
+  "name": "원소 숙련",
+  "description": "스킬 마법 피해가 오릅니다. 3랭크: 원소 화살 반경 +1. 5랭크: 주문 스킬이 맞으면 집중 +5.",
+  "direction": "spell",
+  "tier": 4,
+  "kind": "passive",
+  "max_rank": 5,
+  "required_level": 30,
+  "required_direction_sp": 10,
+  "effect": "fantasyrpg:archer_element_mastery",
+  "values": {
+    "skill_magic_bonus": [
+      0.05,
+      0.075,
+      0.1,
+      0.125,
+      0.15
+    ],
+    "spell_hit_core": [
+      0,
+      0,
+      0,
+      0,
+      5
+    ]
+  },
+  "modifies": [
+    {
+      "effect": "fantasyrpg:archer_elemental_arrow",
+      "key": "radius",
+      "add": [
+        0,
+        0,
+        1,
+        1,
+        1
+      ]
+    }
+  ]
+}

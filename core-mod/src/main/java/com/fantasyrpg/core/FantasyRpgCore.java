@@ -92,6 +92,7 @@ public final class FantasyRpgCore {
         ClericSkills.register();
         NeoForge.EVENT_BUS.addListener(SkillEvents::onKnockback);
         NeoForge.EVENT_BUS.addListener(SkillEvents::onDeath);
+        NeoForge.EVENT_BUS.addListener(SkillEvents::onEffectApplicable);
         NeoForge.EVENT_BUS.addListener(SkillEvents::onServerTick);
         NeoForge.EVENT_BUS.addListener(SkillEvents::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(SkillEvents::onIncomingDamage);

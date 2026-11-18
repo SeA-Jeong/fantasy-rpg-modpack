@@ -1,0 +1,51 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_3-4단_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:cleric/attack_3",
+  "name": "심판의 망치",
+  "description": "바라보는 지점에 심판의 망치를 내립니다. 언데드 +30%. 3랭크: 맞은 적 1마리당 신성력 +3. 5랭크: 신성력 60 이상이면 30을 더 써서 ×1.4.",
+  "direction": "attack",
+  "tier": 3,
+  "kind": "active",
+  "max_rank": 5,
+  "required_level": 20,
+  "required_direction_sp": 5,
+  "effect": "fantasyrpg:cleric_judgment",
+  "cooldown_ticks": 200,
+  "cost": 25,
+  "values": {
+    "physical": [
+      1.2,
+      1.35,
+      1.5,
+      1.65,
+      1.8
+    ],
+    "magic": 0.5,
+    "range": 12,
+    "radius": 3,
+    "undead_bonus": 0.3,
+    "stun_ticks": 10,
+    "hit_core": [
+      0,
+      0,
+      3,
+      3,
+      3
+    ],
+    "empower_threshold": [
+      0,
+      0,
+      0,
+      0,
+      60
+    ],
+    "empower_cost": 30,
+    "empower_mult": [
+      1,
+      1,
+      1,
+      1,
+      1.4
+    ]
+  }
+}

@@ -32,11 +32,24 @@ public final class SkillPassives {
     private SkillPassives() {
     }
 
-    /** 배운 노드와 랭크 (랭크 0이면 null) */
-    public record Learned(SkillNode node, int rank) {
+    /** 배운 노드와 랭크 (랭크 0이면 null). v()는 다른 패시브의 modifies 까지 더한 값 */
+    public record Learned(SkillNode node, int rank, ServerPlayer player) {
         public double v(String key) {
-            return node.value(key, rank);
+            return node.value(key, rank) + modSum(player, node.effect(), key);
         }
+    }
+
+    /** 배운 노드 전부 */
+    public static List<Learned> allLearned(ServerPlayer p) {
+        RpgPlayerData d = RpgProgress.get(p);
+        RpgClass c = d.classOrNull();
+        if (c == null || d.nodeRanks().isEmpty()) return List.of();
+        List<Learned> out = new java.util.ArrayList<>();
+        for (SkillNode n : SkillData.nodes(c.id()).values()) {
+            int r = d.nodeRanks().getOrDefault(n.id(), 0);
+            if (r > 0) out.add(new Learned(n, r, p));
+        }
+        return out;
     }
 
     public static Learned learned(ServerPlayer p, String effectId) {
@@ -46,9 +59,56 @@ public final class SkillPassives {
         for (SkillNode n : SkillData.nodes(c.id()).values()) {
             if (!effectId.equals(n.effect())) continue;
             int r = d.nodeRanks().getOrDefault(n.id(), 0);
-            if (r > 0) return new Learned(n, r);
+            if (r > 0) return new Learned(n, r, p);
         }
         return null;
+    }
+
+    /** 배운 패시브들이 effect 의 key 수치에 더하는 양 ("modifies") */
+    public static double modSum(ServerPlayer p, String effect, String key) {
+        if (p == null || effect == null || effect.isEmpty()) return 0;
+        RpgPlayerData d = RpgProgress.get(p);
+        RpgClass c = d.classOrNull();
+        if (c == null) return 0;
+        double total = 0;
+        for (SkillNode n : SkillData.nodes(c.id()).values()) {
+            if (n.mods().isEmpty()) continue;
+            int r = d.nodeRanks().getOrDefault(n.id(), 0);
+            if (r <= 0) continue;
+            for (SkillNode.Mod m : n.mods()) if (m.effect().equals(effect) && m.key().equals(key)) total += m.at(r);
+        }
+        return total;
+    }
+
+    /**
+     * 배운 모든 노드의 같은 키 합 (피해·쿨타임·회복 보너스 등). {@link SkillIds#CORE_GATED} 키는
+     * 그 노드의 bonus_core_min 보다 코어가 낮으면 빠짐.
+     */
+    public static double sum(ServerPlayer p, String key) {
+        double total = 0;
+        boolean gated = SkillIds.CORE_GATED.contains(key);
+        double core = gated ? CoreService.value(p) : 0;
+        for (Learned l : allLearned(p)) {
+            double v = l.node().value(key, l.rank());
+            if (v == 0) continue;
+            double min = l.node().value("bonus_core_min", l.rank());
+            if (gated && min > 0 && core < min) continue;
+            total += v;
+        }
+        return total;
+    }
+
+    /** 패리 뒤 피해 보너스 (기사 반격 숙달 3랭크) */
+    public static double afterParryBonus(ServerPlayer p) {
+        double b = sum(p, "after_parry_bonus");
+        return b > 0 && SkillRuntime.now(p) - SkillRuntime.state(p).lastParryTick <= 60 ? b : 0;
+    }
+
+    /** 회복 (전투사제 신앙 각성: 회복량 +, 회복 때 신성력) */
+    public static void heal(ServerPlayer p, double amount) {
+        if (amount <= 0) return;
+        p.heal((float) (amount * (1.0 + sum(p, "heal_bonus"))));
+        CoreService.gain(p, sum(p, "heal_core"));
     }
 
     public static Learned learned(ServerPlayer p, String effectId, int minRank) {
@@ -76,7 +136,8 @@ public final class SkillPassives {
     /** 치명타 배율에 더할 값 (도적 급소 감각 5랭크: 표식이 다 찼을 때) */
     public static double critMultBonus(ServerPlayer p) {
         Learned l = learned(p, SkillIds.R_VITAL_SENSE, 5);
-        return l != null && CoreService.value(p) >= l.v("crit_mult_core") ? l.v("crit_mult_bonus") : 0;
+        double full = l != null && CoreService.value(p) >= l.v("crit_mult_core") ? l.v("crit_mult_bonus") : 0;
+        return full + sum(p, "crit_mult_add");
     }
 
     /** 치명타가 났을 때 (기교 2단: 코어) */
@@ -134,6 +195,7 @@ public final class SkillPassives {
             if (undead(target)) factor *= 1.0 + spell.v("undead_bonus");
         }
         factor *= afterSkill(p, st);
+        factor *= 1.0 + sum(p, "all_damage_bonus") + afterParryBonus(p);
         boolean force = st.forceCritBasic;
         st.forceCritBasic = false;
         return new MeleeMods(physical, magic, factor, force, back);
@@ -157,6 +219,20 @@ public final class SkillPassives {
                 }
             }
         }
+        afterBasicHit(p);
+        if (in.critMultiplier() > 1.0) onCrit(p);
+    }
+
+    /** 근접·화살 기본 공격 적중 공통: 4단 패시브 코어(광폭화·집중 사격), 표식 숙달 확률 */
+    private static void afterBasicHit(ServerPlayer p) {
+        CoreService.gain(p, sum(p, "basic_hit_core") + sum(p, "basic_hit_core_high"));
+        double chance = sum(p, "extra_mark_chance");
+        if (chance > 0 && p.getRandom().nextDouble() < chance) CoreService.gain(p, 1);
+    }
+
+    /** 화살이 맞은 뒤 */
+    public static void afterArrow(ServerPlayer p, DamageInput in) {
+        afterBasicHit(p);
         if (in.critMultiplier() > 1.0) onCrit(p);
     }
 
@@ -189,6 +265,7 @@ public final class SkillPassives {
             magic += add;
         }
         factor *= afterSkill(p, st);
+        factor *= 1.0 + sum(p, "all_damage_bonus") + afterParryBonus(p);
         return new ArrowMods(physical, magic, factor);
     }
 
@@ -201,11 +278,16 @@ public final class SkillPassives {
 
     public static int boltCooldown(ServerPlayer p, int base) {
         Learned l = learned(p, SkillIds.M_BOLT_TRAINING);
-        return l == null ? base : (int) Math.round(l.v("bolt_cooldown_ticks"));
+        int cd = l == null ? base : (int) Math.round(l.v("bolt_cooldown_ticks"));
+        SkillRuntime.State st = SkillRuntime.state(p);
+        if (st.hasteEnd > SkillRuntime.now(p)) cd = (int) Math.max(1, Math.round(cd * (1.0 - st.hasteBoltCut)));
+        return cd;
     }
 
     /** 기본 탄을 쏜 뒤 (마탄 단련 5랭크: N발마다 실체 마탄 1발) */
     public static void afterBolt(ServerPlayer p) {
+        SkillRuntime.State hs = SkillRuntime.state(p);
+        if (hs.hasteEnd > SkillRuntime.now(p)) CoreService.gain(p, hs.hasteBoltCore); // 가속 주문 3랭크
         Learned l = learned(p, SkillIds.M_BOLT_TRAINING, 5);
         if (l == null) return;
         SkillRuntime.State st = SkillRuntime.state(p);
@@ -232,8 +314,7 @@ public final class SkillPassives {
     // ── 코어 최대치 ──
 
     public static double coreMaxBonus(ServerPlayer p) {
-        Learned l = learned(p, SkillIds.M_ARCANE_INSIGHT, 3);
-        return l == null ? 0 : l.v("max_core_bonus");
+        return sum(p, "max_core_bonus");
     }
 
     // ── 흡수 체력 (최대 흡수 체력 속성에 임시 수정자를 붙이고 채움, 시간이 지나면 거둠) ──

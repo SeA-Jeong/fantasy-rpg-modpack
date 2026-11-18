@@ -1,0 +1,42 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_3-4단_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:knight/spell_3",
+  "name": "마력 창우",
+  "description": "바라보는 지점에 마력 창을 연달아 떨어뜨립니다. 3랭크: 느림. 5랭크: 창 4개.",
+  "direction": "spell",
+  "tier": 3,
+  "kind": "active",
+  "max_rank": 5,
+  "required_level": 20,
+  "required_direction_sp": 5,
+  "effect": "fantasyrpg:knight_spear_rain",
+  "cooldown_ticks": 240,
+  "cost": 30,
+  "values": {
+    "physical": 0.15,
+    "magic": [
+      0.5,
+      0.5625,
+      0.625,
+      0.6875,
+      0.75
+    ],
+    "range": 16,
+    "radius": 3,
+    "spears": [
+      3,
+      3,
+      3,
+      3,
+      4
+    ],
+    "interval_ticks": 6,
+    "slow_ticks": [
+      0,
+      0,
+      40,
+      40,
+      40
+    ]
+  }
+}

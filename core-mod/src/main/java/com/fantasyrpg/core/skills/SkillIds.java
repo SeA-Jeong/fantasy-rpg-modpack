@@ -74,4 +74,61 @@ public final class SkillIds {
     public static final String[] FINESSE_SENSE = {W_COMBO_SENSE, K_BATTLE_RHYTHM, R_VITAL_SENSE, A_MARKSMAN, C_HOLY_RHYTHM};
     /** 수호 2단: 맞으면 코어(hurt_core), 위기 반응(low_*) */
     public static final String[] GUARD_PASSIVE = {W_FIGHTING_SPIRIT, K_STEADFAST, R_NIMBLE, A_KEEP_DISTANCE, C_FAITH_ARMOR};
+
+    // ── 3단 액티브·4단 패시브 (claude/6직업_3-4단_스킬_초안.md) ──
+    public static final String W_WHIRLWIND = "fantasyrpg:warrior_whirlwind";
+    public static final String W_FRENZY = "fantasyrpg:warrior_frenzy";
+    public static final String W_BLADE_STORM = "fantasyrpg:warrior_blade_storm";
+    public static final String W_MANA_FLOW = "fantasyrpg:warrior_mana_flow";
+    public static final String W_COUNTER_SMASH = "fantasyrpg:warrior_counter_smash";
+    public static final String W_STEEL_WILL = "fantasyrpg:warrior_steel_will";
+    public static final String W_GALE_THRUST = "fantasyrpg:warrior_gale_thrust";
+    public static final String W_COMBO_MASTERY = "fantasyrpg:warrior_combo_mastery";
+    public static final String M_BOLT_BARRAGE = "fantasyrpg:mage_bolt_barrage";
+    public static final String M_BOLT_RESONANCE = "fantasyrpg:mage_bolt_resonance";
+    public static final String M_ARCANE_STORM = "fantasyrpg:mage_arcane_storm";
+    public static final String M_ARCANE_AMPLIFY = "fantasyrpg:mage_arcane_amplify";
+    public static final String M_BARRIER_BURST = "fantasyrpg:mage_barrier_burst";
+    public static final String M_CYCLE_BARRIER = "fantasyrpg:mage_cycle_barrier";
+    public static final String M_HASTE = "fantasyrpg:mage_haste";
+    public static final String M_SPELL_MASTERY = "fantasyrpg:mage_spell_mastery";
+    public static final String K_SPIN = "fantasyrpg:knight_spin";
+    public static final String K_CHARGE_MASTERY = "fantasyrpg:knight_charge_mastery";
+    public static final String K_SPEAR_RAIN = "fantasyrpg:knight_spear_rain";
+    public static final String K_MANA_AWAKEN = "fantasyrpg:knight_mana_awaken";
+    public static final String K_SHIELD_BASH = "fantasyrpg:knight_shield_bash";
+    public static final String K_BULWARK = "fantasyrpg:knight_bulwark";
+    public static final String K_THRUST_FLURRY = "fantasyrpg:knight_thrust_flurry";
+    public static final String K_COUNTER_MASTERY = "fantasyrpg:knight_counter_mastery";
+    public static final String R_ASSASSINATE = "fantasyrpg:rogue_assassinate";
+    public static final String R_VITAL_MASTERY = "fantasyrpg:rogue_vital_mastery";
+    public static final String R_SHADOW_VORTEX = "fantasyrpg:rogue_shadow_vortex";
+    public static final String R_SHADOW_MASTERY = "fantasyrpg:rogue_shadow_mastery";
+    public static final String R_SHADOW_COUNTER = "fantasyrpg:rogue_shadow_counter";
+    public static final String R_SHADOW_STEP = "fantasyrpg:rogue_shadow_step";
+    public static final String R_MARK_BURST = "fantasyrpg:rogue_mark_burst";
+    public static final String R_MARK_MASTERY = "fantasyrpg:rogue_mark_mastery";
+    public static final String A_POWER_SHOT = "fantasyrpg:archer_power_shot";
+    public static final String A_FOCUS_FIRE = "fantasyrpg:archer_focus_fire";
+    public static final String A_ARROW_RAIN = "fantasyrpg:archer_arrow_rain";
+    public static final String A_ELEMENT_MASTERY = "fantasyrpg:archer_element_mastery";
+    public static final String A_TRAP = "fantasyrpg:archer_trap";
+    public static final String A_SURVIVAL = "fantasyrpg:archer_survival";
+    public static final String A_LEAP_SHOT = "fantasyrpg:archer_leap_shot";
+    public static final String A_RAPID_MASTERY = "fantasyrpg:archer_rapid_mastery";
+    public static final String C_JUDGMENT = "fantasyrpg:cleric_judgment";
+    public static final String C_SMITE_MASTERY = "fantasyrpg:cleric_smite_mastery";
+    public static final String C_HOLY_BURST = "fantasyrpg:cleric_holy_burst";
+    public static final String C_FAITH_AWAKEN = "fantasyrpg:cleric_faith_awaken";
+    public static final String C_RETRIBUTION = "fantasyrpg:cleric_retribution";
+    public static final String C_OATH = "fantasyrpg:cleric_oath";
+    public static final String C_PURIFY_FLURRY = "fantasyrpg:cleric_purify_flurry";
+    public static final String C_PURIFY_MASTERY = "fantasyrpg:cleric_purify_mastery";
+
+    /** 연쇄 패시브 (스킬을 이어 쓰면): 마법사 주문 연쇄, 전사 연계 숙달 */
+    public static final String[] CHAIN = {M_SPELL_CHAIN, W_COMBO_MASTERY};
+
+    /** 코어 문턱(bonus_core_min)이 걸리는 합산 키 */
+    public static final java.util.Set<String> CORE_GATED = java.util.Set.of("all_damage_bonus", "skill_magic_bonus",
+            "skill_physical_bonus", "cooldown_rate", "basic_hit_core_high");
 }

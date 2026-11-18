@@ -1,0 +1,60 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_3-4단_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:knight/guard_4",
+  "name": "철벽 숙련",
+  "description": "패리 판정이 길어집니다(최대 8틱). 3랭크: 패리 성공 시 흡수 체력 4. 5랭크: 완벽 방어 쿨타임 −3초.",
+  "direction": "guard",
+  "tier": 4,
+  "kind": "passive",
+  "max_rank": 5,
+  "required_level": 30,
+  "required_direction_sp": 10,
+  "effect": "fantasyrpg:knight_bulwark",
+  "values": {},
+  "modifies": [
+    {
+      "effect": "fantasyrpg:knight_perfect_guard",
+      "key": "parry_ticks",
+      "add": [
+        0,
+        1,
+        1,
+        2,
+        2
+      ]
+    },
+    {
+      "effect": "fantasyrpg:knight_perfect_guard",
+      "key": "parry_absorption",
+      "add": [
+        0,
+        0,
+        4,
+        4,
+        4
+      ]
+    },
+    {
+      "effect": "fantasyrpg:knight_perfect_guard",
+      "key": "parry_absorption_ticks",
+      "add": [
+        0,
+        0,
+        100,
+        100,
+        100
+      ]
+    },
+    {
+      "effect": "fantasyrpg:knight_perfect_guard",
+      "key": "cooldown_ticks",
+      "add": [
+        0,
+        0,
+        0,
+        0,
+        -60
+      ]
+    }
+  ]
+}

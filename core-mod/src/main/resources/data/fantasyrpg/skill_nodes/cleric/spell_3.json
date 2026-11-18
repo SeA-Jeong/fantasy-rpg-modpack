@@ -1,0 +1,47 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_3-4단_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:cleric/spell_3",
+  "name": "신성 폭발",
+  "description": "주변에 신성한 폭발을 일으키고 체력을 회복합니다. 언데드 ×1.5. 3랭크: 반경 5. 5랭크: 맞은 적 1마리당 0.5 추가 회복(최대 3).",
+  "direction": "spell",
+  "tier": 3,
+  "kind": "active",
+  "max_rank": 5,
+  "required_level": 20,
+  "required_direction_sp": 5,
+  "effect": "fantasyrpg:cleric_holy_burst",
+  "cooldown_ticks": 240,
+  "cost": 30,
+  "values": {
+    "magic": [
+      1.0,
+      1.125,
+      1.25,
+      1.375,
+      1.5
+    ],
+    "radius": [
+      4,
+      4,
+      5,
+      5,
+      5
+    ],
+    "undead_mult": 1.5,
+    "heal": [
+      1.0,
+      1.5,
+      2.0,
+      2.5,
+      3.0
+    ],
+    "heal_per_hit": [
+      0,
+      0,
+      0,
+      0,
+      0.5
+    ],
+    "heal_cap": 3
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_3-4단_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:archer/finesse_3",
+  "name": "도약 사격",
+  "description": "위로 뛰어오르며 화살 2발을 쏩니다. 3랭크: 집중 +10. 5랭크: 2발 모두 맞으면 쿨타임 절반.",
+  "direction": "finesse",
+  "tier": 3,
+  "kind": "active",
+  "max_rank": 5,
+  "required_level": 20,
+  "required_direction_sp": 5,
+  "effect": "fantasyrpg:archer_leap_shot",
+  "cooldown_ticks": 160,
+  "cost": 15,
+  "values": {
+    "physical": [
+      0.7,
+      0.775,
+      0.85,
+      0.925,
+      1.0
+    ],
+    "range": 25,
+    "arrows": 2,
+    "jump": 0.8,
+    "cast_core": [
+      0,
+      0,
+      10,
+      10,
+      10
+    ],
+    "all_hit_cooldown_mult": [
+      0,
+      0,
+      0,
+      0,
+      0.5
+    ]
+  }
+}

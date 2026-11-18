@@ -1,0 +1,42 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_3-4단_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:mage/finesse_4",
+  "name": "주문 숙련",
+  "description": "모든 스킬 쿨타임이 줄어듭니다. 3랭크: 주문 연쇄 창 4초. 5랭크: 마나 최대 +20.",
+  "direction": "finesse",
+  "tier": 4,
+  "kind": "passive",
+  "max_rank": 5,
+  "required_level": 30,
+  "required_direction_sp": 10,
+  "effect": "fantasyrpg:mage_spell_mastery",
+  "values": {
+    "cooldown_rate": [
+      0.02,
+      0.03,
+      0.04,
+      0.05,
+      0.06
+    ],
+    "max_core_bonus": [
+      0,
+      0,
+      0,
+      0,
+      20
+    ]
+  },
+  "modifies": [
+    {
+      "effect": "fantasyrpg:mage_spell_chain",
+      "key": "window_ticks",
+      "add": [
+        0,
+        0,
+        20,
+        20,
+        20
+      ]
+    }
+  ]
+}

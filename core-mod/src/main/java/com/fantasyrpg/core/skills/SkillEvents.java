@@ -12,6 +12,8 @@ import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingKnockBackEvent;
+import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
+import net.minecraft.world.effect.MobEffectCategory;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
@@ -46,6 +48,11 @@ public final class SkillEvents {
             SkillPassives.Learned l = SkillPassives.learned(p, SkillIds.C_SANCTUARY);
             if (l != null && p.isAlive()) ClericSkills.sanctuaryEnd(p, l, st.sanctReduced);
             st.sanctReduced = 0;
+        }
+        if (st.retribEnd > 0 && now >= st.retribEnd) {
+            st.retribEnd = -1;
+            SkillPassives.Learned l = SkillPassives.learned(p, SkillIds.C_RETRIBUTION);
+            if (l != null && p.isAlive()) ClericSkills.retributionEnd(p, l);
         }
         if (st.barrierEnd > 0 && now >= st.barrierEnd) st.barrierEnd = -1;
         SkillPassives.tickTimed(p);
@@ -106,6 +113,22 @@ public final class SkillEvents {
                 amount = after;
             }
         }
+        // 전투사제 응징의 방패: 감소와 반격
+        if (st.retribEnd > now) {
+            SkillPassives.Learned l = SkillPassives.learned(p, SkillIds.C_RETRIBUTION);
+            if (l != null) {
+                amount = (float) SkillMath.reduced(amount, l.v("reduction"));
+                if (attacker != null && now - st.retribLast >= l.v("reflect_interval")) {
+                    st.retribLast = now;
+                    new Cast(p, l.node(), l.rank(), 0).hit(attacker, 0, l.v("reflect_magic"));
+                }
+            }
+        }
+        // 궁수 생존 본능: 가까운 적대 몬스터가 많으면 감소
+        SkillPassives.Learned survival = SkillPassives.learned(p, SkillIds.A_SURVIVAL);
+        if (survival != null && SkillTargets.around(p, p.position(), survival.v("crowd_range")).size() >= survival.v("crowd_count")) {
+            amount = (float) SkillMath.reduced(amount, survival.v("crowd_reduction"));
+        }
         // 궁수 후퇴 사격 5랭크
         if (st.retreatGuardEnd > now) {
             SkillPassives.Learned l = SkillPassives.learned(p, SkillIds.A_RETREAT_SHOT, 5);
@@ -147,6 +170,13 @@ public final class SkillEvents {
         if (!(event.getEntity() instanceof ServerPlayer p) || event.getNewDamage() <= 0 || !p.isAlive()) return;
         SkillRuntime.State st = SkillRuntime.state(p);
         long now = SkillRuntime.now(p);
+        st.lastHurtTick = now;
+        // 순환 결계 5랭크: 결계 흡수 체력이 다 깨지면 마나
+        if (st.barrierEnd > now && !st.barrierBroken && p.getAbsorptionAmount() <= 0) {
+            st.barrierBroken = true;
+            SkillPassives.Learned barrier = SkillPassives.learned(p, SkillIds.M_BARRIER_SHOCK);
+            if (barrier != null) CoreService.gain(p, barrier.v("broken_core"));
+        }
         SkillPassives.Learned g = SkillPassives.anyOf(p, SkillIds.GUARD_PASSIVE);
         if (g != null) {
             CoreService.gain(p, g.v("hurt_core"));
@@ -158,7 +188,7 @@ public final class SkillEvents {
                     && p.getHealth() < p.getMaxHealth() * g.v("low_health")) {
                 st.lowHealthReady = now + (long) g.v("low_cooldown_ticks");
                 CoreService.gain(p, g.v("low_core"));
-                if (g.v("low_heal") > 0) p.heal((float) g.v("low_heal"));
+                SkillPassives.heal(p, g.v("low_heal"));
                 if (g.v("low_speed") > 0) {
                     SkillPassives.timedAttribute(p, "low_speed", Attributes.MOVEMENT_SPEED, g.v("low_speed"),
                             AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL, (int) g.v("low_speed_ticks"));
@@ -179,6 +209,14 @@ public final class SkillEvents {
     /** 기사 굳건함 3랭크: 결의가 높으면 밀려나지 않음 */
     public static void onKnockback(LivingKnockBackEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer p)) return;
+        // 강철 의지 5랭크: 불굴 중 밀려나지 않음
+        if (SkillRuntime.state(p).indomitableEnd > SkillRuntime.now(p)) {
+            SkillPassives.Learned ind = SkillPassives.learned(p, SkillIds.W_INDOMITABLE);
+            if (ind != null && ind.v("knockback_immune") > 0) {
+                event.setCanceled(true);
+                return;
+            }
+        }
         SkillPassives.Learned l = SkillPassives.learned(p, SkillIds.K_STEADFAST, 3);
         if (l != null && CoreService.value(p) >= l.v("knockback_core")) event.setCanceled(true);
     }
@@ -192,6 +230,15 @@ public final class SkillEvents {
         SkillRuntime.setCooldown(p, w.nodeId(), 0);
     }
 
+    /** 수호 서약 5랭크: 신성 방벽 중 해로운 효과에 걸리지 않음 */
+    public static void onEffectApplicable(MobEffectEvent.Applicable event) {
+        if (!(event.getEntity() instanceof ServerPlayer p)) return;
+        if (event.getEffectInstance().getEffect().value().getCategory() != MobEffectCategory.HARMFUL) return;
+        if (SkillRuntime.state(p).sanctEnd <= SkillRuntime.now(p)) return;
+        SkillPassives.Learned l = SkillPassives.learned(p, SkillIds.C_SANCTUARY);
+        if (l != null && l.v("cleanse_immune") > 0) event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
+    }
+
     /** 접속·부활 때 */
     public static void refresh(ServerPlayer p) {
         SkillPassives.clearTimed(p);
@@ -202,6 +249,9 @@ public final class SkillEvents {
         st.guardEnd = -1;
         st.evadeEnd = -1;
         st.retreatGuardEnd = -1;
+        st.retribEnd = -1;
+        st.hasteEnd = -1;
+        st.trapSeq++;
         SkillRuntime.resendCooldowns(p);
     }
 }

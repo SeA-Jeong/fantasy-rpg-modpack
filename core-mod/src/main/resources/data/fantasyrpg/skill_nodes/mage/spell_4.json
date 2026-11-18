@@ -1,0 +1,58 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_3-4단_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:mage/spell_4",
+  "name": "비전 증폭",
+  "description": "마나 70 이상일 때 스킬 마법 피해가 오릅니다. 3랭크: 비전 폭발 반경 +1. 5랭크: 비전 폭발·비전 폭풍 쿨타임 −10%.",
+  "direction": "spell",
+  "tier": 4,
+  "kind": "passive",
+  "max_rank": 5,
+  "required_level": 30,
+  "required_direction_sp": 10,
+  "effect": "fantasyrpg:mage_arcane_amplify",
+  "values": {
+    "bonus_core_min": 70,
+    "skill_magic_bonus": [
+      0.05,
+      0.075,
+      0.1,
+      0.125,
+      0.15
+    ]
+  },
+  "modifies": [
+    {
+      "effect": "fantasyrpg:mage_arcane_burst",
+      "key": "radius",
+      "add": [
+        0,
+        0,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "effect": "fantasyrpg:mage_arcane_burst",
+      "key": "cooldown_ticks",
+      "add": [
+        0,
+        0,
+        0,
+        0,
+        -12
+      ]
+    },
+    {
+      "effect": "fantasyrpg:mage_arcane_storm",
+      "key": "cooldown_ticks",
+      "add": [
+        0,
+        0,
+        0,
+        0,
+        -28
+      ]
+    }
+  ]
+}

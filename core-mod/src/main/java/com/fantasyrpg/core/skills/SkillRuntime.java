@@ -65,6 +65,14 @@ public final class SkillRuntime {
         // 전투사제 신성 방벽
         public long sanctEnd = -1;
         public double sanctReduced;
+        // 3~4단
+        public long lastHurtTick = -1000;
+        public long lastEvadeSuccessTick = -1000;
+        public long hasteEnd = -1;
+        public double hasteBoltCut, hasteBoltCore;
+        public long retribEnd = -1, retribLast = -1000;
+        public boolean barrierBroken;
+        public int trapSeq;
         // 시간 제한 속성 수정자 (이동 속도 등): 키 → 끝나는 틱
         public final Map<String, Long> attrEnd = new HashMap<>();
     }

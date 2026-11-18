@@ -1,0 +1,48 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_3-4단_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:knight/attack_3",
+  "name": "회전 창격",
+  "description": "창을 휘둘러 주변 적을 치고 밀쳐냅니다. 3랭크: 맞은 적 1마리당 결의 +3. 5랭크: 결의 60 이상이면 30을 더 써서 ×1.4.",
+  "direction": "attack",
+  "tier": 3,
+  "kind": "active",
+  "max_rank": 5,
+  "required_level": 20,
+  "required_direction_sp": 5,
+  "effect": "fantasyrpg:knight_spin",
+  "cooldown_ticks": 180,
+  "cost": 25,
+  "values": {
+    "physical": [
+      1.1,
+      1.25,
+      1.4,
+      1.55,
+      1.7
+    ],
+    "radius": 3.5,
+    "knockback": 0.6,
+    "hit_core": [
+      0,
+      0,
+      3,
+      3,
+      3
+    ],
+    "empower_threshold": [
+      0,
+      0,
+      0,
+      0,
+      60
+    ],
+    "empower_cost": 30,
+    "empower_mult": [
+      1,
+      1,
+      1,
+      1,
+      1.4
+    ]
+  }
+}

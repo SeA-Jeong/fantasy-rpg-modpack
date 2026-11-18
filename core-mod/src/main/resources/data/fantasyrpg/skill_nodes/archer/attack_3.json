@@ -1,0 +1,41 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_3-4단_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:archer/attack_3",
+  "name": "강사",
+  "description": "집중을 모두 쓴 강한 화살을 쏩니다(집중 10당 +10%). 3랭크: 관통. 5랭크: 집중 100에서 쓰면 ×1.5.",
+  "direction": "attack",
+  "tier": 3,
+  "kind": "active",
+  "max_rank": 5,
+  "required_level": 20,
+  "required_direction_sp": 5,
+  "effect": "fantasyrpg:archer_power_shot",
+  "cooldown_ticks": 240,
+  "cost": 0,
+  "values": {
+    "physical": [
+      1.2,
+      1.35,
+      1.5,
+      1.65,
+      1.8
+    ],
+    "range": 30,
+    "per_ten_bonus": 0.1,
+    "pierce": [
+      0,
+      0,
+      1,
+      1,
+      1
+    ],
+    "full_focus": 100,
+    "full_mult": [
+      0,
+      0,
+      0,
+      0,
+      1.5
+    ]
+  }
+}

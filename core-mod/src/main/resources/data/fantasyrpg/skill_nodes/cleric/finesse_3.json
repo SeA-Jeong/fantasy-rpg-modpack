@@ -1,0 +1,41 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_3-4단_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:cleric/finesse_3",
+  "name": "정화의 연타",
+  "description": "바라보는 적을 연타하며 한 타마다 내 해로운 효과를 1개 없앱니다. 3랭크: 해제마다 신성력 +5. 5랭크: 4연타.",
+  "direction": "finesse",
+  "tier": 3,
+  "kind": "active",
+  "max_rank": 5,
+  "required_level": 20,
+  "required_direction_sp": 5,
+  "effect": "fantasyrpg:cleric_purify_flurry",
+  "cooldown_ticks": 180,
+  "cost": 15,
+  "values": {
+    "physical": [
+      0.5,
+      0.5625,
+      0.625,
+      0.6875,
+      0.75
+    ],
+    "magic": 0.2,
+    "range": 4,
+    "hits": [
+      3,
+      3,
+      3,
+      3,
+      4
+    ],
+    "interval_ticks": 4,
+    "purge_core": [
+      0,
+      0,
+      5,
+      5,
+      5
+    ]
+  }
+}

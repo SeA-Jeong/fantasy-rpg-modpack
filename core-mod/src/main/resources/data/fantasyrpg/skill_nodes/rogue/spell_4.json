@@ -1,0 +1,46 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_3-4단_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:rogue/spell_4",
+  "name": "암영 숙련",
+  "description": "스킬 마법 피해가 오릅니다. 3랭크: 그림자 칼날 적중 표식 +2. 5랭크: 암영 효과 +25%.",
+  "direction": "spell",
+  "tier": 4,
+  "kind": "passive",
+  "max_rank": 5,
+  "required_level": 30,
+  "required_direction_sp": 10,
+  "effect": "fantasyrpg:rogue_shadow_mastery",
+  "values": {
+    "skill_magic_bonus": [
+      0.05,
+      0.075,
+      0.1,
+      0.125,
+      0.15
+    ]
+  },
+  "modifies": [
+    {
+      "effect": "fantasyrpg:rogue_shadow_blades",
+      "key": "hit_core",
+      "add": [
+        0,
+        0,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "effect": "fantasyrpg:rogue_shadow_blades",
+      "key": "shadow_bonus",
+      "add": [
+        0,
+        0,
+        0,
+        0,
+        0.1
+      ]
+    }
+  ]
+}
