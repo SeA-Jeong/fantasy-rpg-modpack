@@ -1,0 +1,42 @@
+{
+  "_comment": "[초안] 수치는 claude/4직업_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:rogue/attack_1",
+  "name": "급소 난무",
+  "description": "바라보는 적을 2연타합니다. 표식을 모두 써서 표식 1개당 피해 +20%. 3랭크: 등 뒤에서 쓰면 치명타 확정. 5랭크: 표식 5개를 쓰면 3연타.",
+  "direction": "attack",
+  "tier": 1,
+  "kind": "active",
+  "max_rank": 5,
+  "required_level": 1,
+  "required_direction_sp": 0,
+  "effect": "fantasyrpg:rogue_vital_flurry",
+  "cooldown_ticks": 120,
+  "cost": 0,
+  "values": {
+    "physical": [
+      0.6,
+      0.67,
+      0.75,
+      0.82,
+      0.9
+    ],
+    "range": 4,
+    "hits": 2,
+    "per_mark_bonus": 0.2,
+    "behind_crit": [
+      0,
+      0,
+      1,
+      1,
+      1
+    ],
+    "full_marks": 5,
+    "full_hits": [
+      2,
+      2,
+      2,
+      2,
+      3
+    ]
+  }
+}

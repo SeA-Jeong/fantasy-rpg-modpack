@@ -1,0 +1,36 @@
+{
+  "_comment": "[초안] 수치는 claude/4직업_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:knight/spell_2",
+  "name": "마력 각인",
+  "description": "기본 공격에 마법 피해가 붙습니다. 3랭크: 마력 관통창이 2명 이상 맞히면 결의 +10. 5랭크: 마력 관통창 쿨타임 −1초.",
+  "direction": "spell",
+  "tier": 2,
+  "kind": "passive",
+  "max_rank": 5,
+  "required_level": 1,
+  "required_direction_sp": 0,
+  "effect": "fantasyrpg:knight_rune_engrave",
+  "values": {
+    "basic_magic": [
+      0.05,
+      0.1,
+      0.15,
+      0.2,
+      0.25
+    ],
+    "multi_hit_core": [
+      0,
+      0,
+      10,
+      10,
+      10
+    ],
+    "cooldown_cut": [
+      0,
+      0,
+      0,
+      0,
+      20
+    ]
+  }
+}

@@ -255,15 +255,12 @@ public final class SkillService {
             bonus = chain == null ? 0 : chain.v("chain_bonus");
             st.chainBonusReady = false;
         }
-        if (!effect.run(new Cast(p, n, rank, bonus))) {
+        Cast cast = new Cast(p, n, rank, bonus);
+        if (!effect.run(cast)) {
             return; // 못 씀: 비용·쿨타임 없음 (연쇄 보너스는 이미 쓴 것으로 봄 — 단순화)
         }
-        if (cost > 0) CoreService.spend(p, cost);
-        int cd = n.cooldownTicks(rank);
-        if (SkillIds.W_MANA_SLASH.equals(n.effect())) {
-            SkillPassives.Learned blade = SkillPassives.learned(p, SkillIds.W_SPELLBLADE, 5);
-            if (blade != null) cd = Math.max(0, cd - (int) blade.v("mana_slash_cooldown_cut"));
-        }
+        if (cost > 0 && !cast.free) CoreService.spend(p, cost);
+        int cd = Math.max(0, n.cooldownTicks(rank) - SkillPassives.cooldownCut(p, n));
         if (chained) {
             cd = SkillMath.chainedCooldown(cd, chain.v("cooldown_cut"));
             st.chainCount++;

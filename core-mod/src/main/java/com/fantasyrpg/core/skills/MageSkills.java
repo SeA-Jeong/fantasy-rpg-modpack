@@ -7,7 +7,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.HashMap;
@@ -129,14 +128,7 @@ public final class MageSkills {
         ServerPlayer p = c.player;
         double dist = c.v("distance");
         Vec3 start = p.position();
-        Vec3 look = p.getViewVector(1.0F);
-        Vec3 best = start;
-        AABB box = p.getBoundingBox();
-        for (double d = 0.25; d <= dist + 1e-6; d += 0.25) {
-            Vec3 at = start.add(look.scale(d));
-            if (!p.level().noCollision(p, box.move(at.subtract(start)))) break;
-            best = at;
-        }
+        Vec3 best = SkillTargets.freeTravel(p, dist, false);
         if (best.distanceToSqr(start) < 1.0) {
             p.displayClientMessage(net.minecraft.network.chat.Component.translatable("message.fantasyrpg.skill.blocked")
                     .withStyle(net.minecraft.ChatFormatting.GRAY), true);

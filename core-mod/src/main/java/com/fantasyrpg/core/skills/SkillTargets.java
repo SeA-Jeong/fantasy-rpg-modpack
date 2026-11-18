@@ -56,6 +56,62 @@ public final class SkillTargets {
         return hit == null ? null : (LivingEntity) hit.getEntity();
     }
 
+    /** 임의 방향으로 쏜 첫 대상 (그림자 칼날의 부채꼴 단검) */
+    public static LivingEntity firstAlong(ServerPlayer p, Vec3 dir, double range) {
+        Vec3 eye = p.getEyePosition();
+        Vec3 end = eye.add(dir.normalize().scale(range));
+        BlockHitResult block = p.level().clip(new ClipContext(eye, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, p));
+        if (block.getType() != HitResult.Type.MISS) end = block.getLocation();
+        AABB box = new AABB(eye, end).inflate(1.0);
+        EntityHitResult hit = ProjectileUtil.getEntityHitResult(p.level(), p, eye, end, box, e -> single(e, p) && e.isPickable());
+        return hit == null ? null : (LivingEntity) hit.getEntity();
+    }
+
+    /** 수평 시선을 yaw 도만큼 돌린 방향 */
+    public static Vec3 rotatedLook(ServerPlayer p, double degrees) {
+        return Vec3.directionFromRotation(p.getXRot(), p.getYRot() + (float) degrees);
+    }
+
+    /**
+     * 수평으로 앞으로 이동할 수 있는 끝 지점 (블록에 막히면 그 앞). 돌진·점멸용.
+     *
+     * @param horizontal true면 시선의 위아래를 무시
+     */
+    public static Vec3 freeTravel(ServerPlayer p, double distance, boolean horizontal) {
+        Vec3 start = p.position();
+        Vec3 look = p.getViewVector(1.0F);
+        if (horizontal) look = new Vec3(look.x, 0, look.z).normalize();
+        Vec3 best = start;
+        AABB box = p.getBoundingBox();
+        for (double d = 0.25; d <= distance + 1e-6; d += 0.25) {
+            Vec3 at = start.add(look.scale(d));
+            if (!p.level().noCollision(p, box.move(at.subtract(start)))) break;
+            best = at;
+        }
+        return best;
+    }
+
+    /** 두 점 사이를 지나간 적대 몬스터 (폭 width) */
+    public static List<LivingEntity> sweep(ServerPlayer p, Vec3 from, Vec3 to, double width) {
+        AABB box = new AABB(from, to).inflate(width, 1.0, width);
+        List<LivingEntity> out = new ArrayList<>();
+        Vec3 a = from.add(0, 1, 0), b = to.add(0, 1, 0);
+        for (Entity e : p.level().getEntities(p, box, e -> area(e, p))) {
+            if (e.getBoundingBox().inflate(width).clip(a, b).isPresent() || e.getBoundingBox().inflate(width).contains(a)) out.add((LivingEntity) e);
+        }
+        out.sort(Comparator.comparingDouble(e -> e.distanceToSqr(from)));
+        return out;
+    }
+
+    /** 뒤(시선 반대)로 도약 — 순간이동이 아니라 속도로 밈 */
+    public static void leapBack(ServerPlayer p, double strength) {
+        Vec3 look = p.getViewVector(1.0F);
+        Vec3 back = new Vec3(-look.x, 0, -look.z).normalize().scale(strength);
+        p.setDeltaMovement(back.x, 0.35, back.z);
+        p.hurtMarked = true;
+        p.resetFallDistance();
+    }
+
     /** 시선 직선 위 모든 대상 (가까운 순, 블록까지) */
     public static List<LivingEntity> line(ServerPlayer p, double range) {
         Vec3 eye = p.getEyePosition();

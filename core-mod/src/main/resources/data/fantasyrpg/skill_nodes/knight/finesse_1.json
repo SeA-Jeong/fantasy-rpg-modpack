@@ -1,0 +1,40 @@
+{
+  "_comment": "[초안] 수치는 claude/4직업_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:knight/finesse_1",
+  "name": "반격 찌르기",
+  "description": "바라보는 적을 빠르게 찌릅니다. 3초 안에 패리했으면 피해 ×2, 결의 비용 없음. 3랭크: 패리 조건 5초. 5랭크: 2연타.",
+  "direction": "finesse",
+  "tier": 1,
+  "kind": "active",
+  "max_rank": 5,
+  "required_level": 1,
+  "required_direction_sp": 0,
+  "effect": "fantasyrpg:knight_riposte",
+  "cooldown_ticks": 100,
+  "cost": 10,
+  "values": {
+    "physical": [
+      1.0,
+      1.15,
+      1.3,
+      1.45,
+      1.6
+    ],
+    "range": 5,
+    "parry_window_ticks": [
+      60,
+      60,
+      100,
+      100,
+      100
+    ],
+    "parry_mult": 2,
+    "hits": [
+      1,
+      1,
+      1,
+      1,
+      2
+    ]
+  }
+}

@@ -52,6 +52,16 @@ public final class SkillMath {
         return damage * (1.0 - Math.max(0.0, Math.min(0.9, reduction)));
     }
 
+    /**
+     * 공격자가 대상 등 뒤(반구)에 있는지.
+     *
+     * @param lookX,lookZ 대상이 바라보는 방향
+     * @param dx,dz       대상 → 공격자
+     */
+    public static boolean isBehind(double lookX, double lookZ, double dx, double dz) {
+        return lookX * dx + lookZ * dz < 0;
+    }
+
     /** 같은 대상 연속 적중 수 갱신. 다른 대상이면 1부터 */
     public static int consecutive(boolean sameTarget, int previous) {
         return sameTarget ? previous + 1 : 1;

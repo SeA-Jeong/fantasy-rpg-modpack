@@ -1,0 +1,46 @@
+{
+  "_comment": "[초안] 수치는 claude/4직업_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:rogue/guard_2",
+  "name": "날렵함",
+  "description": "피해를 받으면 2초 동안 빨라집니다. 3랭크: 체력 30% 아래로 떨어지면 0.5초 자동 회피(60초에 1번). 5랭크: 그때 흡수 체력 4.",
+  "direction": "guard",
+  "tier": 2,
+  "kind": "passive",
+  "max_rank": 5,
+  "required_level": 1,
+  "required_direction_sp": 0,
+  "effect": "fantasyrpg:rogue_nimble",
+  "values": {
+    "hurt_speed": [
+      0.05,
+      0.1,
+      0.15,
+      0.2,
+      0.25
+    ],
+    "hurt_speed_ticks": 40,
+    "low_health": [
+      0,
+      0,
+      0.3,
+      0.3,
+      0.3
+    ],
+    "low_cooldown_ticks": 1200,
+    "low_evade_ticks": [
+      0,
+      0,
+      10,
+      10,
+      10
+    ],
+    "low_absorption": [
+      0,
+      0,
+      0,
+      0,
+      4
+    ],
+    "absorption_ticks": 200
+  }
+}

@@ -65,6 +65,14 @@ public final class RpgAttacks {
         return in;
     }
 
+    /** 스킬 패시브를 반영한 판: 치명타 확률 보너스, 치명타 확정, 치명타 배율 보너스 */
+    public static DamageInput basic(CombatSettings s, double weaponPower, double physical, double magic, double factor,
+                                    ServerPlayer p, double critBonus, boolean forceCrit, double critMultBonus) {
+        DamageInput in = DamageInput.of(weaponPower, physical * factor, magic * factor);
+        if (forceCrit || p.getRandom().nextDouble() < s.critChance() + critBonus) in = in.withCrit(s.critMultiplier() + critMultBonus);
+        return in;
+    }
+
     /** W를 직접 넘기는 판 (쏜 화살처럼 무기 아이템이 손에 없을 때) */
     public static DamageInput basic(CombatSettings s, double weaponPower, double physical, double magic, double factor,
                                     ServerPlayer p) {

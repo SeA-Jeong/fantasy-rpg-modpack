@@ -17,7 +17,11 @@ import com.fantasyrpg.core.network.RpgNetwork;
 import com.fantasyrpg.core.resist.MobResistanceManager;
 import com.fantasyrpg.core.skilltree.SkillData;
 import com.fantasyrpg.core.skilltree.SkillService;
+import com.fantasyrpg.core.skills.ArcherSkills;
+import com.fantasyrpg.core.skills.ClericSkills;
+import com.fantasyrpg.core.skills.KnightSkills;
 import com.fantasyrpg.core.skills.MageSkills;
+import com.fantasyrpg.core.skills.RogueSkills;
 import com.fantasyrpg.core.skills.SkillEvents;
 import com.fantasyrpg.core.skills.SkillRuntime;
 import com.fantasyrpg.core.skills.SkillSettings;
@@ -79,9 +83,15 @@ public final class FantasyRpgCore {
         NeoForge.EVENT_BUS.addListener(CoreService::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(FantasyRpgCore::onLogout);
         NeoForge.EVENT_BUS.addListener(FantasyRpgCore::onDatapackSync);
-        // 전사·마법사 1~2단 스킬: 효과 등록, 받는 피해·틱·예약 실행
+        // 6직업 1~2단 스킬: 효과 등록, 받는 피해·틱·예약 실행
         WarriorSkills.register();
         MageSkills.register();
+        KnightSkills.register();
+        RogueSkills.register();
+        ArcherSkills.register();
+        ClericSkills.register();
+        NeoForge.EVENT_BUS.addListener(SkillEvents::onKnockback);
+        NeoForge.EVENT_BUS.addListener(SkillEvents::onDeath);
         NeoForge.EVENT_BUS.addListener(SkillEvents::onServerTick);
         NeoForge.EVENT_BUS.addListener(SkillEvents::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(SkillEvents::onIncomingDamage);

@@ -1,0 +1,43 @@
+{
+  "_comment": "[초안] 수치는 claude/4직업_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:archer/spell_2",
+  "name": "원소 깃",
+  "description": "직업 활 화살에 마법 피해가 붙습니다. 3랭크: 집중 50 이상이면 2배. 5랭크: 원소 화살 쿨타임 −1초.",
+  "direction": "spell",
+  "tier": 2,
+  "kind": "passive",
+  "max_rank": 5,
+  "required_level": 1,
+  "required_direction_sp": 0,
+  "effect": "fantasyrpg:archer_elemental_fletching",
+  "values": {
+    "arrow_magic": [
+      0.05,
+      0.1,
+      0.15,
+      0.2,
+      0.25
+    ],
+    "high_core": [
+      0,
+      0,
+      50,
+      50,
+      50
+    ],
+    "high_core_mult": [
+      1,
+      1,
+      2,
+      2,
+      2
+    ],
+    "cooldown_cut": [
+      0,
+      0,
+      0,
+      0,
+      20
+    ]
+  }
+}

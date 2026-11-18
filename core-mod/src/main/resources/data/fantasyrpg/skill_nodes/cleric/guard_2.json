@@ -1,0 +1,45 @@
+{
+  "_comment": "[초안] 수치는 claude/4직업_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:cleric/guard_2",
+  "name": "신앙의 갑옷",
+  "description": "피해를 받으면 신성력을 얻습니다. 3랭크: 체력 30% 아래로 떨어지면 체력 4 회복(60초에 1번). 5랭크: 그때 흡수 체력 4.",
+  "direction": "guard",
+  "tier": 2,
+  "kind": "passive",
+  "max_rank": 5,
+  "required_level": 1,
+  "required_direction_sp": 0,
+  "effect": "fantasyrpg:cleric_faith_armor",
+  "values": {
+    "hurt_core": [
+      2,
+      4,
+      6,
+      8,
+      10
+    ],
+    "low_health": [
+      0,
+      0,
+      0.3,
+      0.3,
+      0.3
+    ],
+    "low_cooldown_ticks": 1200,
+    "low_heal": [
+      0,
+      0,
+      4,
+      4,
+      4
+    ],
+    "low_absorption": [
+      0,
+      0,
+      0,
+      0,
+      4
+    ],
+    "absorption_ticks": 200
+  }
+}

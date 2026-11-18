@@ -24,6 +24,9 @@ public final class Cast {
     public final double bonus;
     private final double weaponPower;
     private boolean anyHit;
+    /** 효과가 true로 하면 코어 비용을 받지 않음 (기사 반격 찌르기: 패리 직후) */
+    public boolean free;
+    private int hitCount;
 
     public Cast(ServerPlayer player, SkillNode node, int rank, double bonus) {
         this.player = player;
@@ -43,21 +46,49 @@ public final class Cast {
         return anyHit;
     }
 
-    /** 스킬 피해 한 번. 대상이 죽었거나 플레이어면 아무 일도 없음. 치명타였으면 true */
+    public int hitCount() {
+        return hitCount;
+    }
+
+    /**
+     * 5랭크 "코어가 문턱 이상이면 더 쓰고 강화" (empower_threshold·empower_cost·empower_mult).
+     * 기본 비용은 아직 빠지지 않은 상태라 비용 + 추가분을 함께 확인. 배율(아니면 1)
+     */
+    public double empower() {
+        double threshold = v("empower_threshold");
+        if (threshold <= 0) return 1.0;
+        if (CoreService.value(player) < Math.max(threshold, node.cost(rank) + v("empower_cost"))) return 1.0;
+        CoreService.spend(player, v("empower_cost"));
+        return v("empower_mult");
+    }
+
     public boolean hit(LivingEntity target, double physical, double magic) {
-        if (!SkillTargets.single(target, player) || (physical <= 0 && magic <= 0)) return false;
+        return hit(target, physical, magic, 1.0, false);
+    }
+
+    /** 스킬 피해 한 번. 대상이 죽었거나 플레이어면 아무 일도 없음. mult = 최종 배율, forceCrit = 치명타 확정. 치명타였으면 true */
+    public boolean hit(LivingEntity target, double physical, double magic, double mult, boolean forceCrit) {
+        if (!SkillTargets.single(target, player) || (physical <= 0 && magic <= 0) || mult <= 0) return false;
         CombatSettings s = CombatManager.INSTANCE.settings();
         if (s == null) return false;
         double magicBonus = 0;
         SkillPassives.Learned insight = SkillPassives.learned(player, SkillIds.M_ARCANE_INSIGHT);
         if (insight != null) magicBonus = insight.v("skill_magic_bonus");
         DamageInput in = DamageInput.of(weaponPower, physical, magic).withBonus(0, magicBonus);
-        if (bonus > 0) in = in.withFinalModifier(1.0 + bonus);
-        boolean crit = player.getRandom().nextDouble() < s.critChance() + SkillPassives.critBonus(player);
-        if (crit) in = in.withCrit(s.critMultiplier());
+        double fin = (1.0 + bonus) * mult;
+        // 도적 그림자 칼날 5랭크 "암영": 내 스킬 피해 +
+        Long shadow = SkillRuntime.state(player).shadowMarks.get(target.getUUID());
+        if (shadow != null && shadow > SkillRuntime.now(player)) {
+            SkillPassives.Learned blades = SkillPassives.learned(player, SkillIds.R_SHADOW_BLADES, 5);
+            if (blades != null) fin *= 1.0 + blades.v("shadow_bonus");
+        }
+        if (fin != 1.0) in = in.withFinalModifier(fin);
+        boolean crit = forceCrit || player.getRandom().nextDouble() < s.critChance() + SkillPassives.critBonus(player);
+        if (crit) in = in.withCrit(s.critMultiplier() + SkillPassives.critMultBonus(player));
         RpgDamage.apply(target, player, in);
         player.setLastHurtMob(target);
         SkillRuntime.state(player).lastSkillHitTick = SkillRuntime.now(player);
+        hitCount++;
         if (!anyHit) {
             anyHit = true;
             // 비전 이해 5랭크: 주문 방향 스킬이 처음 맞을 때 마나

@@ -1,0 +1,43 @@
+{
+  "_comment": "[초안] 수치는 claude/4직업_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:rogue/finesse_2",
+  "name": "급소 감각",
+  "description": "치명타 확률이 오릅니다. 3랭크: 치명타가 나면 표식 +1. 5랭크: 표식 5개일 때 치명타 배율 +0.25.",
+  "direction": "finesse",
+  "tier": 2,
+  "kind": "passive",
+  "max_rank": 5,
+  "required_level": 1,
+  "required_direction_sp": 0,
+  "effect": "fantasyrpg:rogue_vital_sense",
+  "values": {
+    "crit_chance": [
+      0.01,
+      0.02,
+      0.03,
+      0.04,
+      0.05
+    ],
+    "crit_core": [
+      0,
+      0,
+      1,
+      1,
+      1
+    ],
+    "crit_mult_core": [
+      0,
+      0,
+      0,
+      0,
+      5
+    ],
+    "crit_mult_bonus": [
+      0,
+      0,
+      0,
+      0,
+      0.25
+    ]
+  }
+}
