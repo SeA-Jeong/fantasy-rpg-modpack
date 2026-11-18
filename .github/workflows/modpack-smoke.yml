@@ -65,6 +65,7 @@ jobs:
         run: |
           python3 tools/smoke_server.py server ours \
             --command "magiccity status" \
+            --command "magiccity quest list" \
             --command "rpg simulate 100 2.0 0 0.25 0=>150"
           mkdir -p smoke-logs/stage1 && cp -r server/logs smoke-logs/stage1/ 2>/dev/null || true
           cp -r server/crash-reports smoke-logs/stage1/ 2>/dev/null || true
@@ -82,6 +83,9 @@ jobs:
           grep -E "\[스킬\] 공통 패시브 노드 [0-9]+개 로드, 오류 0건" server/logs/latest.log
           grep -E "\[스킬\] 직업 코어 6개 로드, 오류 0건" server/logs/latest.log
           if grep -E "Parsing error loading recipe fantasyrpg" server/logs/latest.log; then echo "fantasyrpg 조합식 읽기 오류"; exit 1; fi
+          # magiccity 개인 퀘스트(1장 왕의 소명)와 서장 NPC 정의가 오류 없이 읽혔는지
+          grep -E "\[퀘스트\] 퀘스트 [1-9][0-9]*개 로드, 오류 0건" server/logs/latest.log
+          grep -E "\[퀘스트\] 퀘스트 NPC [1-9][0-9]*명 로드" server/logs/latest.log
 
       - name: "통합 팩(.mrpack) 만들기·설치"
         run: |

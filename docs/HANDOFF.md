@@ -5,13 +5,13 @@
 
 ---
 
-## 현재 상태 (2026-11-18 기준)
+## 현재 상태 (2026-11-19 기준)
 
 | 항목 | 상태 |
 |---|---|
 | 기준 기획 | `docs/design/직업_전투시스템_v0.4.md` |
-| 구현 진행 | 8.3장 **1단계(피해 계산 엔진) 완료**. **방어 등급 상한은 2026-11-18 폐지**, 바닐라 갑옷은 원래 수치로 복원. **계열 방어구 20종(5계열×4부위, 1~10급, 방어력 최대 30)** 등록, **룬석 소켓(6종·4등급, 제작대 끼우기·빼기·합성·연마)**, **플레이어 성장 최소판(직업·레벨·경험치·SP)**, **실제 전투 연결(직업 무기 6종, 근접·활·지팡이 기본 공격 → RPG 피해, PvP 차단)**, **스킬트리 틀(투자·되돌리기·초기화권·장착칸, 코어 자원, 공통 패시브, K 화면·Z X C V B·HUD)**, **6직업 스킬트리 156노드 완성(1~6단 + 혼합, 궁극기 24·마스터리 24)** — 모두 게임 확인 전. **Better Combat 연동 준비**(순수 로직·컴파일 의존성)는 `main`에 있음 |
-| 플랫폼 | Minecraft 1.21.1 / NeoForge **21.1.266** / Java 21 / ModDevGradle 2.0.141. **필수 의존 모드 magiccity** (JitPack `com.github.aswq0258:magic-city-mod:7eb93cc`, `gradle.properties`의 `magiccity_commit`) |
+| 구현 진행 | 8.3장 **1단계(피해 계산 엔진) 완료**. **방어 등급 상한은 2026-11-18 폐지**, 바닐라 갑옷은 원래 수치로 복원. **계열 방어구 20종(5계열×4부위, 1~10급, 방어력 최대 30)** 등록, **룬석 소켓(6종·4등급, 제작대 끼우기·빼기·합성·연마)**, **플레이어 성장 최소판(직업·레벨·경험치·SP)**, **실제 전투 연결(직업 무기 6종, 근접·활·지팡이 기본 공격 → RPG 피해, PvP 차단)**, **스킬트리 틀(투자·되돌리기·초기화권·장착칸, 코어 자원, 공통 패시브, K 화면·Z X C V B·HUD)**, **6직업 스킬트리 156노드 완성(1~6단 + 혼합, 궁극기 24·마스터리 24)**, **서장 NPC 직업 선택(magiccity 개인 퀘스트 1장 "왕의 소명")** — 모두 게임 확인 전. **Better Combat 연동 준비**(순수 로직·컴파일 의존성)는 `main`에 있음 |
+| 플랫폼 | Minecraft 1.21.1 / NeoForge **21.1.266** / Java 21 / ModDevGradle 2.0.141. **필수 의존 모드 magiccity** (JitPack `com.github.aswq0258:magic-city-mod:46ce844` (2026-11-19 퀘스트 API), `gradle.properties`의 `magiccity_commit`) |
 | CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄). 모드 구성이 바뀌면 `modpack smoke`가 외부 모드 18개 + 우리 모드 2개로 **NeoForge 전용 서버를 실제 기동** |
 | 1차 외부 모드 구성 | `modpack/mods.lock.json` (필수 13 + 권장 5, 버전 고정). 2026-11-17 전용 서버 기동 통과 (run 44061047052). 클라이언트 실행은 아직 확인 안 함 |
 | 우리 모드 3개 | `fantasyrpg`(이 저장소), `magiccity`(JitPack), `royalqol`(클라이언트 전용 편의 모드, `magic-city-mod` 저장소 `royalqol/`, `mods.lock.json`의 `royalqol.commit`으로 빌드 — `tools/build_royalqol.sh`). 테스트 팩과 서버 기동 검사에 셋 다 들어감 |
@@ -38,12 +38,13 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - **(v0.5, 게임 확인 전) 플레이어 성장:** 데이터 첨부 `fantasyrpg:player`(직업·레벨·경험치·사용 SP·시작 SP·완료 보너스 기록·직업 변경 횟수, 죽어도 유지). 레벨 상한 = min(60, `MagicCityApi.levelCap`), 상한에서 경험치는 1레벨 분량까지 보관. SP 합계는 계산(직업 1 + 레벨 − 1 + 보너스). 완료 보너스는 `reconcileClearBonus` 한 함수(챕터 첫 완료 이벤트·접속). 경험치: 적대 몬스터 처치, 챕터 첫 완료(등급 × 400). `/rpg player info|reset`, `/rpg class choose|change`, `/rpg xp add`. **이 저장소에서 처음으로 `MagicCityApi`·`ChapterFirstClearEvent`를 실제로 씀**
 - **(v0.7, 게임 확인 전) 스킬트리 틀:** 직업 노드(`skill_nodes/<직업>/*.json`, 기획 v0.4 견본 형식)·공통 패시브(`passive_nodes`)·직업 코어(`class_cores`) 로더. 저장(`RpgPlayerData`): 노드 랭크·장착칸 5(0~3 액티브, 4 궁극기)·공통 패시브 랭크·무료 초기화 사용 수. 서버 판정 `SkillService`(투자·1랭크 되돌리기(선행 깨면 거부)·전체 초기화(무료권: 직업 선택 1 + 6장 완료 1, 유료 비용 [미정]이라 무료권 없으면 거부)·장착·사용). 공통 패시브 포인트 = 등급 × 2(최대 12), 효과는 임시 속성 수정자 `fantasyrpg:passive/<id>`(접속·부활·차원 이동·/reload 때 다시). 코어: 서버 메모리 값(저장 안 함), 기본 공격 적중 `basic_attack_hit`로 얻고 회복·감소. 패킷 4종(`network/RpgNetwork`), 클라이언트 K 화면·Z X C V B·HUD(`client/`). 스킬 효과 등록소 `SkillEffects`는 비어 있어 사용하면 "아직 효과 없는 스킬". 시험 명령 `/rpg skill …`, `/rpg passive …`. **배포 데이터에는 노드·패시브·코어가 0개**, 시험 데이터팩에만 있음
 
+- **(v0.13, 게임 확인 전) 서장 NPC 직업 선택:** magiccity 가 왕좌의 전당에 퀘스트 NPC "왕실 시종장 에드윈"을 두고, 대화 선택지 `choose_class`를 서버에서 확인한 뒤 `NpcActionEvent`를 발행 → `playerdata/ClassSelection`이 무직이면 직업 선택 화면(`client/ClassSelectScreen`, 패킷 `OpenClassSelect`)을 열고 5분 동안 기억 → 클라이언트 `ChooseClass` 요청은 기억이 있고 무직일 때만 받아 직업 선택 + **1급 직업 무기 지급** → `MagicCityApi.questSignal(fantasyrpg:class_chosen)`로 퀘스트 다음 단계. `/rpg class choose`도 신호를 보냄. 신호를 기다리는 단계가 시작·접속될 때(`QuestStepStartEvent`) 이미 직업이 있으면 바로 신호. 직업 **변경**은 NPC에 없음(비용 [미정], 명령만). magiccity 커밋 `magiccity_commit`을 퀘스트 API가 들어간 커밋으로 올림
 - **(준비, 게임 연결 없음) 무기 사용 권한·기본 공격 입력:** `combat/WeaponPermission`(정책 P1 판정), `combat/BasicAttackMath`(콤보 배율 정리·바닐라 충전 곡선). 아직 어떤 이벤트에도 연결하지 않음
 - **도구:** `tools/check_mods.py` — mods 폴더 jar 의존성·버전 범위 검사. `tools/fetch_mods.py` — `mods.lock.json`의 외부 모드 내려받기. `tools/smoke_server.py` — 전용 서버 기동·콘솔 명령·로그 검사
 
 ### 아직 없는 것 (다음 작업 후보)
 - 스킬·코어 자원·가드·패리·경직, 파티원 공격 제외(FTB Teams), 쇠뇌, 바닐라 전투 인챈트 데이터팩(정의 덮어쓰기·획득 차단), 무기 제작법, 활 당김 모습(전용 그림·속성), 궁수 근접(지금은 활로 근접하면 "직업 무기가 아닙니다")
-- 서장 NPC 직업 선택, 직업 변경 비용, 파티 경험치 분배
+- 직업 변경 비용(NPC 변경 메뉴), 2장 이후 개인 퀘스트·다른 NPC 대사, 파티 경험치 분배
 - 치명타 총상한(기교 보너스 합산)·장비 치명타 옵션
 - 스킬 프리셋 3개(기획 7장), 마을 구역 안전 판정, 기본 방패 가드(우클릭)·일반 패리, 보스 고정 피해가 피해 무효를 뚫게 하기(magiccity 패턴 구현 뒤), 유료 초기화·노드 되돌리기 비용(재료), 엔딩 후 무료 초기화(magiccity 엔딩 API 필요), 장비 W 전부
 - magiccity 연동 중 레벨·SP 부분(연동작업지침 4~8절). 이번에는 의존성 연결(1~3절)만 함
@@ -87,6 +88,7 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 | `skills/Cast`, `SkillTargets`, `SkillRuntime`, `SkillPassives`, `SkillEvents`, `SkillSettings` | 스킬 한 번 사용(피해·치명타·강화·암영, 5랭크 코어 강화), 대상 고르기(조준·직선·부채꼴·주변·지나간 경로)·이동(돌진·도약)·제어 효과(보스 면역), 쿨타임·예약 실행·지속 효과, 패시브(묶음별 공통: 공격 2단·주문 2단·수호 2단·기교 2단, 화살, 흡수 체력, 시간 제한 속성), 받는 피해(회피·패리·감소·마력 방벽)·틱·처치·넉백 이벤트, `skill_settings` 로더 |
 | `skills/WarriorSkills`, `MageSkills`, `KnightSkills`, `RogueSkills`, `ArcherSkills`, `ClericSkills` | 직업별 1단·3단 액티브 4종씩 |
 | `skills/UltimateSkills` | 5단 궁극기 24종 |
+| `playerdata/ClassSelection`, `client/ClassSelectScreen` | 서장 NPC 직업 선택(magiccity `NpcActionEvent`·`QuestStepStartEvent` 수신, 화면 열기 기억 5분, 1급 무기 지급, 퀘스트 신호), 6직업 카드 화면(글은 언어 파일 `class.fantasyrpg.<직업>.weapon|core|desc|play`) |
 | `command/SkillCommands` | `/rpg skill list|invest|refund|reset [force]|equip|cast`, `/rpg passive list|invest|refund` |
 | `core-mod/src/main/resources/data/` | 피해 유형 정의, 바닐라 피해 태그 추가, `fantasyrpg/armor_stats/*.json` 계열 수치표 기본값, `fantasyrpg/runes/*.json` 룬석 효과, `fantasyrpg/recipe/` 룬석 조합(특수 4종 + 시험용 임시 제작법), `fantasyrpg/progression/` 레벨 곡선·몬스터 경험치 [초안], `fantasyrpg/combat/basic_attack.json` 기본 공격 [초안], `fantasyrpg/tags/item/class_weapons/` 직업 무기 태그, `fantasyrpg/weapon_attributes/` Better Combat 동작, 바닐라 갑옷 부위 태그(인챈트용)에 계열 방어구 추가 |
 | `core-mod/src/main/resources/assets/` | 언어(ko·en), 계열 방어구 아이템 모델(바닐라 모델을 부모로) |
@@ -157,6 +159,8 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 | 11-19 | 쿨타임 = (노드 값 + modifies − 주문 2단 감소) × (1 − 쿨타임 비율 합, 최대 50%) × 효과가 정한 배율 → 연쇄 감소 | |
 | 11-19 | 마스터리 활성 1개는 `RpgPlayerData.activeMastery`(저장), 효과 계산(`SkillPassives.rankOf`)에서 활성 아닌 마스터리는 0랭크로 봄. 처음 배운 마스터리 자동 활성. 교체는 "16칸 안 적대 몬스터 없음 + 10초 동안 피해 없음"일 때만 | 기획 2.4 "안전 지역" [초안] |
 | 11-19 | 혼합 노드는 레벨 조건 없음(두 방향 8SP씩), K 화면 7번째 줄 | [초안] |
+| 11-19 | 서장 NPC 대화는 magiccity 자체 대화(채팅 클릭 선택지, A안), 직업 선택 화면은 fantasyrpg. 선택지 명령은 권한 0이지만 서버가 NPC 표식·6칸·단계·화면 열기 기록을 다시 확인 | 사용자 승인 2026-11-19. Easy NPC는 월드마다 손으로 배치해야 하고 치환자 문법 미확인 |
+| 11-19 | 직업 선택 때 그 직업 1급 무기 지급(NPC 화면으로 고를 때만, 명령으로 고르면 없음) | 사용자 승인 2026-11-19 |
 | 11-19 | 궁극기: 피해 무효(절대 결계·부활 직후)·회피(그림자 장막)·정면 무효(불굴의 성벽)는 받는 피해 이벤트를 취소. 시간 가속은 궁극기 쿨타임·비용에는 적용 안 함. 은신 후퇴는 보스(제어 면역 대상)의 표적은 유지 | 초안 4번 확인 사항 기본값 |
 | 11-18 | 흡수 체력은 최대 흡수 체력 속성에 임시 수정자를 붙여 채우고 시간이 지나면 거둠. 투지 5랭크 흡수 체력 지속 10초 | 1.21에서 흡수 체력은 최대치 속성이 필요. 10초는 초안 표에 없던 값 [초안] |
 | 11-17 | 플레이어가 받는 피해에 `fantasyrpg:rpg` 유형을 쓰지 않음 | 방어 무시라서 방어 투자가 무의미해짐 |
@@ -184,6 +188,12 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 ---
 
 ## 작업 기록
+
+### 2026-11-19 — 서장 NPC·직업 선택 (fantasyrpg v0.13 + magiccity 퀘스트 최소판)
+- 사용자 결정: 초안 `claude/서장NPC_직업선택_초안.md` 승인("진행하자") — A안(자체 대화), 왕실 시종장 에드윈·왕좌의 전당, 1급 무기 지급, 직업 변경은 NPC에 넣지 않음
+- magiccity: `quest` 패키지(정의·규칙·저장·대화·명령, JUnit 7개), 왕좌의 전당 NPC 자동 소환·`/magiccity fix npcs`, 공개 API `questSignal`·`questState`·`questDone`·`NpcActionEvent`·`QuestStepStartEvent`, 데이터 `quests/kings_call.json`·`quest_npcs/steward.json`
+- fantasyrpg: `ClassSelection`, `ClassSelectScreen`, 패킷 2개, 언어 30줄, `/rpg class choose`도 퀘스트 신호, 서버 기동 검사에 퀘스트 로드 줄 확인 추가, mod_version 0.13.0
+- 게임 확인: 하지 않음 → `docs/TESTING.md` v0.13 W1~W15, 빠른 확인 6회차
 
 ### 2026-11-19 — 6단 마스터리·혼합 노드 (브랜치 `claude/mastery-mixed`)
 - 사용자 결정: 초안 `claude/6직업_마스터리_혼합_초안.md` 승인("진행하자")

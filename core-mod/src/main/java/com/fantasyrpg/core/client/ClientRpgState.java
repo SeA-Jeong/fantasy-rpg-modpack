@@ -71,6 +71,11 @@ public final class ClientRpgState {
         return out;
     }
 
+    /** 서장 NPC 직업 선택 화면 (서버가 연다) */
+    public static void openClassSelect() {
+        ClassSelectScreen.open();
+    }
+
     public static void acceptCooldown(String nodeId, int ticks) {
         cooldownEnd.put(nodeId, System.currentTimeMillis() + ticks * 50L);
     }

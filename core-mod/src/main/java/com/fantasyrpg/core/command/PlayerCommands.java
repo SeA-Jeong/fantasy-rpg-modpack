@@ -80,7 +80,10 @@ public final class PlayerCommands {
         }
         RpgProgress.ClassResult r = change ? RpgProgress.changeClass(p, c) : RpgProgress.chooseClass(p, c);
         switch (r) {
-            case CHOSEN -> send(ctx, "§6[성장] §f직업 선택: " + Component.translatable("class.fantasyrpg." + c.id()).getString() + " (시작 SP +1)");
+            case CHOSEN -> {
+                send(ctx, "§6[성장] §f직업 선택: " + Component.translatable("class.fantasyrpg." + c.id()).getString() + " (시작 SP +1)");
+                com.fantasyrpg.core.playerdata.ClassSelection.notifyChosen(p);   // 서장 퀘스트 단계도 넘김
+            }
             case CHANGED -> send(ctx, "§6[성장] §f직업 변경: " + Component.translatable("class.fantasyrpg." + c.id()).getString() + " (쓴 SP 반환)");
             case SAME -> send(ctx, "§7[성장] 이미 그 직업입니다");
             case ALREADY_CHOSEN -> {
