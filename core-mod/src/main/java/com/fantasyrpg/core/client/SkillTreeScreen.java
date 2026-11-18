@@ -95,9 +95,11 @@ public final class SkillTreeScreen extends Screen {
             cells.computeIfAbsent(((long) col << 8) | n.tier(), k -> new ArrayList<>()).add(n);
         }
         List<Component> tip = null;
-        for (int t = 1; t <= 6; t++) {
-            int rowY = top + 8 + (t - 1) * CELL_H;
-            g.drawString(font, t + "", left - 10, rowY + 6, 0xFF808080);
+        for (int row = 1; row <= 7; row++) {
+            int t = row == 7 ? 0 : row; // 7번째 줄 = 혼합 노드(단계 0)
+            int rowY = top + 8 + (row - 1) * CELL_H;
+            if (row == 7) g.drawString(font, Component.translatable("screen.fantasyrpg.mixed"), left - 24, rowY + 6, 0xFFC080FF);
+            else g.drawString(font, t + "", left - 10, rowY + 6, 0xFF808080);
             for (int c = 0; c < COLUMNS.length; c++) {
                 List<SkillNode> list = cells.getOrDefault(((long) c << 8) | t, List.of());
                 for (int i = 0; i < list.size() && i < 2; i++) {
@@ -111,7 +113,7 @@ public final class SkillTreeScreen extends Screen {
             }
         }
         // 장착칸
-        int slotY = top + 8 + 6 * CELL_H + 8;
+        int slotY = top + 8 + 7 * CELL_H + 8;
         g.drawString(font, Component.translatable(held.isEmpty() ? "screen.fantasyrpg.slots" : "screen.fantasyrpg.slots_held",
                 held), left, slotY, 0xFFFFFFFF);
         String[] keys = {"Z", "X", "C", "V", "B"};
@@ -135,6 +137,7 @@ public final class SkillTreeScreen extends Screen {
         int rank = ClientRpgState.ranks.getOrDefault(n.id(), 0);
         boolean locked = ClientRpgState.level < n.requiredLevel();
         int border = n.id().equals(held) ? 0xFF55FF55
+                : n.id().equals(ClientRpgState.activeMastery) ? 0xFF55FFFF
                 : n.kind() == SkillNode.Kind.ULTIMATE ? 0xFFE8C66A
                 : n.directions().size() > 1 ? 0xFFC080FF
                 : rank > 0 ? 0xFFFFFFFF : 0xFF606060;
@@ -178,6 +181,10 @@ public final class SkillTreeScreen extends Screen {
         if (cd > 0 || n.cost(r) > 0) {
             t.add(Component.translatable("screen.fantasyrpg.node.cd_cost", r, String.format("%.1f", cd / 20.0),
                     (int) n.cost(r)).withStyle(net.minecraft.ChatFormatting.AQUA));
+        }
+        if (n.kind() == SkillNode.Kind.MASTERY) {
+            t.add(Component.translatable(n.id().equals(ClientRpgState.activeMastery) ? "screen.fantasyrpg.node.mastery_active"
+                    : "screen.fantasyrpg.node.mastery_inactive").withStyle(net.minecraft.ChatFormatting.AQUA));
         }
         List<String> mods = ClientRpgState.modifiers(n.effect());
         if (!mods.isEmpty()) {
@@ -223,7 +230,11 @@ public final class SkillTreeScreen extends Screen {
             switch (h.kind()) {
                 case "node" -> {
                     if (button == 0) FantasyRpgClient.send(shift ? ActionType.REFUND : ActionType.INVEST, h.id(), 0);
-                    else if (button == 1) held = held.equals(h.id()) ? "" : h.id();
+                    else if (button == 1) {
+                        SkillNode n = ClientRpgState.nodes.get(h.id());
+                        if (n != null && n.kind() == SkillNode.Kind.MASTERY) FantasyRpgClient.send(ActionType.SET_MASTERY, h.id(), 0);
+                        else held = held.equals(h.id()) ? "" : h.id();
+                    }
                 }
                 case "slot" -> {
                     if (button == 0 && !held.isEmpty()) {

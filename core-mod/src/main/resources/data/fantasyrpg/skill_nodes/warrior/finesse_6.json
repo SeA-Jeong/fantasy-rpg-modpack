@@ -1,0 +1,25 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_마스터리_혼합_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:warrior/finesse_6",
+  "name": "검성",
+  "description": "치명타 배율 +0.10/0.15/0.20, 모든 스킬 쿨타임 −3/5/7%.",
+  "direction": "finesse",
+  "tier": 6,
+  "kind": "mastery",
+  "max_rank": 3,
+  "required_level": 60,
+  "required_direction_sp": 20,
+  "effect": "fantasyrpg:warrior_mastery_sword_saint",
+  "values": {
+    "crit_mult_add": [
+      0.1,
+      0.15,
+      0.2
+    ],
+    "cooldown_rate": [
+      0.03,
+      0.05,
+      0.07
+    ]
+  }
+}

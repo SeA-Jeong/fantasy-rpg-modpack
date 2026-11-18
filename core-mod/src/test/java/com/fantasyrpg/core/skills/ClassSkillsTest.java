@@ -97,7 +97,7 @@ class ClassSkillsTest {
         Set<String> effects = new HashSet<>();
         for (String cls : List.of("warrior", "mage", "knight", "rogue", "archer", "cleric")) {
             Map<String, SkillNode> nodes = load(cls);
-            assertEquals(20, nodes.size(), cls);
+            assertEquals(26, nodes.size(), cls);
             for (SkillNode.Direction d : SkillNode.Direction.values()) {
                 for (int tier = 1; tier <= 2; tier++) {
                     final int t = tier;
@@ -147,7 +147,7 @@ class ClassSkillsTest {
                 all.add(n.effect());
             }
         }
-        assertEquals(120, all.size());
+        assertEquals(156, all.size()); // 기획 2.1: 기본 144 + 혼합 12
         for (SkillNode n : everything.values()) {
             for (SkillNode.Mod m : n.mods()) assertTrue(all.contains(m.effect()), n.id() + " → " + m.effect());
         }
@@ -172,6 +172,29 @@ class ClassSkillsTest {
         assertEquals(60, load("rogue").get("fantasyrpg:rogue/guard_5").value("duration_ticks", 1), 1e-9);
         assertEquals(100, load("knight").get("fantasyrpg:knight/guard_5").value("duration_ticks", 1), 1e-9);
         assertEquals(3600, load("cleric").get("fantasyrpg:cleric/guard_5").cooldownTicks(1));
+    }
+
+    @Test
+    @DisplayName("6단 마스터리(Lv.60·20SP·3랭크) 4개, 혼합 노드(두 방향, 8SP씩, 1랭크 패시브) 2개, 수호 마스터리 감소 최대 20%")
+    void masteryAndMixed() throws IOException {
+        for (String cls : List.of("warrior", "mage", "knight", "rogue", "archer", "cleric")) {
+            Map<String, SkillNode> nodes = load(cls);
+            for (SkillNode.Direction d : SkillNode.Direction.values()) {
+                SkillNode m = nodes.values().stream().filter(x -> x.directions().equals(Set.of(d)) && x.tier() == 6).findFirst().orElseThrow();
+                assertEquals(SkillNode.Kind.MASTERY, m.kind(), m.id());
+                assertEquals(3, m.maxRank(), m.id());
+                assertEquals(60, m.requiredLevel(), m.id());
+                assertEquals(20, m.requiredDirectionSp(), m.id());
+                assertTrue(m.value("low_health_reduction", 3) <= 0.2, m.id());
+            }
+            List<SkillNode> mixed = nodes.values().stream().filter(SkillNode::mixed).toList();
+            assertEquals(2, mixed.size(), cls);
+            for (SkillNode x : mixed) {
+                assertEquals(1, x.maxRank(), x.id());
+                assertEquals(SkillNode.Kind.PASSIVE, x.kind(), x.id());
+                assertTrue(!x.values().keys().isEmpty() || !x.mods().isEmpty(), x.id());
+            }
+        }
     }
 
     @Test

@@ -202,6 +202,11 @@ public final class SkillEvents {
         if (steadfast != null && CoreService.value(p) >= steadfast.v("high_core_guard")) {
             amount = (float) SkillMath.reduced(amount, steadfast.v("high_core_reduction"));
         }
+        // 수호 마스터리: 체력이 낮으면 감소
+        if (p.getHealth() <= p.getMaxHealth() * 0.35) {
+            double low = SkillPassives.sum(p, "low_health_reduction");
+            if (low > 0) amount = (float) SkillMath.reduced(amount, Math.min(0.5, low));
+        }
         // 마법사 마력 방벽: 일부를 마나로
         SkillPassives.Learned ward = SkillPassives.learned(p, SkillIds.M_MANA_WARD);
         if (ward != null && amount > 0) {
@@ -286,6 +291,11 @@ public final class SkillEvents {
 
     /** 도적 연쇄 표식 5랭크: 표식 단검을 맞은 적이 정해진 시간 안에 죽으면 쿨타임 초기화 */
     public static void onDeath(LivingDeathEvent event) {
+        // 처치 때 코어 (표식 장인)
+        if (!(event.getEntity() instanceof net.minecraft.world.entity.player.Player)
+                && event.getSource().getEntity() instanceof ServerPlayer killer) {
+            CoreService.gain(killer, SkillPassives.sum(killer, "kill_core"));
+        }
         // 전투사제 부활의 기도: 죽을 피해를 한 번 버팀
         if (event.getEntity() instanceof ServerPlayer p && !event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
             SkillRuntime.State st = SkillRuntime.state(p);

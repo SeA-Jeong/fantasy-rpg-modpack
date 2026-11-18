@@ -57,7 +57,7 @@ public final class WarriorSkills {
             return false;
         }
         double mult = c.empower(); // 5랭크
-        c.hit(t, c.v("physical"), 0, mult, false);
+        c.hit(t, c.v("physical"), c.v("magic"), mult, false); // magic: 혼합 노드 마력 강타
         SkillTargets.slow(t, (int) c.v("stun_ticks"), 3);
         ServerLevel l = level(c);
         l.sendParticles(mult > 1 ? ParticleTypes.EXPLOSION : ParticleTypes.CRIT, t.getX(), t.getY(0.6), t.getZ(), mult > 1 ? 1 : 12, 0.3, 0.3, 0.3, 0.2);

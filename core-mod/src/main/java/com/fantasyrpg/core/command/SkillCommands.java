@@ -34,6 +34,7 @@ import static net.minecraft.commands.Commands.literal;
  * /rpg skill refund &lt;노드&gt;       — 1랭크 되돌리기
  * /rpg skill reset [force]        — 전체 초기화 (무료권 사용, force는 무료권 없이 강제)
  * /rpg skill equip &lt;칸 1~5&gt; &lt;노드&gt; — 장착 (5칸은 궁극기)
+ * /rpg skill mastery &lt;노드&gt;      — 활성 마스터리 바꾸기 (안전할 때만)
  * /rpg skill cast &lt;칸 1~5&gt;        — 사용 (지금은 "아직 효과 없음")
  * /rpg passive list|invest|refund &lt;노드&gt; — 공통 패시브
  * </pre>
@@ -52,6 +53,7 @@ public final class SkillCommands {
                         .then(literal("force").executes(c -> ok(c, SkillService.fullReset(me(c), true)))))
                 .then(literal("equip").then(argument("slot", integer(1, RpgPlayerData.SLOT_COUNT))
                         .then(nodeArg().executes(c -> ok(c, SkillService.equip(me(c), getString(c, "node"), getInteger(c, "slot") - 1))))))
+                .then(literal("mastery").then(nodeArg().executes(c -> ok(c, SkillService.setMastery(me(c), getString(c, "node"))))))
                 .then(literal("cast").then(argument("slot", integer(1, RpgPlayerData.SLOT_COUNT)).executes(c -> {
                     SkillService.cast(me(c), getInteger(c, "slot") - 1);
                     return 1;
@@ -102,6 +104,7 @@ public final class SkillCommands {
                     + " " + r + "/" + n.maxRank() + " §8Lv." + n.requiredLevel()
                     + (n.tier() > 2 ? " 방향SP " + SkillTreeRules.spentInDirection(n.directions().iterator().next(), d.nodeRanks(), SkillData.nodes(cls.id()), n.id()) : ""));
         }
+        send(c, "§7활성 마스터리 " + (d.activeMastery().isEmpty() ? "없음" : d.activeMastery()));
         send(c, "§7장착 " + d.slots() + " §7코어 " + String.format("%.1f", CoreService.value(p)));
         return 1;
     }

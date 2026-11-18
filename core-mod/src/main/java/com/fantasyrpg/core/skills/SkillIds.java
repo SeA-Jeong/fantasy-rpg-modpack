@@ -157,4 +157,78 @@ public final class SkillIds {
     public static final String U_C_SANCTUM = "fantasyrpg:cleric_ult_sanctum";
     public static final String U_C_PRAYER = "fantasyrpg:cleric_ult_prayer";
     public static final String U_C_RADIANCE = "fantasyrpg:cleric_ult_radiance";
+
+    // ── 6단 마스터리·혼합 노드 (claude/6직업_마스터리_혼합_초안.md). 대부분 데이터(합산 키·modifies)로 동작 ──
+    /** 명사수 */
+    public static final String ARCHER_MASTERY_SHARPSHOOTER = "fantasyrpg:archer_mastery_sharpshooter";
+    /** 속사수 */
+    public static final String ARCHER_MASTERY_RAPID = "fantasyrpg:archer_mastery_rapid";
+    /** 생존가 */
+    public static final String ARCHER_MASTERY_SURVIVOR = "fantasyrpg:archer_mastery_survivor";
+    /** 원소 관통 */
+    public static final String ARCHER_MIXED_ELEMENT_PIERCE = "fantasyrpg:archer_mixed_element_pierce";
+    /** 기동 사수 */
+    public static final String ARCHER_MIXED_MOBILE = "fantasyrpg:archer_mixed_mobile";
+    /** 원소술사 */
+    public static final String ARCHER_MASTERY_ELEMENTALIST = "fantasyrpg:archer_mastery_elementalist";
+    /** 심판자 */
+    public static final String CLERIC_MASTERY_JUDGE = "fantasyrpg:cleric_mastery_judge";
+    /** 정화자 */
+    public static final String CLERIC_MASTERY_PURIFIER = "fantasyrpg:cleric_mastery_purifier";
+    /** 수호성인 */
+    public static final String CLERIC_MASTERY_SAINT = "fantasyrpg:cleric_mastery_saint";
+    /** 신성 징벌 */
+    public static final String CLERIC_MIXED_HOLY_SMITE = "fantasyrpg:cleric_mixed_holy_smite";
+    /** 신앙 순환 */
+    public static final String CLERIC_MIXED_FAITH_CYCLE = "fantasyrpg:cleric_mixed_faith_cycle";
+    /** 대사제 */
+    public static final String CLERIC_MASTERY_HIGH_PRIEST = "fantasyrpg:cleric_mastery_high_priest";
+    /** 창기병 */
+    public static final String KNIGHT_MASTERY_LANCER = "fantasyrpg:knight_mastery_lancer";
+    /** 결투가 */
+    public static final String KNIGHT_MASTERY_DUELIST = "fantasyrpg:knight_mastery_duelist";
+    /** 철벽 */
+    public static final String KNIGHT_MASTERY_BASTION = "fantasyrpg:knight_mastery_bastion";
+    /** 돌격 방벽 */
+    public static final String KNIGHT_MIXED_CHARGE_WALL = "fantasyrpg:knight_mixed_charge_wall";
+    /** 마력 반격 */
+    public static final String KNIGHT_MIXED_MANA_RIPOSTE = "fantasyrpg:knight_mixed_mana_riposte";
+    /** 성기사 */
+    public static final String KNIGHT_MASTERY_PALADIN = "fantasyrpg:knight_mastery_paladin";
+    /** 마탄의 군주 */
+    public static final String MAGE_MASTERY_BOLT_LORD = "fantasyrpg:mage_mastery_bolt_lord";
+    /** 시간술사 */
+    public static final String MAGE_MASTERY_CHRONOMANCER = "fantasyrpg:mage_mastery_chronomancer";
+    /** 결계술사 */
+    public static final String MAGE_MASTERY_WARDEN = "fantasyrpg:mage_mastery_warden";
+    /** 마력 융합 */
+    public static final String MAGE_MIXED_FUSION = "fantasyrpg:mage_mixed_fusion";
+    /** 결계 도약 */
+    public static final String MAGE_MIXED_BARRIER_BLINK = "fantasyrpg:mage_mixed_barrier_blink";
+    /** 대마법사 */
+    public static final String MAGE_MASTERY_ARCHMAGE = "fantasyrpg:mage_mastery_archmage";
+    /** 암살자 */
+    public static final String ROGUE_MASTERY_ASSASSIN = "fantasyrpg:rogue_mastery_assassin";
+    /** 표식 장인 */
+    public static final String ROGUE_MASTERY_MARKMASTER = "fantasyrpg:rogue_mastery_markmaster";
+    /** 유령 */
+    public static final String ROGUE_MASTERY_PHANTOM = "fantasyrpg:rogue_mastery_phantom";
+    /** 표식 사냥꾼 */
+    public static final String ROGUE_MIXED_MARK_HUNTER = "fantasyrpg:rogue_mixed_mark_hunter";
+    /** 그림자 은신 */
+    public static final String ROGUE_MIXED_SHADOW_HIDE = "fantasyrpg:rogue_mixed_shadow_hide";
+    /** 그림자술사 */
+    public static final String ROGUE_MASTERY_SHADOWMANCER = "fantasyrpg:rogue_mastery_shadowmancer";
+    /** 파괴자 */
+    public static final String WARRIOR_MASTERY_DESTROYER = "fantasyrpg:warrior_mastery_destroyer";
+    /** 검성 */
+    public static final String WARRIOR_MASTERY_SWORD_SAINT = "fantasyrpg:warrior_mastery_sword_saint";
+    /** 불사신 */
+    public static final String WARRIOR_MASTERY_UNDYING = "fantasyrpg:warrior_mastery_undying";
+    /** 마력 강타 */
+    public static final String WARRIOR_MIXED_MANA_STRIKE = "fantasyrpg:warrior_mixed_mana_strike";
+    /** 역습의 리듬 */
+    public static final String WARRIOR_MIXED_COUNTER_RHYTHM = "fantasyrpg:warrior_mixed_counter_rhythm";
+    /** 마검사 */
+    public static final String WARRIOR_MASTERY_SPELLSWORD = "fantasyrpg:warrior_mastery_spellsword";
 }

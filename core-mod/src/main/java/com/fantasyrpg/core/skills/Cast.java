@@ -72,6 +72,12 @@ public final class Cast {
         return v("empower_mult");
     }
 
+    /** 역습의 리듬: 피해를 받은 뒤 잠시 스킬 피해 + */
+    private double afterHurt() {
+        double b = SkillPassives.sum(player, "after_hurt_bonus");
+        return b > 0 && SkillRuntime.now(player) - SkillRuntime.state(player).lastHurtTick <= 60 ? b : 0;
+    }
+
     public boolean hit(LivingEntity target, double physical, double magic) {
         return hit(target, physical, magic, 1.0, false);
     }
@@ -85,7 +91,7 @@ public final class Cast {
         double physicalBonus = SkillPassives.sum(player, "skill_physical_bonus");
         DamageInput in = DamageInput.of(weaponPower, physical, magic).withBonus(physicalBonus, magicBonus);
         double fin = (1.0 + bonus) * mult * (1.0 + SkillPassives.sum(player, "all_damage_bonus") + SkillPassives.afterParryBonus(player)
-                + SkillPassives.buffDamage(player));
+                + SkillPassives.buffDamage(player) + afterHurt());
         // 도적 그림자 칼날 5랭크 "암영": 내 스킬 피해 +
         Long shadow = SkillRuntime.state(player).shadowMarks.get(target.getUUID());
         if (shadow != null && shadow > SkillRuntime.now(player)) {

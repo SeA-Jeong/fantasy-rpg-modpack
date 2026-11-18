@@ -76,8 +76,8 @@ jobs:
           grep -E "\[성장\] 레벨 곡선 need" server/logs/latest.log
           # 기본 공격 수치가 읽혔는지
           grep -E "\[전투\] 기본 공격 로드" server/logs/latest.log
-          # 스킬: 6직업 1~5단 120노드, 코어 6개, 공통 패시브 로더가 오류 없이 돌았는지
-          grep -E "\[스킬\] 스킬 노드 120개\(6직업\) 로드, 오류 0건" server/logs/latest.log
+          # 스킬: 6직업 전체 156노드, 코어 6개, 공통 패시브 로더가 오류 없이 돌았는지
+          grep -E "\[스킬\] 스킬 노드 156개\(6직업\) 로드, 오류 0건" server/logs/latest.log
           grep -E "\[스킬\] 제어 면역" server/logs/latest.log
           grep -E "\[스킬\] 공통 패시브 노드 [0-9]+개 로드, 오류 0건" server/logs/latest.log
           grep -E "\[스킬\] 직업 코어 6개 로드, 오류 0건" server/logs/latest.log

@@ -1,0 +1,31 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_마스터리_혼합_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:archer/attack_6",
+  "name": "명사수",
+  "description": "모든 피해 +6/9/12%, 천공의 일격 집중 10당 보너스 +5/10/15%p.",
+  "direction": "attack",
+  "tier": 6,
+  "kind": "mastery",
+  "max_rank": 3,
+  "required_level": 60,
+  "required_direction_sp": 20,
+  "effect": "fantasyrpg:archer_mastery_sharpshooter",
+  "values": {
+    "all_damage_bonus": [
+      0.06,
+      0.09,
+      0.12
+    ]
+  },
+  "modifies": [
+    {
+      "effect": "fantasyrpg:archer_ult_skypiercer",
+      "key": "per_ten_bonus",
+      "add": [
+        0.05,
+        0.1,
+        0.15
+      ]
+    }
+  ]
+}

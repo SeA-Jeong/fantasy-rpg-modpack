@@ -1,0 +1,25 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_마스터리_혼합_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:mage/spell_6",
+  "name": "대마법사",
+  "description": "스킬 마법 피해 +8/12/16%, 마나 초당 +1/1.5/2.",
+  "direction": "spell",
+  "tier": 6,
+  "kind": "mastery",
+  "max_rank": 3,
+  "required_level": 60,
+  "required_direction_sp": 20,
+  "effect": "fantasyrpg:mage_mastery_archmage",
+  "values": {
+    "skill_magic_bonus": [
+      0.08,
+      0.12,
+      0.16
+    ],
+    "core_regen": [
+      1,
+      1.5,
+      2
+    ]
+  }
+}

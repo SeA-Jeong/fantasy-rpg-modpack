@@ -1,0 +1,28 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_마스터리_혼합_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:cleric/mixed_attack_spell",
+  "name": "신성 징벌",
+  "description": "징벌 강타 마법 +0.3, 심판의 망치 언데드 +30%p.",
+  "directions": [
+    "attack",
+    "spell"
+  ],
+  "kind": "passive",
+  "max_rank": 1,
+  "required_level": 1,
+  "required_direction_sp": 8,
+  "effect": "fantasyrpg:cleric_mixed_holy_smite",
+  "values": {},
+  "modifies": [
+    {
+      "effect": "fantasyrpg:cleric_smite",
+      "key": "magic",
+      "add": 0.3
+    },
+    {
+      "effect": "fantasyrpg:cleric_judgment",
+      "key": "undead_bonus",
+      "add": 0.3
+    }
+  ]
+}
