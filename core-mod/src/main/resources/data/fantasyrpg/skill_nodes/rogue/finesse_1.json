@@ -1,0 +1,47 @@
+{
+  "_comment": "[초안] 수치는 claude/4직업_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:rogue/finesse_1",
+  "name": "연쇄 표식",
+  "description": "바라보는 적에게 표식 단검을 꽂아 표식 +2. 3랭크: 표식이 3개 이상이면 +1 더. 5랭크: 맞은 적이 5초 안에 죽으면 쿨타임 초기화.",
+  "direction": "finesse",
+  "tier": 1,
+  "kind": "active",
+  "max_rank": 5,
+  "required_level": 1,
+  "required_direction_sp": 0,
+  "effect": "fantasyrpg:rogue_chain_mark",
+  "cooldown_ticks": 80,
+  "cost": 0,
+  "values": {
+    "physical": [
+      0.8,
+      0.9,
+      1.0,
+      1.1,
+      1.2
+    ],
+    "range": 5,
+    "mark_gain": 2,
+    "bonus_threshold": [
+      0,
+      0,
+      3,
+      3,
+      3
+    ],
+    "bonus_marks": [
+      0,
+      0,
+      1,
+      1,
+      1
+    ],
+    "kill_reset_ticks": [
+      0,
+      0,
+      0,
+      0,
+      100
+    ]
+  }
+}

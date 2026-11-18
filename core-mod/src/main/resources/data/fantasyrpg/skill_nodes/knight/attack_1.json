@@ -1,0 +1,55 @@
+{
+  "_comment": "[초안] 수치는 claude/4직업_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:knight/attack_1",
+  "name": "창돌진",
+  "description": "바라보는 방향으로 돌진해 지나간 적을 찌르고 밀쳐냅니다. 3랭크: 처음 맞은 적 경직. 5랭크: 결의 60 이상이면 30을 더 써서 9칸·피해 ×1.4.",
+  "direction": "attack",
+  "tier": 1,
+  "kind": "active",
+  "max_rank": 5,
+  "required_level": 1,
+  "required_direction_sp": 0,
+  "effect": "fantasyrpg:knight_charge",
+  "cooldown_ticks": 160,
+  "cost": 20,
+  "values": {
+    "physical": [
+      1.4,
+      1.6,
+      1.8,
+      2.0,
+      2.2
+    ],
+    "distance": 6,
+    "knockback": 0.6,
+    "stun_ticks": [
+      0,
+      0,
+      10,
+      10,
+      10
+    ],
+    "empower_threshold": [
+      0,
+      0,
+      0,
+      0,
+      60
+    ],
+    "empower_cost": 30,
+    "empower_mult": [
+      1,
+      1,
+      1,
+      1,
+      1.4
+    ],
+    "empower_distance_mult": [
+      1,
+      1,
+      1,
+      1,
+      1.5
+    ]
+  }
+}

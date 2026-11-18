@@ -40,6 +40,11 @@ public final class WarriorSkills {
                 .withStyle(net.minecraft.ChatFormatting.GRAY), true);
     }
 
+    static void blocked(Cast c) {
+        c.player.displayClientMessage(net.minecraft.network.chat.Component.translatable("message.fantasyrpg.skill.blocked")
+                .withStyle(net.minecraft.ChatFormatting.GRAY), true);
+    }
+
     // ── 강격 ──
     private static boolean heavyStrike(Cast c) {
         LivingEntity t = SkillTargets.look(c.player, c.v("range"));
@@ -47,14 +52,8 @@ public final class WarriorSkills {
             noTarget(c);
             return false;
         }
-        double mult = 1.0;
-        // 5랭크: 기세가 문턱 이상이면 더 쓰고 강화 (기본 비용은 아직 빠지지 않은 상태라 비용 + 추가분을 함께 확인)
-        double threshold = c.v("empower_threshold");
-        if (threshold > 0 && CoreService.value(c.player) >= Math.max(threshold, c.node.cost(c.rank) + c.v("empower_cost"))) {
-            CoreService.spend(c.player, c.v("empower_cost"));
-            mult = c.v("empower_mult");
-        }
-        c.hit(t, c.v("physical") * mult, 0);
+        double mult = c.empower(); // 5랭크
+        c.hit(t, c.v("physical"), 0, mult, false);
         SkillTargets.slow(t, (int) c.v("stun_ticks"), 3);
         ServerLevel l = level(c);
         l.sendParticles(mult > 1 ? ParticleTypes.EXPLOSION : ParticleTypes.CRIT, t.getX(), t.getY(0.6), t.getZ(), mult > 1 ? 1 : 12, 0.3, 0.3, 0.3, 0.2);

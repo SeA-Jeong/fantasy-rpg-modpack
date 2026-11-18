@@ -48,7 +48,32 @@ public final class SkillRuntime {
         public long lastReflect = -1000;
         // 마력 베기 표식: 대상 → 끝나는 틱
         public final Map<UUID, Long> marks = new HashMap<>();
+        // 궁수 정밀 사격 5랭크
+        public UUID lastArrowTarget;
+        public int arrowConsecutive;
+        // 기사
+        public long lastChargeTick = -1000;
+        public long lastParryTick = -1000;
+        public boolean forceCritBasic;
+        public long guardStart = -1, guardEnd = -1;
+        // 도적: 회피(스킬이면 성공 효과), 암영
+        public long evadeEnd = -1;
+        public boolean evadeFromSkill, evadeSucceeded;
+        public final Map<UUID, Long> shadowMarks = new HashMap<>();
+        // 궁수 후퇴 사격 5랭크
+        public long retreatGuardEnd = -1;
+        // 전투사제 신성 방벽
+        public long sanctEnd = -1;
+        public double sanctReduced;
+        // 시간 제한 속성 수정자 (이동 속도 등): 키 → 끝나는 틱
+        public final Map<String, Long> attrEnd = new HashMap<>();
     }
+
+    /** 도적 연쇄 표식 5랭크: 대상이 죽으면 쿨타임 초기화 */
+    public record KillWatch(UUID player, String nodeId, long until) {
+    }
+
+    public static final Map<UUID, KillWatch> KILL_WATCH = new ConcurrentHashMap<>();
 
     private static final Map<UUID, State> STATES = new ConcurrentHashMap<>();
 

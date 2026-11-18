@@ -1,0 +1,43 @@
+{
+  "_comment": "[초안] 수치는 claude/4직업_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:cleric/spell_1",
+  "name": "성광",
+  "description": "바라보는 지점에 신성한 빛을 내립니다. 언데드에게 +30%. 3랭크: 맞은 적 1마리당 체력 0.5 회복(최대 2). 5랭크: 1초 뒤 50% 한 번 더.",
+  "direction": "spell",
+  "tier": 1,
+  "kind": "active",
+  "max_rank": 5,
+  "required_level": 1,
+  "required_direction_sp": 0,
+  "effect": "fantasyrpg:cleric_holy_light",
+  "cooldown_ticks": 120,
+  "cost": 20,
+  "values": {
+    "magic": [
+      1.0,
+      1.15,
+      1.3,
+      1.45,
+      1.6
+    ],
+    "range": 16,
+    "radius": 3,
+    "undead_bonus": 0.3,
+    "heal_per_hit": [
+      0,
+      0,
+      0.5,
+      0.5,
+      0.5
+    ],
+    "heal_cap": 2,
+    "echo_ratio": [
+      0,
+      0,
+      0,
+      0,
+      0.5
+    ],
+    "echo_delay": 20
+  }
+}

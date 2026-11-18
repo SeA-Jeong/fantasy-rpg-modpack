@@ -2,22 +2,31 @@ package com.fantasyrpg.core.skills;
 
 import com.fantasyrpg.core.FantasyRpgCore;
 import com.fantasyrpg.core.classcore.CoreService;
+import com.fantasyrpg.core.combat.DamageInput;
+import com.fantasyrpg.core.combat.RpgDamage;
 import com.fantasyrpg.core.playerdata.RpgClass;
 import com.fantasyrpg.core.playerdata.RpgPlayerData;
 import com.fantasyrpg.core.playerdata.RpgProgress;
 import com.fantasyrpg.core.skilltree.SkillData;
 import com.fantasyrpg.core.skilltree.SkillNode;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.phys.Vec3;
 
+import java.util.List;
 
 /**
- * 배운 노드 찾기와 패시브 효과의 공통 처리 (기본 공격·받는 피해·흡수 체력).
+ * 배운 노드 찾기와 패시브 효과의 공통 처리 (기본 공격·화살·받는 피해·흡수 체력·시간 제한 속성).
  * 노드는 데이터의 {@code effect} id로 찾는다(노드 id를 데이터팩에서 바꿔도 동작).
+ * 같은 역할 패시브는 직업마다 하나씩이라 {@link SkillIds}의 묶음으로 한 번에 처리한다.
  */
 public final class SkillPassives {
     private SkillPassives() {
@@ -47,57 +56,140 @@ public final class SkillPassives {
         return l != null && l.rank() >= minRank ? l : null;
     }
 
+    /** 묶음 중 처음 배운 것 */
+    public static Learned anyOf(ServerPlayer p, String[] effectIds) {
+        for (String id : effectIds) {
+            Learned l = learned(p, id);
+            if (l != null) return l;
+        }
+        return null;
+    }
+
     // ── 치명타 ──
 
-    /** 기본 확률에 더할 치명타 확률 (연계 감각). 기교 트리 합계 상한 +15%p [기획 5.4] */
+    /** 기본 확률에 더할 치명타 확률 (기교 2단). 기교 트리 합계 상한 +15%p [기획 5.4] */
     public static double critBonus(ServerPlayer p) {
-        Learned l = learned(p, SkillIds.W_COMBO_SENSE);
+        Learned l = anyOf(p, SkillIds.FINESSE_SENSE);
         return l == null ? 0 : Math.min(0.15, l.v("crit_chance"));
     }
 
-    /** 치명타가 났을 때 (연계 감각 5랭크) */
+    /** 치명타 배율에 더할 값 (도적 급소 감각 5랭크: 표식이 다 찼을 때) */
+    public static double critMultBonus(ServerPlayer p) {
+        Learned l = learned(p, SkillIds.R_VITAL_SENSE, 5);
+        return l != null && CoreService.value(p) >= l.v("crit_mult_core") ? l.v("crit_mult_bonus") : 0;
+    }
+
+    /** 치명타가 났을 때 (기교 2단: 코어) */
     public static void onCrit(ServerPlayer p) {
-        Learned l = learned(p, SkillIds.W_COMBO_SENSE, 5);
+        Learned l = anyOf(p, SkillIds.FINESSE_SENSE);
         if (l != null) CoreService.gain(p, l.v("crit_core"));
     }
 
-    // ── 전사 기본 공격 ──
+    /** 스킬 적중 뒤 기본 공격 보너스 (기교 2단 3랭크) */
+    private static double afterSkill(ServerPlayer p, SkillRuntime.State st) {
+        Learned l = anyOf(p, SkillIds.FINESSE_SENSE);
+        if (l == null || l.v("after_skill_ticks") <= 0) return 1.0;
+        return SkillRuntime.now(p) - st.lastSkillHitTick <= l.v("after_skill_ticks") ? 1.0 + l.v("after_skill_bonus") : 1.0;
+    }
 
-    public record MeleeMods(double physical, double magic, double factor) {
+    /** 공격자가 대상 등 뒤에 있는지 */
+    public static boolean behind(Entity attacker, LivingEntity target) {
+        Vec3 look = Vec3.directionFromRotation(0, target.getYRot());
+        return SkillMath.isBehind(look.x, look.z, attacker.getX() - target.getX(), attacker.getZ() - target.getZ());
+    }
+
+    public static boolean undead(LivingEntity e) {
+        return e.getType().is(EntityTypeTags.UNDEAD);
+    }
+
+    // ── 근접 기본 공격 (전사·기사·도적·전투사제) ──
+
+    public record MeleeMods(double physical, double magic, double factor, boolean forceCrit, boolean behind) {
     }
 
     public static MeleeMods melee(ServerPlayer p, LivingEntity target, double physical, double magic) {
         double factor = 1.0;
         SkillRuntime.State st = SkillRuntime.state(p);
-        Learned mastery = learned(p, SkillIds.W_SWORD_MASTERY);
+        long now = SkillRuntime.now(p);
+        boolean back = behind(p, target);
+        Learned mastery = anyOf(p, SkillIds.MELEE_MASTERY);
         if (mastery != null) {
             physical *= 1.0 + mastery.v("basic_physical_bonus");
+            if (back) factor *= 1.0 + mastery.v("behind_bonus");
             boolean same = target.getUUID().equals(st.lastBasicTarget);
             st.basicConsecutive = SkillMath.consecutive(same, st.basicConsecutive);
             st.lastBasicTarget = target.getUUID();
             if (mastery.rank() >= 5 && st.basicConsecutive >= 3) {
                 physical += mastery.v("third_hit_physical");
+                SkillTargets.slow(target, (int) mastery.v("third_hit_stun"), 3);
                 st.basicConsecutive = 0;
             }
+            if (now - st.lastChargeTick <= mastery.v("after_charge_ticks")) factor *= 1.0 + mastery.v("after_charge_bonus");
         }
-        Learned blade = learned(p, SkillIds.W_SPELLBLADE);
-        if (blade != null) {
-            double add = blade.v("basic_magic");
-            if (blade.rank() >= 3 && CoreService.value(p) >= blade.v("high_core")) add *= blade.v("high_core_mult");
+        Learned spell = anyOf(p, SkillIds.MELEE_MAGIC);
+        if (spell != null) {
+            double add = spell.v("basic_magic");
+            if (spell.v("high_core") > 0 && CoreService.value(p) >= spell.v("high_core")) add *= spell.v("high_core_mult");
             magic += add;
+            if (undead(target)) factor *= 1.0 + spell.v("undead_bonus");
         }
-        Learned combo = learned(p, SkillIds.W_COMBO_SENSE, 3);
-        if (combo != null && SkillRuntime.now(p) - st.lastSkillHitTick <= combo.v("after_skill_ticks")) {
-            factor *= 1.0 + combo.v("after_skill_bonus");
-        }
-        return new MeleeMods(physical, magic, factor);
+        factor *= afterSkill(p, st);
+        boolean force = st.forceCritBasic;
+        st.forceCritBasic = false;
+        return new MeleeMods(physical, magic, factor, force, back);
     }
 
     /** 근접 기본 공격이 맞은 뒤 */
-    public static void afterMelee(ServerPlayer p, boolean crit) {
-        Learned mastery = learned(p, SkillIds.W_SWORD_MASTERY, 3);
-        if (mastery != null) CoreService.gain(p, mastery.v("hit_core_bonus"));
-        if (crit) onCrit(p);
+    public static void afterMelee(ServerPlayer p, LivingEntity target, DamageInput in, boolean behind) {
+        Learned mastery = anyOf(p, SkillIds.MELEE_MASTERY);
+        if (mastery != null) {
+            CoreService.gain(p, mastery.v("hit_core_bonus"));
+            if (behind) CoreService.gain(p, mastery.v("behind_core"));
+            // 기사 창술 숙련 3랭크: 대상 바로 뒤 적도 일부 피해
+            double pierce = mastery.v("pierce_ratio");
+            if (pierce > 0) {
+                Vec3 dir = target.position().subtract(p.position()).multiply(1, 0, 1).normalize();
+                Vec3 at = target.position().add(dir.scale(1.2)).add(0, target.getBbHeight() / 2, 0);
+                for (LivingEntity e : SkillTargets.around(p, at, 0.9)) {
+                    if (e == target) continue;
+                    RpgDamage.apply(e, p, in.withFinalModifier(in.finalModifier() * pierce));
+                    break;
+                }
+            }
+        }
+        if (in.critMultiplier() > 1.0) onCrit(p);
+    }
+
+    // ── 궁수 화살 ──
+
+    public record ArrowMods(double physical, double magic, double factor) {
+    }
+
+    public static ArrowMods arrow(ServerPlayer p, LivingEntity target, double physical, double magic, Vec3 shotFrom) {
+        double factor = 1.0;
+        SkillRuntime.State st = SkillRuntime.state(p);
+        Learned precision = learned(p, SkillIds.A_PRECISION);
+        if (precision != null) {
+            factor *= 1.0 + precision.v("arrow_bonus");
+            if (precision.v("far_distance") > 0 && target.position().distanceTo(shotFrom) >= precision.v("far_distance")) {
+                factor *= 1.0 + precision.v("far_bonus");
+            }
+            boolean same = target.getUUID().equals(st.lastArrowTarget);
+            st.arrowConsecutive = SkillMath.consecutive(same, st.arrowConsecutive);
+            st.lastArrowTarget = target.getUUID();
+            if (precision.rank() >= 5 && st.arrowConsecutive >= 3) {
+                physical += precision.v("third_hit_physical");
+                st.arrowConsecutive = 0;
+            }
+        }
+        Learned fletch = learned(p, SkillIds.A_ELEMENTAL_FLETCH);
+        if (fletch != null) {
+            double add = fletch.v("arrow_magic");
+            if (fletch.v("high_core") > 0 && CoreService.value(p) >= fletch.v("high_core")) add *= fletch.v("high_core_mult");
+            magic += add;
+        }
+        factor *= afterSkill(p, st);
+        return new ArrowMods(physical, magic, factor);
     }
 
     // ── 마법사 기본 탄 ──
@@ -126,6 +218,17 @@ public final class SkillPassives {
         }
     }
 
+    // ── 쿨타임 감소 (주문 2단 5랭크) ──
+
+    public static int cooldownCut(ServerPlayer p, SkillNode cast) {
+        for (String[] pair : SkillIds.COOLDOWN_CUT) {
+            if (!pair[1].equals(cast.effect())) continue;
+            Learned l = learned(p, pair[0], 5);
+            if (l != null) return (int) l.v("cooldown_cut");
+        }
+        return 0;
+    }
+
     // ── 코어 최대치 ──
 
     public static double coreMaxBonus(ServerPlayer p) {
@@ -152,18 +255,6 @@ public final class SkillPassives {
         SkillRuntime.state(p).absorptionEnd.put(key, SkillRuntime.now(p) + ticks);
     }
 
-    /** 매 틱: 끝난 흡수 체력 거두기 */
-    public static void tickAbsorption(ServerPlayer p) {
-        SkillRuntime.State st = SkillRuntime.state(p);
-        if (st.absorptionEnd.isEmpty()) return;
-        long now = SkillRuntime.now(p);
-        st.absorptionEnd.entrySet().removeIf(e -> {
-            if (e.getValue() > now) return false;
-            removeAbsorption(p, e.getKey());
-            return true;
-        });
-    }
-
     public static void removeAbsorption(ServerPlayer p, String key) {
         AttributeInstance max = p.getAttribute(Attributes.MAX_ABSORPTION);
         if (max == null) return;
@@ -171,9 +262,58 @@ public final class SkillPassives {
         if (p.getAbsorptionAmount() > p.getMaxAbsorption()) p.setAbsorptionAmount((float) p.getMaxAbsorption());
     }
 
-    /** 접속·부활 때 남은 흡수 수정자 정리 (임시 수정자라 보통 없음) */
-    public static void clearAbsorption(ServerPlayer p) {
-        for (String k : java.util.List.copyOf(SkillRuntime.state(p).absorptionEnd.keySet())) removeAbsorption(p, k);
-        SkillRuntime.state(p).absorptionEnd.clear();
+    // ── 시간 제한 속성 (이동 속도 등) ──
+
+    private static ResourceLocation attrId(String key) {
+        return ResourceLocation.fromNamespaceAndPath(FantasyRpgCore.MOD_ID, "skill/timed/" + key);
+    }
+
+    private static final java.util.Map<String, Holder<Attribute>> TIMED_ATTR = new java.util.concurrent.ConcurrentHashMap<>();
+
+    /** key 하나에 수정자 하나. 다시 걸면 값·시간을 새로 */
+    public static void timedAttribute(ServerPlayer p, String key, Holder<Attribute> attr, double amount,
+                                      AttributeModifier.Operation op, int ticks) {
+        if (amount == 0 || ticks <= 0) return;
+        AttributeInstance inst = p.getAttribute(attr);
+        if (inst == null) return;
+        inst.removeModifier(attrId(key));
+        inst.addTransientModifier(new AttributeModifier(attrId(key), amount, op));
+        TIMED_ATTR.put(key, attr);
+        SkillRuntime.state(p).attrEnd.put(key, SkillRuntime.now(p) + ticks);
+    }
+
+    private static void removeTimed(ServerPlayer p, String key) {
+        Holder<Attribute> attr = TIMED_ATTR.get(key);
+        AttributeInstance inst = attr == null ? null : p.getAttribute(attr);
+        if (inst != null) inst.removeModifier(attrId(key));
+    }
+
+    /** 매 틱: 끝난 흡수 체력·속성 거두기 */
+    public static void tickTimed(ServerPlayer p) {
+        SkillRuntime.State st = SkillRuntime.state(p);
+        long now = SkillRuntime.now(p);
+        if (!st.absorptionEnd.isEmpty()) {
+            st.absorptionEnd.entrySet().removeIf(e -> {
+                if (e.getValue() > now) return false;
+                removeAbsorption(p, e.getKey());
+                return true;
+            });
+        }
+        if (!st.attrEnd.isEmpty()) {
+            st.attrEnd.entrySet().removeIf(e -> {
+                if (e.getValue() > now) return false;
+                removeTimed(p, e.getKey());
+                return true;
+            });
+        }
+    }
+
+    /** 접속·부활 때 남은 수정자 정리 */
+    public static void clearTimed(ServerPlayer p) {
+        SkillRuntime.State st = SkillRuntime.state(p);
+        for (String k : List.copyOf(st.absorptionEnd.keySet())) removeAbsorption(p, k);
+        for (String k : List.copyOf(st.attrEnd.keySet())) removeTimed(p, k);
+        st.absorptionEnd.clear();
+        st.attrEnd.clear();
     }
 }

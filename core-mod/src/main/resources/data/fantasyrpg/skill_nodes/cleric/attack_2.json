@@ -1,0 +1,36 @@
+{
+  "_comment": "[초안] 수치는 claude/4직업_스킬_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:cleric/attack_2",
+  "name": "철퇴 숙련",
+  "description": "기본 공격 물리 계수가 오릅니다. 3랭크: 적중 때 신성력 +2. 5랭크: 같은 적 3연속 적중마다 0.5초 경직.",
+  "direction": "attack",
+  "tier": 2,
+  "kind": "passive",
+  "max_rank": 5,
+  "required_level": 1,
+  "required_direction_sp": 0,
+  "effect": "fantasyrpg:cleric_mace_mastery",
+  "values": {
+    "basic_physical_bonus": [
+      0.03,
+      0.06,
+      0.09,
+      0.12,
+      0.15
+    ],
+    "hit_core_bonus": [
+      0,
+      0,
+      2,
+      2,
+      2
+    ],
+    "third_hit_stun": [
+      0,
+      0,
+      0,
+      0,
+      10
+    ]
+  }
+}

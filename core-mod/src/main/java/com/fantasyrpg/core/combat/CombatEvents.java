@@ -65,6 +65,7 @@ public final class CombatEvents {
                 return;
             }
             DamageInput in;
+            SkillPassives.MeleeMods mods = null;
             if (v == WeaponPermission.Verdict.UNARMED) {
                 in = RpgAttacks.unarmed(s, charge);
             } else {
@@ -72,16 +73,16 @@ public final class CombatEvents {
                 if (a == null) return;
                 double combo = betterCombat() ? BetterCombatCompat.comboMultiplier(p) : 1.0;
                 double factor = BasicAttackMath.basicCoefficient(1.0, combo, charge);
-                // 전사 패시브(검술 숙련·마검 공명·연계 감각)
-                SkillPassives.MeleeMods mods = SkillPassives.melee(p, target, a.physical(), a.magic());
-                in = RpgAttacks.basic(s, mods.physical(), mods.magic(), weapon, factor * mods.factor(), p,
-                        SkillPassives.critBonus(p));
+                // 직업 패시브(공격·주문·기교 2단)
+                mods = SkillPassives.melee(p, target, a.physical(), a.magic());
+                in = RpgAttacks.basic(s, s.power(GearRegistry.tierOf(weapon)), mods.physical(), mods.magic(),
+                        factor * mods.factor(), p, SkillPassives.critBonus(p), mods.forceCrit(), SkillPassives.critMultBonus(p));
             }
             RpgDamage.apply(target, p, in);
             p.setLastHurtMob(target);
             if (v != WeaponPermission.Verdict.UNARMED) {
                 CoreService.onEvent(p, CoreService.BASIC_ATTACK_HIT);
-                SkillPassives.afterMelee(p, in.critMultiplier() > 1.0);
+                SkillPassives.afterMelee(p, target, in, mods != null && mods.behind());
             }
         } finally {
             p.resetAttackStrengthTicker(); // 취소로 빠진 바닐라 쿨타임 초기화를 대신함
@@ -134,10 +135,13 @@ public final class CombatEvents {
         boolean tagged = proj.getPersistentData().contains(SHOT);
         if (!(proj instanceof ThrownTrident)) proj.discard(); // 삼지창은 잃어버리지 않게 지우지 않음
         if (!tagged || target instanceof Player) return; // 직업 무기가 아닌 투사체·PvP → 피해 없음
-        DamageInput in = RpgAttacks.basic(s, s.power(shot.getInt("tier")), shot.getDouble("physical"),
-                shot.getDouble("magic"), shot.getDouble("power"), p);
+        // 궁수 패시브(정밀 사격·원소 깃·사수의 감)
+        SkillPassives.ArrowMods mods = SkillPassives.arrow(p, target, shot.getDouble("physical"), shot.getDouble("magic"), p.position());
+        DamageInput in = RpgAttacks.basic(s, s.power(shot.getInt("tier")), mods.physical(), mods.magic(),
+                shot.getDouble("power") * mods.factor(), p, SkillPassives.critBonus(p), false, SkillPassives.critMultBonus(p));
         RpgDamage.apply(target, p, in);
         p.setLastHurtMob(target);
+        if (in.critMultiplier() > 1.0) SkillPassives.onCrit(p);
         CoreService.onEvent(p, CoreService.BASIC_ATTACK_HIT);
     }
 
