@@ -23,31 +23,31 @@ public final class SkillRuntime {
 
     /** 플레이어마다 하나 */
     public static final class State {
-        final Map<String, Long> cooldownEnd = new HashMap<>();
+        public final Map<String, Long> cooldownEnd = new HashMap<>();
         // 주문 연쇄
-        String lastCastNode = "";
-        long lastCastTick = -1000;
-        int chainCount;
-        boolean chainBonusReady;
+        public String lastCastNode = "";
+        public long lastCastTick = -1000;
+        public int chainCount;
+        public boolean chainBonusReady;
         // 연계 감각 3랭크
-        long lastSkillHitTick = -1000;
+        public long lastSkillHitTick = -1000;
         // 검술 숙련 5랭크
-        UUID lastBasicTarget;
-        int basicConsecutive;
+        public UUID lastBasicTarget;
+        public int basicConsecutive;
         // 마탄 단련 5랭크
-        int boltCount;
+        public int boltCount;
         // 불굴
-        long indomitableEnd = -1;
-        String indomitableNode = "";
+        public long indomitableEnd = -1;
+        public String indomitableNode = "";
         // 투지 3랭크
-        long lowHealthReady;
+        public long lowHealthReady;
         // 흡수 체력: 수정자 id → 끝나는 틱
-        final Map<String, Long> absorptionEnd = new HashMap<>();
+        public final Map<String, Long> absorptionEnd = new HashMap<>();
         // 결계 충격 5랭크 반사
-        long barrierEnd = -1;
-        long lastReflect = -1000;
+        public long barrierEnd = -1;
+        public long lastReflect = -1000;
         // 마력 베기 표식: 대상 → 끝나는 틱
-        final Map<UUID, Long> marks = new HashMap<>();
+        public final Map<UUID, Long> marks = new HashMap<>();
     }
 
     private static final Map<UUID, State> STATES = new ConcurrentHashMap<>();
