@@ -1,0 +1,22 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_궁극기_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:knight/spell_5",
+  "name": "성창 낙하",
+  "description": "바라보는 지점에 거대한 마력 창을 떨어뜨립니다. 반경 5, 3초 느림.",
+  "direction": "spell",
+  "tier": 5,
+  "kind": "ultimate",
+  "max_rank": 1,
+  "required_level": 40,
+  "required_direction_sp": 15,
+  "effect": "fantasyrpg:knight_ult_holy_lance",
+  "cooldown_ticks": 1800,
+  "cost": 50,
+  "values": {
+    "physical": 1.0,
+    "magic": 3.0,
+    "range": 20,
+    "radius": 5,
+    "slow_ticks": 60
+  }
+}

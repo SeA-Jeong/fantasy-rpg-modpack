@@ -25,6 +25,7 @@ import com.fantasyrpg.core.skills.RogueSkills;
 import com.fantasyrpg.core.skills.SkillEvents;
 import com.fantasyrpg.core.skills.SkillRuntime;
 import com.fantasyrpg.core.skills.SkillSettings;
+import com.fantasyrpg.core.skills.UltimateSkills;
 import com.fantasyrpg.core.skills.WarriorSkills;
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
@@ -90,6 +91,7 @@ public final class FantasyRpgCore {
         RogueSkills.register();
         ArcherSkills.register();
         ClericSkills.register();
+        UltimateSkills.register();
         NeoForge.EVENT_BUS.addListener(SkillEvents::onKnockback);
         NeoForge.EVENT_BUS.addListener(SkillEvents::onDeath);
         NeoForge.EVENT_BUS.addListener(SkillEvents::onEffectApplicable);

@@ -97,7 +97,7 @@ class ClassSkillsTest {
         Set<String> effects = new HashSet<>();
         for (String cls : List.of("warrior", "mage", "knight", "rogue", "archer", "cleric")) {
             Map<String, SkillNode> nodes = load(cls);
-            assertEquals(16, nodes.size(), cls);
+            assertEquals(20, nodes.size(), cls);
             for (SkillNode.Direction d : SkillNode.Direction.values()) {
                 for (int tier = 1; tier <= 2; tier++) {
                     final int t = tier;
@@ -147,10 +147,31 @@ class ClassSkillsTest {
                 all.add(n.effect());
             }
         }
-        assertEquals(96, all.size());
+        assertEquals(120, all.size());
         for (SkillNode n : everything.values()) {
             for (SkillNode.Mod m : n.mods()) assertTrue(all.contains(m.effect()), n.id() + " → " + m.effect());
         }
+    }
+
+    @Test
+    @DisplayName("5단 궁극기: 직업마다 4방향 × 궁극기(Lv.40·선행 15SP·1랭크·B칸), 쿨타임 60~180초, 피해 무효 계열은 3~5초")
+    void ultimates() throws IOException {
+        for (String cls : List.of("warrior", "mage", "knight", "rogue", "archer", "cleric")) {
+            Map<String, SkillNode> nodes = load(cls);
+            for (SkillNode.Direction d : SkillNode.Direction.values()) {
+                SkillNode u = nodes.values().stream().filter(x -> x.directions().equals(Set.of(d)) && x.tier() == 5).findFirst().orElseThrow();
+                assertEquals(SkillNode.Kind.ULTIMATE, u.kind(), u.id());
+                assertTrue(u.kind().equippable(), u.id());
+                assertEquals(1, u.maxRank(), u.id());
+                assertEquals(40, u.requiredLevel(), u.id());
+                assertEquals(15, u.requiredDirectionSp(), u.id());
+                assertTrue(u.cooldownTicks(1) >= 1200 && u.cooldownTicks(1) <= 3600, u.id() + " 쿨타임 " + u.cooldownTicks(1));
+            }
+        }
+        assertEquals(60, load("mage").get("fantasyrpg:mage/guard_5").value("duration_ticks", 1), 1e-9);
+        assertEquals(60, load("rogue").get("fantasyrpg:rogue/guard_5").value("duration_ticks", 1), 1e-9);
+        assertEquals(100, load("knight").get("fantasyrpg:knight/guard_5").value("duration_ticks", 1), 1e-9);
+        assertEquals(3600, load("cleric").get("fantasyrpg:cleric/guard_5").cooldownTicks(1));
     }
 
     @Test

@@ -1,0 +1,20 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_궁극기_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:cleric/guard_5",
+  "name": "부활의 기도",
+  "description": "30초 안에 죽을 피해를 받으면 한 번 버티고 체력 50%로 살아나며 2초 동안 피해 0.",
+  "direction": "guard",
+  "tier": 5,
+  "kind": "ultimate",
+  "max_rank": 1,
+  "required_level": 40,
+  "required_direction_sp": 15,
+  "effect": "fantasyrpg:cleric_ult_prayer",
+  "cooldown_ticks": 3600,
+  "cost": 0,
+  "values": {
+    "duration_ticks": 600,
+    "revive_health": 0.5,
+    "invuln_ticks": 40
+  }
+}

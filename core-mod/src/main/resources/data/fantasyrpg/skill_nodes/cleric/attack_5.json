@@ -1,0 +1,23 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_궁극기_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:cleric/attack_5",
+  "name": "신의 철퇴",
+  "description": "바라보는 적에 신의 철퇴를 내리칩니다. 주변 4칸 70%, 언데드 ×1.5.",
+  "direction": "attack",
+  "tier": 5,
+  "kind": "ultimate",
+  "max_rank": 1,
+  "required_level": 40,
+  "required_direction_sp": 15,
+  "effect": "fantasyrpg:cleric_ult_divine_hammer",
+  "cooldown_ticks": 1200,
+  "cost": 50,
+  "values": {
+    "physical": 3.0,
+    "magic": 1.5,
+    "range": 5,
+    "splash_radius": 4,
+    "splash_ratio": 0.7,
+    "undead_mult": 1.5
+  }
+}

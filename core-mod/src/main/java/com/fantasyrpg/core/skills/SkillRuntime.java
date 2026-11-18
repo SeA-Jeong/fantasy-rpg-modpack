@@ -73,6 +73,19 @@ public final class SkillRuntime {
         public long retribEnd = -1, retribLast = -1000;
         public boolean barrierBroken;
         public int trapSeq;
+        // 궁극기
+        public long invulnEnd = -1;
+        public long releaseEnd = -1;
+        public double releaseMagic;
+        public long shoutEnd = -1;
+        public int shoutHits;
+        public long timeAccelEnd = -1;
+        public long wallEnd = -1, wallLast = -1000;
+        public long cloneEnd = -1;
+        public double cloneBonus;
+        public long veilEnd = -1, veilLast = -1000;
+        public double nextSkillBonus;
+        public long prayerEnd = -1;
         // 시간 제한 속성 수정자 (이동 속도 등): 키 → 끝나는 틱
         public final Map<String, Long> attrEnd = new HashMap<>();
     }

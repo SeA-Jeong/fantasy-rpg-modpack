@@ -1,0 +1,21 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_궁극기_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:cleric/finesse_5",
+  "name": "정화의 빛",
+  "description": "해로운 효과를 모두 없애고 최대 체력 30%를 회복, 주변 적에게 신성 피해(언데드 ×2).",
+  "direction": "finesse",
+  "tier": 5,
+  "kind": "ultimate",
+  "max_rank": 1,
+  "required_level": 40,
+  "required_direction_sp": 15,
+  "effect": "fantasyrpg:cleric_ult_radiance",
+  "cooldown_ticks": 1800,
+  "cost": 40,
+  "values": {
+    "heal_ratio": 0.3,
+    "radius": 5,
+    "magic": 1.5,
+    "undead_mult": 2.0
+  }
+}
