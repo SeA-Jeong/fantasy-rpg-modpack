@@ -43,6 +43,33 @@ public final class ClientRpgState {
     /** 노드 id → 쿨타임 끝나는 시각(ms) */
     public static final Map<String, Long> cooldownEnd = new java.util.concurrent.ConcurrentHashMap<>();
 
+    /** 배운 패시브가 effect 의 key 에 더하는 양 (서버 SkillPassives.modSum 과 같은 계산, 표시용) */
+    public static double modSum(String effect, String key) {
+        double total = 0;
+        for (SkillNode n : nodes.values()) {
+            int r = ranks.getOrDefault(n.id(), 0);
+            if (r <= 0) continue;
+            for (SkillNode.Mod m : n.mods()) if (m.effect().equals(effect) && m.key().equals(key)) total += m.at(r);
+        }
+        return total;
+    }
+
+    /** effect 를 강화하는 배운 패시브 이름 */
+    public static List<String> modifiers(String effect) {
+        List<String> out = new ArrayList<>();
+        for (SkillNode n : nodes.values()) {
+            int r = ranks.getOrDefault(n.id(), 0);
+            if (r <= 0) continue;
+            for (SkillNode.Mod m : n.mods()) {
+                if (m.effect().equals(effect) && m.at(r) != 0) {
+                    out.add(n.name() + " " + r);
+                    break;
+                }
+            }
+        }
+        return out;
+    }
+
     public static void acceptCooldown(String nodeId, int ticks) {
         cooldownEnd.put(nodeId, System.currentTimeMillis() + ticks * 50L);
     }

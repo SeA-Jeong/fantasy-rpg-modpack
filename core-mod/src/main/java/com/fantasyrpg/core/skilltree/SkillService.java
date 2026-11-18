@@ -228,6 +228,9 @@ public final class SkillService {
             return;
         }
         double cost = n.cost(rank);
+        // 시간 가속(마법사 궁극기): 궁극기가 아닌 스킬 코어 비용 절반
+        SkillRuntime.State accel = SkillRuntime.state(p);
+        if (accel.timeAccelEnd > SkillRuntime.now(p) && n.kind() != SkillNode.Kind.ULTIMATE) cost *= 0.5;
         if (cost > 0 && CoreService.value(p) < cost) {
             tell(p, "message.fantasyrpg.skill.no_core", ChatFormatting.RED, n.name(), (int) Math.ceil(cost));
             return;
@@ -251,6 +254,8 @@ public final class SkillService {
         boolean chained = chain != null && !st.lastCastNode.isEmpty() && !st.lastCastNode.equals(n.id())
                 && now - st.lastCastTick <= chain.v("window_ticks");
         double bonus = chained ? chain.v("chain_damage") : 0;
+        bonus += st.nextSkillBonus; // 은신 후퇴: 다음 스킬 한 번
+        st.nextSkillBonus = 0;
         if (st.chainBonusReady) {
             bonus += chain == null ? 0 : chain.v("chain_bonus");
             st.chainBonusReady = false;
@@ -264,6 +269,7 @@ public final class SkillService {
         if (cost > 0 && !cast.free) CoreService.spend(p, cost);
         int cd = Math.max(0, cast.cooldownTicks() - SkillPassives.cooldownCut(p, n));
         cd = (int) Math.round(cd * (1.0 - rate) * cast.cooldownMult);
+        if (st.timeAccelEnd > now && n.kind() != SkillNode.Kind.ULTIMATE) cd = (int) Math.round(cd / 3.0); // 시간 가속
         if (chained) {
             cd = SkillMath.chainedCooldown(cd, chain.v("cooldown_cut"));
             st.chainCount++;

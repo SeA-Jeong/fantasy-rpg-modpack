@@ -131,4 +131,30 @@ public final class SkillIds {
     /** 코어 문턱(bonus_core_min)이 걸리는 합산 키 */
     public static final java.util.Set<String> CORE_GATED = java.util.Set.of("all_damage_bonus", "skill_magic_bonus",
             "skill_physical_bonus", "cooldown_rate", "basic_hit_core_high");
+
+    // ── 5단 궁극기 (claude/6직업_궁극기_초안.md) ──
+    public static final String U_W_RUIN = "fantasyrpg:warrior_ult_ruin";
+    public static final String U_W_RELEASE = "fantasyrpg:warrior_ult_release";
+    public static final String U_W_SHOUT = "fantasyrpg:warrior_ult_shout";
+    public static final String U_W_THOUSAND = "fantasyrpg:warrior_ult_thousand_blades";
+    public static final String U_M_BOLT_STORM = "fantasyrpg:mage_ult_bolt_storm";
+    public static final String U_M_METEOR = "fantasyrpg:mage_ult_meteor";
+    public static final String U_M_ABSOLUTE = "fantasyrpg:mage_ult_absolute_barrier";
+    public static final String U_M_TIME = "fantasyrpg:mage_ult_time_accel";
+    public static final String U_K_THUNDER = "fantasyrpg:knight_ult_thunder_charge";
+    public static final String U_K_LANCE = "fantasyrpg:knight_ult_holy_lance";
+    public static final String U_K_WALL = "fantasyrpg:knight_ult_rampart";
+    public static final String U_K_DANCE = "fantasyrpg:knight_ult_spear_dance";
+    public static final String U_R_EXECUTE = "fantasyrpg:rogue_ult_execute";
+    public static final String U_R_CLONE = "fantasyrpg:rogue_ult_shadow_clone";
+    public static final String U_R_VEIL = "fantasyrpg:rogue_ult_shadow_veil";
+    public static final String U_R_CHAIN = "fantasyrpg:rogue_ult_chain_execution";
+    public static final String U_A_SKYPIERCER = "fantasyrpg:archer_ult_skypiercer";
+    public static final String U_A_STORM = "fantasyrpg:archer_ult_element_storm";
+    public static final String U_A_VANISH = "fantasyrpg:archer_ult_vanish";
+    public static final String U_A_DELUGE = "fantasyrpg:archer_ult_arrow_deluge";
+    public static final String U_C_HAMMER = "fantasyrpg:cleric_ult_divine_hammer";
+    public static final String U_C_SANCTUM = "fantasyrpg:cleric_ult_sanctum";
+    public static final String U_C_PRAYER = "fantasyrpg:cleric_ult_prayer";
+    public static final String U_C_RADIANCE = "fantasyrpg:cleric_ult_radiance";
 }

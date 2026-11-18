@@ -55,6 +55,27 @@ public final class SkillEvents {
             if (l != null && p.isAlive()) ClericSkills.retributionEnd(p, l);
         }
         if (st.barrierEnd > 0 && now >= st.barrierEnd) st.barrierEnd = -1;
+        // 궁극기 끝
+        if (st.releaseEnd > 0 && now >= st.releaseEnd) {
+            st.releaseEnd = -1;
+            SkillPassives.Learned l = SkillPassives.learned(p, SkillIds.U_W_RELEASE);
+            if (l != null && p.isAlive()) UltimateSkills.releaseEnd(p, l);
+        }
+        if (st.shoutEnd > 0 && now >= st.shoutEnd) {
+            st.shoutEnd = -1;
+            SkillPassives.Learned l = SkillPassives.learned(p, SkillIds.U_W_SHOUT);
+            if (l != null && p.isAlive()) UltimateSkills.shoutEnd(p, l, st.shoutHits);
+        }
+        if (st.wallEnd > 0 && now >= st.wallEnd) {
+            st.wallEnd = -1;
+            SkillPassives.Learned l = SkillPassives.learned(p, SkillIds.U_K_WALL);
+            if (l != null) UltimateSkills.rampartEnd(p, l);
+        }
+        if (st.veilEnd > 0 && now >= st.veilEnd) {
+            st.veilEnd = -1;
+            if (SkillPassives.learned(p, SkillIds.U_R_VEIL) != null) CoreService.gain(p, 100); // 표식 최대
+        }
+        if (st.prayerEnd > 0 && now >= st.prayerEnd) st.prayerEnd = -1;
         SkillPassives.tickTimed(p);
     }
 
@@ -77,7 +98,49 @@ public final class SkillEvents {
             return;
         }
 
+        // 궁극기: 피해 무효(절대 결계·부활 직후), 그림자 장막(회피+반격), 불굴의 성벽(정면)
+        if (st.invulnEnd > now) {
+            event.setCanceled(true);
+            return;
+        }
+        if (st.veilEnd > now) {
+            event.setCanceled(true);
+            SkillPassives.Learned veil = SkillPassives.learned(p, SkillIds.U_R_VEIL);
+            if (veil != null && attacker != null && now - st.veilLast >= veil.v("counter_interval")) {
+                st.veilLast = now;
+                new Cast(p, veil.node(), veil.rank(), 0).hit(attacker, veil.v("counter_physical"), 0);
+            }
+            return;
+        }
+        if (st.wallEnd > now) {
+            SkillPassives.Learned wall = SkillPassives.learned(p, SkillIds.U_K_WALL);
+            Vec3 src = event.getSource().getSourcePosition();
+            if (wall != null && src != null) {
+                Vec3 look = p.getViewVector(1.0F);
+                if (SkillMath.inCone(src.x - p.getX(), src.z - p.getZ(), look.x, look.z, wall.v("front_angle"))) {
+                    event.setCanceled(true);
+                    if (now - st.wallLast >= wall.v("counter_interval")) {
+                        st.wallLast = now;
+                        CoreService.gain(p, wall.v("block_core"));
+                        if (attacker != null) {
+                            SkillTargets.slow(attacker, (int) wall.v("stun_ticks"), 3);
+                            new Cast(p, wall.node(), wall.rank(), 0).hit(attacker, wall.v("counter_physical"), 0);
+                        }
+                    }
+                    return;
+                }
+            }
+        }
+
         float amount = event.getAmount();
+        // 전사 불멸의 함성
+        if (st.shoutEnd > now) {
+            SkillPassives.Learned shout = SkillPassives.learned(p, SkillIds.U_W_SHOUT);
+            if (shout != null) {
+                amount = (float) SkillMath.reduced(amount, shout.v("reduction"));
+                st.shoutHits++;
+            }
+        }
 
         // 기사 완벽 방어: 정면이면 감소, 처음 몇 틱이면 패리(피해 0)
         if (st.guardEnd > now) {
@@ -223,6 +286,23 @@ public final class SkillEvents {
 
     /** 도적 연쇄 표식 5랭크: 표식 단검을 맞은 적이 정해진 시간 안에 죽으면 쿨타임 초기화 */
     public static void onDeath(LivingDeathEvent event) {
+        // 전투사제 부활의 기도: 죽을 피해를 한 번 버팀
+        if (event.getEntity() instanceof ServerPlayer p && !event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+            SkillRuntime.State st = SkillRuntime.state(p);
+            long now = SkillRuntime.now(p);
+            if (st.prayerEnd > now) {
+                SkillPassives.Learned l = SkillPassives.learned(p, SkillIds.U_C_PRAYER);
+                if (l != null) {
+                    event.setCanceled(true);
+                    st.prayerEnd = -1;
+                    p.setHealth((float) Math.max(1.0, p.getMaxHealth() * l.v("revive_health")));
+                    st.invulnEnd = now + (long) l.v("invuln_ticks");
+                    p.serverLevel().sendParticles(net.minecraft.core.particles.ParticleTypes.TOTEM_OF_UNDYING, p.getX(), p.getY(1.0), p.getZ(), 60, 0.5, 0.8, 0.5, 0.4);
+                    p.serverLevel().playSound(null, p.blockPosition(), net.minecraft.sounds.SoundEvents.TOTEM_USE, net.minecraft.sounds.SoundSource.PLAYERS, 1.0F, 1.0F);
+                    return;
+                }
+            }
+        }
         SkillRuntime.KillWatch w = SkillRuntime.KILL_WATCH.remove(event.getEntity().getUUID());
         if (w == null || event.getEntity().level().getServer() == null) return;
         ServerPlayer p = event.getEntity().level().getServer().getPlayerList().getPlayer(w.player());
@@ -252,6 +332,13 @@ public final class SkillEvents {
         st.retribEnd = -1;
         st.hasteEnd = -1;
         st.trapSeq++;
+        st.invulnEnd = -1;
+        st.releaseEnd = -1;
+        st.shoutEnd = -1;
+        st.wallEnd = -1;
+        st.veilEnd = -1;
+        st.cloneEnd = -1;
+        st.timeAccelEnd = -1;
         SkillRuntime.resendCooldowns(p);
     }
 }

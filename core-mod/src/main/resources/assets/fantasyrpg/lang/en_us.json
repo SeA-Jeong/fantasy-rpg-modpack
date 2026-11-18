@@ -123,5 +123,6 @@
   "message.fantasyrpg.skill.need_weapon": "Hold your class weapon to use skills",
   "message.fantasyrpg.skill.cooldown": "%s: ready in %ss",
   "message.fantasyrpg.skill.no_core": "%s: not enough core (%s needed)",
-  "screen.fantasyrpg.node.cd_cost": "Rank %s: cooldown %ss, core %s"
+  "screen.fantasyrpg.node.cd_cost": "Rank %s: cooldown %ss, core %s",
+  "screen.fantasyrpg.node.modified": "Enhanced by: %s"
 }

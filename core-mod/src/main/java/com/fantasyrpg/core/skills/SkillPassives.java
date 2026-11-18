@@ -98,6 +98,12 @@ public final class SkillPassives {
         return total;
     }
 
+    /** 지속 버프 피해 보너스 (도적 그림자 분신) */
+    public static double buffDamage(ServerPlayer p) {
+        SkillRuntime.State st = SkillRuntime.state(p);
+        return st.cloneEnd > SkillRuntime.now(p) ? st.cloneBonus : 0;
+    }
+
     /** 패리 뒤 피해 보너스 (기사 반격 숙달 3랭크) */
     public static double afterParryBonus(ServerPlayer p) {
         double b = sum(p, "after_parry_bonus");
@@ -195,7 +201,8 @@ public final class SkillPassives {
             if (undead(target)) factor *= 1.0 + spell.v("undead_bonus");
         }
         factor *= afterSkill(p, st);
-        factor *= 1.0 + sum(p, "all_damage_bonus") + afterParryBonus(p);
+        factor *= 1.0 + sum(p, "all_damage_bonus") + afterParryBonus(p) + buffDamage(p);
+        if (st.releaseEnd > now) magic += st.releaseMagic; // 마검 해방
         boolean force = st.forceCritBasic;
         st.forceCritBasic = false;
         return new MeleeMods(physical, magic, factor, force, back);
@@ -265,7 +272,7 @@ public final class SkillPassives {
             magic += add;
         }
         factor *= afterSkill(p, st);
-        factor *= 1.0 + sum(p, "all_damage_bonus") + afterParryBonus(p);
+        factor *= 1.0 + sum(p, "all_damage_bonus") + afterParryBonus(p) + buffDamage(p);
         return new ArrowMods(physical, magic, factor);
     }
 

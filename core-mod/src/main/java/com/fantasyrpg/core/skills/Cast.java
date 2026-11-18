@@ -84,7 +84,8 @@ public final class Cast {
         double magicBonus = SkillPassives.sum(player, "skill_magic_bonus");
         double physicalBonus = SkillPassives.sum(player, "skill_physical_bonus");
         DamageInput in = DamageInput.of(weaponPower, physical, magic).withBonus(physicalBonus, magicBonus);
-        double fin = (1.0 + bonus) * mult * (1.0 + SkillPassives.sum(player, "all_damage_bonus") + SkillPassives.afterParryBonus(player));
+        double fin = (1.0 + bonus) * mult * (1.0 + SkillPassives.sum(player, "all_damage_bonus") + SkillPassives.afterParryBonus(player)
+                + SkillPassives.buffDamage(player));
         // 도적 그림자 칼날 5랭크 "암영": 내 스킬 피해 +
         Long shadow = SkillRuntime.state(player).shadowMarks.get(target.getUUID());
         if (shadow != null && shadow > SkillRuntime.now(player)) {

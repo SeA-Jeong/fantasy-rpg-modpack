@@ -1,0 +1,21 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_궁극기_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:warrior/spell_5",
+  "name": "마검 해방",
+  "description": "8초 동안 기본 공격에 마법 피해가 붙고, 마력 베기·마검 폭풍 쿨타임이 바로 돌아옵니다. 끝날 때 주변 마법 폭발.",
+  "direction": "spell",
+  "tier": 5,
+  "kind": "ultimate",
+  "max_rank": 1,
+  "required_level": 40,
+  "required_direction_sp": 15,
+  "effect": "fantasyrpg:warrior_ult_release",
+  "cooldown_ticks": 1800,
+  "cost": 50,
+  "values": {
+    "duration_ticks": 160,
+    "basic_magic": 0.6,
+    "end_magic": 2.0,
+    "end_radius": 4
+  }
+}

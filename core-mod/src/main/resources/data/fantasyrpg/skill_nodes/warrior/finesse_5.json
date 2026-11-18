@@ -1,0 +1,21 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_궁극기_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:warrior/finesse_5",
+  "name": "천검난무",
+  "description": "3초 동안 바라보는 적을 15번 벱니다. 마지막 타는 치명타 확정.",
+  "direction": "finesse",
+  "tier": 5,
+  "kind": "ultimate",
+  "max_rank": 1,
+  "required_level": 40,
+  "required_direction_sp": 15,
+  "effect": "fantasyrpg:warrior_ult_thousand_blades",
+  "cooldown_ticks": 1500,
+  "cost": 40,
+  "values": {
+    "physical": 0.4,
+    "hits": 15,
+    "interval_ticks": 4,
+    "range": 5
+  }
+}

@@ -174,9 +174,14 @@ public final class SkillTreeScreen extends Screen {
             }
         }
         int r = Math.max(1, ClientRpgState.ranks.getOrDefault(n.id(), 0));
-        if (n.cooldownTicks(r) > 0 || n.cost(r) > 0) {
-            t.add(Component.translatable("screen.fantasyrpg.node.cd_cost", r, String.format("%.1f", n.cooldownTicks(r) / 20.0),
+        double cd = Math.max(0, n.cooldownTicks(r) + ClientRpgState.modSum(n.effect(), "cooldown_ticks"));
+        if (cd > 0 || n.cost(r) > 0) {
+            t.add(Component.translatable("screen.fantasyrpg.node.cd_cost", r, String.format("%.1f", cd / 20.0),
                     (int) n.cost(r)).withStyle(net.minecraft.ChatFormatting.AQUA));
+        }
+        List<String> mods = ClientRpgState.modifiers(n.effect());
+        if (!mods.isEmpty()) {
+            t.add(Component.translatable("screen.fantasyrpg.node.modified", String.join(", ", mods)).withStyle(net.minecraft.ChatFormatting.GREEN));
         }
         if (SkillNodeEffectHint.isEmpty(n)) t.add(Component.translatable("screen.fantasyrpg.node.no_effect").withStyle(net.minecraft.ChatFormatting.DARK_GRAY));
         return t;

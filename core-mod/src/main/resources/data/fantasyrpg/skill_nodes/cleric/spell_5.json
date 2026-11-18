@@ -1,0 +1,23 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_궁극기_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:cleric/spell_5",
+  "name": "성역",
+  "description": "내 자리에 6초 동안 성역을 펼칩니다. 1초마다 적에게 신성 피해(언데드 ×1.5), 나 체력 1 회복.",
+  "direction": "spell",
+  "tier": 5,
+  "kind": "ultimate",
+  "max_rank": 1,
+  "required_level": 40,
+  "required_direction_sp": 15,
+  "effect": "fantasyrpg:cleric_ult_sanctum",
+  "cooldown_ticks": 1800,
+  "cost": 60,
+  "values": {
+    "magic": 0.6,
+    "radius": 6,
+    "pulses": 6,
+    "pulse_interval": 20,
+    "undead_mult": 1.5,
+    "heal": 1
+  }
+}

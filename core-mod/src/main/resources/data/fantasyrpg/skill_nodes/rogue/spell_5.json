@@ -1,0 +1,19 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_궁극기_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:rogue/spell_5",
+  "name": "그림자 분신",
+  "description": "표식을 최대로 채우고 6초 동안 모든 피해 +30%.",
+  "direction": "spell",
+  "tier": 5,
+  "kind": "ultimate",
+  "max_rank": 1,
+  "required_level": 40,
+  "required_direction_sp": 15,
+  "effect": "fantasyrpg:rogue_ult_shadow_clone",
+  "cooldown_ticks": 1800,
+  "cost": 0,
+  "values": {
+    "duration_ticks": 120,
+    "damage_bonus": 0.3
+  }
+}

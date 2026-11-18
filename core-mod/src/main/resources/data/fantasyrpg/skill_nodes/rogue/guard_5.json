@@ -1,0 +1,20 @@
+{
+  "_comment": "[초안] 수치는 claude/6직업_궁극기_초안.md. 데이터팩의 같은 경로 파일로 덮어쓸 수 있음",
+  "id": "fantasyrpg:rogue/guard_5",
+  "name": "그림자 장막",
+  "description": "3초 동안 모든 피해를 피하며, 피할 때마다 공격자에게 반격(0.5초에 1번). 끝나면 표식 최대.",
+  "direction": "guard",
+  "tier": 5,
+  "kind": "ultimate",
+  "max_rank": 1,
+  "required_level": 40,
+  "required_direction_sp": 15,
+  "effect": "fantasyrpg:rogue_ult_shadow_veil",
+  "cooldown_ticks": 1800,
+  "cost": 0,
+  "values": {
+    "duration_ticks": 60,
+    "counter_physical": 0.8,
+    "counter_interval": 10
+  }
+}
