@@ -13,11 +13,11 @@ import java.util.List;
  * {
  *   "family": "knight",
  *   "class": "heavy",
- *   "tiers": [ {"tier": 1, "armor": 13, "toughness": 1, "knockback": 0.0}, ... 10급까지 ]
+ *   "tiers": [ {"tier": 1, "armor": 13, "toughness": 1, "knockback": 0.0, "sockets": 1}, ... 10급까지 ]
  * }
  * </pre>
- * 검사: 1~10급이 모두 한 번씩, 방어력 0~30, 강도 0~20, 넉백 저항 0~1(0.01 단위),
- * 등급이 오를 때 세트 값과 부위 값이 줄지 않음.
+ * 검사: 1~10급이 모두 한 번씩, 방어력 0~30, 강도 0~20, 넉백 저항 0~1(0.01 단위), 룬석 소켓 0~5(부위마다),
+ * 등급이 오를 때 세트 값·부위 값·소켓 수가 줄지 않음.
  */
 public final class ArmorStatParser {
     private ArmorStatParser() {
@@ -55,7 +55,11 @@ public final class ArmorStatParser {
             if (Math.abs(knockback * 100 - Math.round(knockback * 100)) > 1e-9) {
                 throw new IllegalArgumentException(tier + "급 넉백 저항 " + knockback + "은(는) 0.01 단위가 아닙니다");
             }
-            byTier[tier - 1] = new ArmorStatTable.Tier(tier, armor, toughness, knockback);
+            int sockets = o.has("sockets") ? requireInt(o, "sockets") : 0;
+            if (sockets < 0 || sockets > ArmorStatTable.MAX_SOCKETS) {
+                throw new IllegalArgumentException(tier + "급 소켓 수 " + sockets + "은(는) 0~5 밖입니다");
+            }
+            byTier[tier - 1] = new ArmorStatTable.Tier(tier, armor, toughness, knockback, sockets);
         }
 
         List<ArmorStatTable.Tier> tiers = new ArrayList<>();
@@ -68,9 +72,12 @@ public final class ArmorStatParser {
         return table;
     }
 
-    /** 등급이 오를 때 세트·부위 값이 줄면 예외. */
+    /** 등급이 오를 때 세트·부위 값·소켓 수가 줄면 예외. */
     static void checkMonotonic(ArmorStatTable table) {
         for (int t = ArmorStatTable.MIN_TIER + 1; t <= ArmorStatTable.MAX_TIER; t++) {
+            if (table.tier(t).sockets() < table.tier(t - 1).sockets()) {
+                throw new IllegalArgumentException(t + "급 소켓 수가 " + (t - 1) + "급보다 작습니다");
+            }
             for (ArmorPart part : ArmorPart.values()) {
                 if (table.partArmor(t, part) < table.partArmor(t - 1, part)
                         || table.partToughness(t, part) < table.partToughness(t - 1, part)

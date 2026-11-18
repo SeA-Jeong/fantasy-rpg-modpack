@@ -18,8 +18,13 @@ public record ArmorStatTable(String family, String armorClass, List<Tier> tiers)
     /** 바닐라 방어 강도 속성 최대값 */
     public static final int MAX_TOUGHNESS = 20;
 
-    /** 4부위 세트 합계 */
-    public record Tier(int tier, int armor, int toughness, double knockback) {
+    /** 부위마다 룬석 소켓 최대 수 */
+    public static final int MAX_SOCKETS = 5;
+
+    /**
+     * 4부위 세트 합계와, 부위마다 같은 룬석 소켓 수.
+     */
+    public record Tier(int tier, int armor, int toughness, double knockback, int sockets) {
     }
 
     public ArmorStatTable {

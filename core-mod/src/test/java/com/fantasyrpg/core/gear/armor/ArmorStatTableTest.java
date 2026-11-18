@@ -55,10 +55,10 @@ class ArmorStatTableTest {
             assertEquals(f, t.family());
             assertEquals(10, t.tiers().size());
         }
-        assertEquals(new ArmorStatTable.Tier(10, 30, 16, 0.35), load("knight").tier(10));
-        assertEquals(new ArmorStatTable.Tier(10, 30, 16, 0.40), load("dwarf").tier(10));
-        assertEquals(new ArmorStatTable.Tier(10, 30, 15, 0.30), load("dragon").tier(10));
-        assertEquals(new ArmorStatTable.Tier(10, 24, 12, 0.0), load("elf").tier(10));
+        assertEquals(new ArmorStatTable.Tier(10, 30, 16, 0.35, 3), load("knight").tier(10));
+        assertEquals(new ArmorStatTable.Tier(10, 30, 16, 0.40, 3), load("dwarf").tier(10));
+        assertEquals(new ArmorStatTable.Tier(10, 30, 15, 0.30, 3), load("dragon").tier(10));
+        assertEquals(new ArmorStatTable.Tier(10, 24, 12, 0.0, 3), load("elf").tier(10));
         assertEquals(load("elf").tiers(), load("arcane").tiers());
     }
 

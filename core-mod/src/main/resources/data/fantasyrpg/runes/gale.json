@@ -1,0 +1,16 @@
+{
+  "_comment": "2026-11-18 공통 룬석 (claude/계열방어구_상위옵션_초안.md 3-3). values = 하급·중급·상급·최고급. 데이터팩에 같은 경로 파일을 두면 덮어씀. 이동 속도 기본값 대비 +2~5%. 경갑(엘프·마도)은 +1%p 더.",
+  "rune": "gale",
+  "attribute": "minecraft:generic.movement_speed",
+  "operation": "add_multiplied_base",
+  "parts": [
+    "boots"
+  ],
+  "values": [
+    0.02,
+    0.03,
+    0.04,
+    0.05
+  ],
+  "light_bonus": 0.01
+}
