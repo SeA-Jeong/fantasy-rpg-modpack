@@ -83,6 +83,8 @@ public final class SkillEvents {
     public static void onIncomingDamage(LivingIncomingDamageEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer p)) return;
         if (event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return; // /kill·공허
+        // 보스 고정 피해 패턴: 모든 직업 방어 기술(회피·무효·가드·패리·감소·마력 방벽·유산 수호)을 통과 (기획 5.3, 2026-11-19)
+        if (io.github.aswq0258.magiccity.api.MagicCityApi.isBossFixed(event.getSource())) return;
         SkillRuntime.State st = SkillRuntime.state(p);
         long now = SkillRuntime.now(p);
         LivingEntity attacker = event.getSource().getEntity() instanceof LivingEntity le && SkillTargets.single(le, p) ? le : null;
