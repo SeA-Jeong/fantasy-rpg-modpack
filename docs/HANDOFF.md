@@ -15,7 +15,7 @@
 | CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄). 모드 구성이 바뀌면 `modpack smoke`가 외부 모드 18개 + 우리 모드 2개로 **NeoForge 전용 서버를 실제 기동** |
 | 1차 외부 모드 구성 | `modpack/mods.lock.json` (필수 13 + 권장 5, 버전 고정). 2026-11-17 전용 서버 기동 통과 (run 44061047052). 클라이언트 실행은 아직 확인 안 함 |
 | 우리 모드 3개 | `fantasyrpg`(이 저장소), `magiccity`(JitPack), `royalqol`(클라이언트 전용 편의 모드, `magic-city-mod` 저장소 `royalqol/`, `mods.lock.json`의 `royalqol.commit`으로 빌드 — `tools/build_royalqol.sh`). 테스트 팩과 서버 기동 검사에 셋 다 들어감 |
-| 최신 테스트 팩 | **v0.15.0-test.1** (스킬트리 156노드 + 서장 NPC 직업 선택 + 기사 가드·프리셋 + 유산 무기, 게임 확인 전 — Releases 탭). 통합 팩 `magic-kingdom-testpack-*.mrpack`(우리 모드 3개 + 외부 18개, Prism 가져오기) + `fantasyrpg-testpack-*.zip`. 이전 판은 v0.2~v0.14 |
+| 최신 테스트 팩 | **v0.16.0-test.1** (스킬트리 156노드 + 서장 NPC 직업 선택 + 기사 가드·프리셋 + 유산 무기 + 2~12장 챕터 퀘스트, 게임 확인 전 — Releases 탭). 통합 팩 `magic-kingdom-testpack-*.mrpack`(우리 모드 3개 + 외부 18개, Prism 가져오기) + `fantasyrpg-testpack-*.zip`. 이전 판은 v0.2~v0.15 |
 | 게임 테스트 | `docs/TESTING.md`의 v0.1·v0.2 체크리스트 |
 
 ### 테스트 팩 Release 만드는 법
@@ -205,6 +205,7 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - 사용자 결정: 초안 `claude/챕터퀘스트_2-12장_초안.md` v2 승인("진행하자") — 의뢰 NPC 11명(9명 + 시종장), 메인 줄기 "초대 왕의 유산을 되살리는 여정", 완료 보상에 강화 재료(시험용)
 - magiccity: 퀘스트 장·선행 장 조건, 보스 자리 자동 좌표, 지역 거점 자리(`QuestAnchors`)·근처에 오면 NPC 소환, 퀘스트 11개·NPC 9명, `/quest` 받을 수 있는 의뢰 목록, JUnit 9개
 - fantasyrpg: 각성 단계가 오를 때 강화 재료 지급(JUnit 1개, 전체 86개), 서버 기동 검사 확인 줄을 퀘스트 12개·NPC 10명으로, mod_version 0.16.0
+- CI: magiccity(퀘스트 JUnit 9개) 통과, fantasyrpg 첫 빌드에 통과(JUnit 86개, 서버 기동 검사 퀘스트 12개·NPC 10명 로드). `main` 병합(`f309392`), 복구 지점 `backup/main-before-chapter-quests-2026-11-19`, 테스트 팩 v0.16.0-test.1
 - 게임 확인: 하지 않음 → `docs/TESTING.md` v0.16 E1~E11, 빠른 확인 9회차
 
 ### 2026-11-19 — 유산 무기 v0.15 (브랜치 `claude/heirloom`, magiccity `9bd0a49`)
