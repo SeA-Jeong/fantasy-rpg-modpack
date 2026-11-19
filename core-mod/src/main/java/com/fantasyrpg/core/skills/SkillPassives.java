@@ -142,7 +142,8 @@ public final class SkillPassives {
     /** 기본 확률에 더할 치명타 확률 (기교 2단). 기교 트리 합계 상한 +15%p [기획 5.4] */
     public static double critBonus(ServerPlayer p) {
         Learned l = anyOf(p, SkillIds.FINESSE_SENSE);
-        return l == null ? 0 : Math.min(0.15, l.v("crit_chance"));
+        double heirloom = com.fantasyrpg.core.gear.heirloom.HeirloomService.bonus(p, "crit_chance");   // 유산 기교 특성 (트리 +15%p 상한과 따로)
+        return (l == null ? 0 : Math.min(0.15, l.v("crit_chance"))) + heirloom;
     }
 
     /** 치명타 배율에 더할 값 (도적 급소 감각 5랭크: 표식이 다 찼을 때) */

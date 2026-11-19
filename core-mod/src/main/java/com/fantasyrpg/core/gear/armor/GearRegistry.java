@@ -49,6 +49,13 @@ public final class GearRegistry {
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, FantasyRpgCore.MOD_ID);
 
     /** 장비 등급 1~10 ({@code fantasyrpg:gear_tier}). 없으면 1급으로 본다. */
+    /** 유산 무기 주인·일련번호 (기획 6.1, 2026-11-19) */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<com.fantasyrpg.core.gear.heirloom.HeirloomTag>> HEIRLOOM =
+            COMPONENTS.register("heirloom", () -> DataComponentType.<com.fantasyrpg.core.gear.heirloom.HeirloomTag>builder()
+                    .persistent(com.fantasyrpg.core.gear.heirloom.HeirloomTag.CODEC)
+                    .networkSynchronized(com.fantasyrpg.core.gear.heirloom.HeirloomTag.STREAM_CODEC)
+                    .build());
+
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> GEAR_TIER =
             COMPONENTS.register("gear_tier", () -> DataComponentType.<Integer>builder()
                     .persistent(Codec.intRange(ArmorStatTable.MIN_TIER, ArmorStatTable.MAX_TIER))

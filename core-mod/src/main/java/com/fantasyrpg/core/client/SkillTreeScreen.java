@@ -31,6 +31,7 @@ public final class SkillTreeScreen extends Screen {
     private static final SkillNode.Direction[] COLUMNS = SkillNode.Direction.values();
 
     private boolean passiveTab;
+    private boolean heirloomTab;
     private String held = "";
     private int left;
     private int top;
@@ -50,10 +51,21 @@ public final class SkillTreeScreen extends Screen {
     protected void init() {
         left = (width - CELL_W * COLUMNS.length) / 2;
         top = 40;
-        addRenderableWidget(Button.builder(Component.translatable("screen.fantasyrpg.tab.class"), b -> passiveTab = false)
+        addRenderableWidget(Button.builder(Component.translatable("screen.fantasyrpg.tab.class"), b -> {
+                    passiveTab = false;
+                    heirloomTab = false;
+                })
                 .bounds(left, 6, 80, 16).build());
-        addRenderableWidget(Button.builder(Component.translatable("screen.fantasyrpg.tab.passive"), b -> passiveTab = true)
+        addRenderableWidget(Button.builder(Component.translatable("screen.fantasyrpg.tab.passive"), b -> {
+                    passiveTab = true;
+                    heirloomTab = false;
+                })
                 .bounds(left + 84, 6, 80, 16).build());
+        addRenderableWidget(Button.builder(Component.translatable("screen.fantasyrpg.tab.heirloom"), b -> {
+                    heirloomTab = true;
+                    passiveTab = false;
+                })
+                .bounds(left + 168, 6, 80, 16).build());
         addRenderableWidget(Button.builder(Component.translatable("screen.fantasyrpg.full_reset"),
                         b -> FantasyRpgClient.send(ActionType.FULL_RESET, "", 0))
                 .bounds(left + CELL_W * COLUMNS.length - 90, 6, 90, 16).build());
@@ -72,7 +84,7 @@ public final class SkillTreeScreen extends Screen {
             g.drawCenteredString(font, Component.translatable("screen.fantasyrpg.no_class"), width / 2, height / 2, 0xFFFF8080);
             return;
         }
-        List<Component> tooltip = passiveTab ? renderPassives(g, mx, my) : renderTree(g, mx, my);
+        List<Component> tooltip = heirloomTab ? renderHeirloom(g, mx, my) : passiveTab ? renderPassives(g, mx, my) : renderTree(g, mx, my);
         if (tooltip != null && !tooltip.isEmpty()) {
             List<FormattedCharSequence> lines = new ArrayList<>();
             for (Component c : tooltip) lines.add(c.getVisualOrderText());
@@ -207,6 +219,58 @@ public final class SkillTreeScreen extends Screen {
         return t;
     }
 
+    /** 유산 무기 탭: 등급·한계·각성 단계·특성, 강화 버튼, 특성 고르기 버튼 */
+    private List<Component> renderHeirloom(GuiGraphics g, int mx, int my) {
+        net.minecraft.nbt.CompoundTag h = ClientRpgState.heirloom;
+        int y = 30;
+        if (!h.getBoolean("owned")) {
+            g.drawString(font, Component.translatable("screen.fantasyrpg.heirloom.none"), left, y, 0xFF909090);
+            return null;
+        }
+        g.drawString(font, Component.translatable("screen.fantasyrpg.heirloom.title"), left, y, 0xFFE8C66A);
+        y += 14;
+        g.drawString(font, Component.translatable(h.getBoolean("awakened") ? "screen.fantasyrpg.heirloom.awake" : "screen.fantasyrpg.heirloom.asleep",
+                h.getInt("stage")), left, y, h.getBoolean("awakened") ? 0xFFFFFFFF : 0xFF909090);
+        y += 12;
+        g.drawString(font, Component.translatable("screen.fantasyrpg.heirloom.tier", h.getInt("tier"), h.getInt("cap")), left, y, 0xFFFFFFFF);
+        y += 16;
+        List<Component> tip = null;
+        // 강화 버튼
+        String item = h.getString("next_item");
+        boolean canTry = h.getBoolean("awakened") && h.getInt("tier") < h.getInt("cap") && !item.isEmpty();
+        int bw = 220;
+        g.fill(left, y, left + bw, y + 18, canTry ? 0xC0203040 : 0xC0201010);
+        g.renderOutline(left, y, bw, 18, canTry ? 0xFF6FD0FF : 0xFF505050);
+        Component costName = item.isEmpty() ? Component.literal("-")
+                : Component.translatable(net.minecraft.core.registries.BuiltInRegistries.ITEM.get(net.minecraft.resources.ResourceLocation.parse(item)).getDescriptionId());
+        g.drawString(font, Component.translatable("screen.fantasyrpg.heirloom.enhance", h.getInt("tier") + 1, costName, h.getInt("next_count")),
+                left + 4, y + 5, canTry ? 0xFFFFFFFF : 0xFF808080, false);
+        Hit eh = new Hit(left, y, bw, 18, "heirloom_enhance", "", 0);
+        hits.add(eh);
+        if (eh.contains(mx, my)) tip = List.of(Component.translatable("screen.fantasyrpg.heirloom.enhance_help"));
+        y += 28;
+        // 특성
+        int left2 = h.getInt("picks_left");
+        g.drawString(font, Component.translatable("screen.fantasyrpg.heirloom.traits", left2), left, y, left2 > 0 ? 0xFFFFD27F : 0xFFFFFFFF);
+        y += 14;
+        net.minecraft.nbt.CompoundTag tr = h.getCompound("traits");
+        String[] dirs = {"attack", "spell", "guard", "finesse"};
+        for (int i = 0; i < dirs.length; i++) {
+            int x = left + i * 92;
+            int n = tr.getInt(dirs[i]);
+            g.fill(x, y, x + 88, y + 20, left2 > 0 ? 0xC0203020 : 0xC0101010);
+            g.renderOutline(x, y, 88, 20, left2 > 0 ? 0xFFFFD27F : 0xFF505050);
+            g.drawCenteredString(font, Component.translatable("direction.fantasyrpg." + dirs[i]).append(" " + n), x + 44, y + 6, 0xFFFFFFFF);
+            Hit th = new Hit(x, y, 88, 20, "heirloom_trait", dirs[i], i);
+            hits.add(th);
+            if (th.contains(mx, my)) tip = List.of(Component.translatable("screen.fantasyrpg.heirloom.trait." + dirs[i]),
+                    Component.translatable("screen.fantasyrpg.heirloom.trait_help").withStyle(net.minecraft.ChatFormatting.DARK_GRAY));
+        }
+        y += 30;
+        g.drawString(font, Component.translatable("screen.fantasyrpg.heirloom.help"), left, y, 0xFF909090);
+        return tip;
+    }
+
     private List<Component> presetTooltip(int i, boolean open) {
         List<Component> t = new ArrayList<>();
         t.add(Component.translatable("screen.fantasyrpg.preset.title", i + 1));
@@ -286,6 +350,12 @@ public final class SkillTreeScreen extends Screen {
                 }
                 case "passive" -> {
                     if (button == 0) FantasyRpgClient.send(shift ? ActionType.PASSIVE_REFUND : ActionType.PASSIVE_INVEST, h.id(), 0);
+                }
+                case "heirloom_enhance" -> {
+                    if (button == 0) FantasyRpgClient.send(ActionType.HEIRLOOM_ENHANCE, "", 0);
+                }
+                case "heirloom_trait" -> {
+                    if (button == 0) FantasyRpgClient.send(ActionType.HEIRLOOM_TRAIT, h.id(), 0);
                 }
                 case "preset" -> {
                     if (button == 0) FantasyRpgClient.send(shift ? ActionType.PRESET_SAVE : ActionType.PRESET_APPLY, "", h.slot());

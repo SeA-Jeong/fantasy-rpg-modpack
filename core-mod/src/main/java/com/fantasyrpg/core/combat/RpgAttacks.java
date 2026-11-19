@@ -49,6 +49,15 @@ public final class RpgAttacks {
         return WeaponPermission.check(c.id(), kind, facts(stack, kind), Set.of());
     }
 
+    /** 직업 판정 + 유산 무기 주인·일련번호 확인 */
+    public static WeaponPermission.Verdict check(ServerPlayer p, RpgClass c, WeaponPermission.AttackKind kind, ItemStack stack) {
+        WeaponPermission.Verdict v = check(c, kind, stack);
+        if (v == WeaponPermission.Verdict.ALLOW && !com.fantasyrpg.core.gear.heirloom.HeirloomService.usable(p, stack)) {
+            return WeaponPermission.Verdict.DENY_NOT_OWNER;
+        }
+        return v;
+    }
+
     /**
      * 직업 무기 기본 공격 입력. factor = 콤보 × 충전(또는 활 당김) 배율. 치명타는 확률로 굴린다.
      */
@@ -93,6 +102,7 @@ public final class RpgAttacks {
         if (last != null && now - last < 20) return;
         LAST_NOTICE.put(p.getUUID(), now);
         String key = v == WeaponPermission.Verdict.DENY_OTHER_CLASS ? "message.fantasyrpg.weapon_other_class"
+                : v == WeaponPermission.Verdict.DENY_NOT_OWNER ? "message.fantasyrpg.heirloom.not_owner"
                 : "message.fantasyrpg.weapon_not_weapon";
         p.displayClientMessage(Component.translatable(key).withStyle(ChatFormatting.RED), true);
     }

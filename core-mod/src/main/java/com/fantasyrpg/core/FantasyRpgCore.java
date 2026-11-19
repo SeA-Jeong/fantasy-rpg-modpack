@@ -68,6 +68,10 @@ public final class FantasyRpgCore {
         RpgProgress.register(modEventBus);
         NeoForge.EVENT_BUS.addListener(RpgProgress::onLivingDeath);
         NeoForge.EVENT_BUS.addListener(RpgProgress::onChapterFirstClear);
+        // 유산 무기: 각성, 죽어도 떨어뜨리지 않음
+        NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.heirloom.HeirloomService::onChapterFirstClear);
+        NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.heirloom.HeirloomService::onDrops);
+        NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.heirloom.HeirloomService::onClone);
         NeoForge.EVENT_BUS.addListener(RpgProgress::onLogin);
         // 실제 전투: 직업 무기 6종, 근접·활·지팡이 기본 공격 → RPG 피해, 다른 원거리 무기 막기, PvP 차단
         WeaponRegistry.register(modEventBus);
@@ -110,6 +114,7 @@ public final class FantasyRpgCore {
         event.addListener(ArmorStatManager.INSTANCE);
         event.addListener(RuneStatManager.INSTANCE);
         event.addListener(ProgressionManager.INSTANCE);
+        event.addListener(com.fantasyrpg.core.gear.heirloom.HeirloomManager.INSTANCE);
         event.addListener(CombatManager.INSTANCE);
         event.addListener(SkillData.NODES);
         event.addListener(SkillData.PASSIVES);

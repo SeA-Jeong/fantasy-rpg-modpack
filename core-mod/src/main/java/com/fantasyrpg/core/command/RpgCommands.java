@@ -62,6 +62,7 @@ public final class RpgCommands {
                 .then(PlayerCommands.player())
                 .then(PlayerCommands.rpgClass())
                 .then(PlayerCommands.xp())
+                .then(HeirloomCommands.node())
                 .then(SkillCommands.skill())
                 .then(SkillCommands.passive())
                 .then(literal("hit")

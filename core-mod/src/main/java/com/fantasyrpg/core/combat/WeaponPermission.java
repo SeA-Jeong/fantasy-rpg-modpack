@@ -32,10 +32,12 @@ public final class WeaponPermission {
         /** 다른 직업의 무기 */
         DENY_OTHER_CLASS,
         /** 무기가 아닌 아이템(채집 도구 포함) 또는 맨손 원거리 */
-        DENY_NOT_WEAPON;
+        DENY_NOT_WEAPON,
+        /** 다른 사람의 유산 무기, 또는 다시 불러서 무효가 된 옛 유산 무기 (2026-11-19) */
+        DENY_NOT_OWNER;
 
         public boolean denied() {
-            return this == DENY_OTHER_CLASS || this == DENY_NOT_WEAPON;
+            return this == DENY_OTHER_CLASS || this == DENY_NOT_WEAPON || this == DENY_NOT_OWNER;
         }
     }
 

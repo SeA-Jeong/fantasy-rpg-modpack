@@ -41,7 +41,7 @@ public final class SkillService {
     private SkillService() {
     }
 
-    public enum ActionType { INVEST, REFUND, FULL_RESET, EQUIP, UNEQUIP, PASSIVE_INVEST, PASSIVE_REFUND, CAST, SET_MASTERY, PRESET_SAVE, PRESET_APPLY }
+    public enum ActionType { INVEST, REFUND, FULL_RESET, EQUIP, UNEQUIP, PASSIVE_INVEST, PASSIVE_REFUND, CAST, SET_MASTERY, PRESET_SAVE, PRESET_APPLY, HEIRLOOM_ENHANCE, HEIRLOOM_TRAIT }
 
     public static void handle(ServerPlayer p, int action, String id, int slot) {
         if (action < 0 || action >= ActionType.values().length) return;
@@ -57,6 +57,8 @@ public final class SkillService {
             case SET_MASTERY -> setMastery(p, id);
             case PRESET_SAVE -> savePreset(p, slot);
             case PRESET_APPLY -> applyPreset(p, slot);
+            case HEIRLOOM_ENHANCE -> com.fantasyrpg.core.gear.heirloom.HeirloomService.enhance(p);
+            case HEIRLOOM_TRAIT -> com.fantasyrpg.core.gear.heirloom.HeirloomService.pickTrait(p, id);
         }
     }
 
@@ -196,7 +198,7 @@ public final class SkillService {
             tell(p, "message.fantasyrpg.skill.no_free_reset", ChatFormatting.RED);
             return false;
         }
-        RpgPlayerData next = d.withNodeRanks(Map.of(), RpgPlayerData.EMPTY_SLOTS);
+        RpgPlayerData next = com.fantasyrpg.core.gear.heirloom.HeirloomService.clearTraits(d.withNodeRanks(Map.of(), RpgPlayerData.EMPTY_SLOTS));
         if (!force) next = next.withFreeResetsUsed(d.freeResetsUsed() + 1);
         RpgProgress.set(p, next);
         tell(p, "message.fantasyrpg.skill.reset_done", ChatFormatting.GREEN, d.spSpent());
@@ -377,7 +379,7 @@ public final class SkillService {
     public static boolean holdsClassWeapon(ServerPlayer p, RpgClass c) {
         ItemStack held = p.getMainHandItem();
         for (WeaponPermission.AttackKind k : WeaponPermission.AttackKind.values()) {
-            if (RpgAttacks.check(c, k, held) == WeaponPermission.Verdict.ALLOW) return true;
+            if (RpgAttacks.check(p, c, k, held) == WeaponPermission.Verdict.ALLOW) return true;
         }
         return false;
     }
@@ -411,6 +413,24 @@ public final class SkillService {
             presets.add(pt);
         }
         t.put("presets", presets);
+        // 유산 무기
+        com.fantasyrpg.core.playerdata.HeirloomData h = d.heirloom();
+        CompoundTag ht = new CompoundTag();
+        ht.putBoolean("owned", h.owned());
+        ht.putInt("tier", h.tier());
+        ht.putBoolean("awakened", h.awakened());
+        int g = MagicCityApi.grade(p);
+        ht.putInt("cap", com.fantasyrpg.core.gear.heirloom.HeirloomRules.cap(g, h.awakened()));
+        ht.putInt("stage", com.fantasyrpg.core.gear.heirloom.HeirloomRules.stage(g, h.awakened()));
+        ht.putInt("picks_left", com.fantasyrpg.core.gear.heirloom.HeirloomRules.picksLeft(g, h.awakened(), h.traits()));
+        CompoundTag tr = new CompoundTag();
+        h.traits().forEach(tr::putInt);
+        ht.put("traits", tr);
+        com.fantasyrpg.core.gear.heirloom.HeirloomSettings hs = com.fantasyrpg.core.gear.heirloom.HeirloomService.settings();
+        com.fantasyrpg.core.gear.heirloom.HeirloomSettings.Cost cost = hs == null ? null : hs.enhance().get(h.tier() + 1);
+        ht.putString("next_item", cost == null ? "" : cost.item());
+        ht.putInt("next_count", cost == null ? 0 : cost.count());
+        t.put("heirloom", ht);
         CompoundTag ranks = new CompoundTag();
         d.nodeRanks().forEach(ranks::putInt);
         t.put("ranks", ranks);

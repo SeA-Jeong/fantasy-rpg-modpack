@@ -59,7 +59,7 @@ public final class CombatEvents {
         try {
             if (target instanceof Player) return; // PvP 금지
             ItemStack weapon = p.getMainHandItem();
-            WeaponPermission.Verdict v = RpgAttacks.check(c, WeaponPermission.AttackKind.MELEE, weapon);
+            WeaponPermission.Verdict v = RpgAttacks.check(p, c, WeaponPermission.AttackKind.MELEE, weapon);
             if (v.denied()) {
                 RpgAttacks.notice(p, v);
                 return;
@@ -99,7 +99,7 @@ public final class CombatEvents {
         CombatSettings s = CombatManager.INSTANCE.settings();
         if (c == null || s == null) return;
         ItemStack bow = bowInUse(p);
-        if (bow.isEmpty() || RpgAttacks.check(c, WeaponPermission.AttackKind.RANGED, bow).denied()) return;
+        if (bow.isEmpty() || RpgAttacks.check(p, c, WeaponPermission.AttackKind.RANGED, bow).denied()) return;
         CombatSettings.ClassAttack a = s.forClass(c.id());
         if (a == null) return;
         double power = Math.min(1.0, arrow.getDeltaMovement().length() / MAX_BOW_SPEED);
@@ -154,7 +154,7 @@ public final class CombatEvents {
         if (!ranged) return;
         RpgClass c = RpgProgress.get(p).classOrNull();
         if (c == null) return;
-        WeaponPermission.Verdict v = RpgAttacks.check(c, WeaponPermission.AttackKind.RANGED, stack);
+        WeaponPermission.Verdict v = RpgAttacks.check(p, c, WeaponPermission.AttackKind.RANGED, stack);
         if (v.denied()) {
             event.setCanceled(true);
             RpgAttacks.notice(p, v);

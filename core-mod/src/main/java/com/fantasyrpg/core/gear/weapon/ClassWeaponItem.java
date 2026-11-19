@@ -51,6 +51,11 @@ public class ClassWeaponItem extends Item {
 
     @Override
     public Component getName(ItemStack stack) {
+        if (stack.has(GearRegistry.HEIRLOOM.get())) {
+            // 유산 무기: "왕의 유산 · 검 (2급)"
+            return Component.translatable("item.fantasyrpg.heirloom",
+                    Component.translatable("class.fantasyrpg." + type.rpgClass().id() + ".weapon"), GearRegistry.tierOf(stack));
+        }
         return Component.translatable("item.fantasyrpg.tiered", super.getName(stack), GearRegistry.tierOf(stack));
     }
 
@@ -68,7 +73,7 @@ public class ClassWeaponItem extends Item {
         RpgClass c = RpgProgress.get(p).classOrNull();
         CombatSettings s = CombatManager.INSTANCE.settings();
         if (c == null || s == null) return InteractionResultHolder.pass(stack);
-        WeaponPermission.Verdict v = RpgAttacks.check(c, WeaponPermission.AttackKind.RANGED, stack);
+        WeaponPermission.Verdict v = RpgAttacks.check(p, c, WeaponPermission.AttackKind.RANGED, stack);
         if (v.denied()) {
             RpgAttacks.notice(p, v);
             return InteractionResultHolder.fail(stack);
