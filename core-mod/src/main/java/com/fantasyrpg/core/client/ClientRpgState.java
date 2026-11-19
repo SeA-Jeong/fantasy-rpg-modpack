@@ -43,6 +43,8 @@ public final class ClientRpgState {
     public static volatile String activeMastery = "";
     /** 장착 프리셋: 쓸 수 있는 수, 프리셋마다 장착칸 5개와 마스터리 */
     public static volatile int presetsUnlocked = 1;
+    /** 유산 무기 (서버 계산 결과) */
+    public static volatile CompoundTag heirloom = new CompoundTag();
     public static volatile List<List<String>> presetSlots = List.of(List.of(), List.of(), List.of());
     public static volatile List<String> presetMastery = List.of("", "", "");
     /** 노드 id → 쿨타임 끝나는 시각(ms) */
@@ -110,6 +112,7 @@ public final class ClientRpgState {
         while (s.size() < 5) s.add("");
         slots = List.copyOf(s);
         presetsUnlocked = t.getInt("presets_unlocked");
+        heirloom = t.getCompound("heirloom");
         List<List<String>> ps = new ArrayList<>();
         List<String> pm = new ArrayList<>();
         ListTag pl = t.getList("presets", Tag.TAG_COMPOUND);

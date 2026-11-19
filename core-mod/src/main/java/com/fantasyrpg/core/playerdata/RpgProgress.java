@@ -133,6 +133,7 @@ public final class RpgProgress {
         }
         if (d.classOrNull() == c) return ClassResult.SAME;
         set(p, d.withClass(c, true));
+        com.fantasyrpg.core.gear.heirloom.HeirloomService.reform(p);   // 유산 무기는 모양만 바뀜
         return ClassResult.CHANGED;
     }
 
@@ -165,6 +166,7 @@ public final class RpgProgress {
         if (event.getEntity() instanceof ServerPlayer p) {
             reconcileClearBonus(p);
             applyHeldXp(p);
+            com.fantasyrpg.core.gear.heirloom.HeirloomService.onLogin(p);
             SkillService.refreshAll(p);
         }
     }

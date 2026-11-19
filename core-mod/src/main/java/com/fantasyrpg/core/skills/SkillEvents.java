@@ -226,6 +226,9 @@ public final class SkillEvents {
                 }
             }
         }
+        // 유산 무기 수호 특성: 받는 피해 감소
+        double hr = com.fantasyrpg.core.gear.heirloom.HeirloomService.bonus(p, "damage_reduction");
+        if (hr > 0) amount = (float) (amount * (1.0 - Math.min(0.5, hr)));
         event.setAmount(Math.max(0f, amount));
 
         // 마법사 결계 충격 5랭크: 흡수 체력이 남아 있는 동안 공격자에게 반사

@@ -1,0 +1,20 @@
+{
+  "_comment": "유산 무기 [초안] (기획 v0.4 6.1, 프로젝트 문서 claude/유산무기_초안.md). traits: 각성 특성 단계당 효과. enhance: 목표 등급마다 강화 재료 — 정식 재료(장비제작 v2) 전까지 시험용 임시",
+  "traits": {
+    "attack": {"physical_bonus": 0.04},
+    "spell": {"magic_bonus": 0.04},
+    "guard": {"damage_reduction": 0.02},
+    "finesse": {"crit_chance": 0.02}
+  },
+  "enhance": [
+    {"to": 2, "item": "minecraft:iron_ingot", "count": 8},
+    {"to": 3, "item": "minecraft:iron_ingot", "count": 16},
+    {"to": 4, "item": "minecraft:diamond", "count": 4},
+    {"to": 5, "item": "minecraft:diamond", "count": 8},
+    {"to": 6, "item": "minecraft:diamond", "count": 12},
+    {"to": 7, "item": "minecraft:netherite_scrap", "count": 2},
+    {"to": 8, "item": "minecraft:netherite_scrap", "count": 4},
+    {"to": 9, "item": "minecraft:netherite_scrap", "count": 6},
+    {"to": 10, "item": "minecraft:netherite_scrap", "count": 8}
+  ]
+}

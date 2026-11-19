@@ -1,7 +1,5 @@
 package com.fantasyrpg.core.playerdata;
 
-import com.fantasyrpg.core.gear.weapon.WeaponRegistry;
-import com.fantasyrpg.core.gear.weapon.WeaponType;
 import com.fantasyrpg.core.network.RpgNetwork;
 import io.github.aswq0258.magiccity.api.MagicCityApi;
 import io.github.aswq0258.magiccity.api.NpcActionEvent;
@@ -20,7 +18,7 @@ import java.util.UUID;
  * <ol>
  *   <li>magiccity 가 NPC 선택지 {@value #ACTION}(NPC 표식·6칸·퀘스트 단계 확인 뒤)를 {@link NpcActionEvent} 로 알림</li>
  *   <li>무직이면 직업 선택 화면을 열고, 서버는 "화면을 열어 준 플레이어"를 {@value #OPEN_TICKS}틱 동안 기억</li>
- *   <li>클라이언트가 고른 직업을 보내면 기억이 있고 무직일 때만 선택 + 1급 직업 무기 지급</li>
+ *   <li>클라이언트가 고른 직업을 보내면 기억이 있고 무직일 때만 선택 + 유산 무기(1급, 잠든 상태) 지급</li>
  *   <li>직업이 정해지면 magiccity 퀘스트 신호 {@value #SIGNAL} (명령으로 고른 경우도)</li>
  * </ol>
  * 모드 사이 방향은 fantasyrpg → magiccity 한 방향만 (magiccity 는 fantasyrpg 를 모름).
@@ -35,7 +33,14 @@ public final class ClassSelection {
 
     private static final Map<UUID, Integer> OPEN = new HashMap<>();
 
+    /** 시종장 [유산을 다시 부른다] */
+    public static final String RECALL = "recall_heirloom";
+
     public static void onNpcAction(NpcActionEvent event) {
+        if (RECALL.equals(event.getAction())) {
+            com.fantasyrpg.core.gear.heirloom.HeirloomService.recall(event.getPlayer());
+            return;
+        }
         if (!ACTION.equals(event.getAction())) return;
         ServerPlayer p = event.getPlayer();
         if (RpgProgress.get(p).classOrNull() != null) {
@@ -69,28 +74,20 @@ public final class ClassSelection {
             notifyChosen(p);
             return;
         }
-        ItemStack weapon = starterWeapon(c);
-        if (!weapon.isEmpty()) p.getInventory().placeItemBackInInventory(weapon);
+        // 유산 무기 (기획 6.1, 2026-11-19): 서장에서 받는 낡은 직업 무기가 초대 왕의 유산
+        ItemStack weapon = com.fantasyrpg.core.gear.heirloom.HeirloomService.grant(p);
         p.sendSystemMessage(Component.literal("§6[성장] §f직업 선택: ")
                 .append(Component.translatable("class.fantasyrpg." + c.id()))
-                .append(Component.literal(" §7(시작 SP +1)" + (weapon.isEmpty() ? "" : " — 1급 "))
-                .append(weapon.isEmpty() ? Component.empty() : weapon.getHoverName())
-                .append(Component.literal(weapon.isEmpty() ? "" : "§7을(를) 받았다")))
+                .append(Component.literal(" §7(시작 SP +1)"))
                 .append(Component.literal(" §8K 키: 스킬트리")));
+        if (!weapon.isEmpty()) p.sendSystemMessage(Component.translatable("message.fantasyrpg.heirloom.granted", weapon.getHoverName())
+                .withStyle(net.minecraft.ChatFormatting.GOLD));
         notifyChosen(p);
     }
 
     /** 직업이 정해졌음을 magiccity 퀘스트에 알림 (기다리는 단계가 없으면 아무 일 없음) */
     public static void notifyChosen(ServerPlayer p) {
         MagicCityApi.questSignal(p, SIGNAL);
-    }
-
-    /** 그 직업의 1급 직업 무기 [초안 승인 2026-11-19] */
-    public static ItemStack starterWeapon(RpgClass c) {
-        for (WeaponType t : WeaponType.values()) {
-            if (t.rpgClass() == c) return WeaponRegistry.stack(t, 1);
-        }
-        return ItemStack.EMPTY;
     }
 
     public static void forget(ServerPlayer p) {
