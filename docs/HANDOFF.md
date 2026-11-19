@@ -10,12 +10,12 @@
 | 항목 | 상태 |
 |---|---|
 | 기준 기획 | `docs/design/직업_전투시스템_v0.4.md` |
-| 구현 진행 | 8.3장 **1단계(피해 계산 엔진) 완료**. **방어 등급 상한은 2026-11-18 폐지**, 바닐라 갑옷은 원래 수치로 복원. **계열 방어구 20종(5계열×4부위, 1~10급, 방어력 최대 30)** 등록, **룬석 소켓(6종·4등급, 제작대 끼우기·빼기·합성·연마)**, **플레이어 성장 최소판(직업·레벨·경험치·SP)**, **실제 전투 연결(직업 무기 6종, 근접·활·지팡이 기본 공격 → RPG 피해, PvP 차단)**, **스킬트리 틀(투자·되돌리기·초기화권·장착칸, 코어 자원, 공통 패시브, K 화면·Z X C V B·HUD)**, **6직업 스킬트리 156노드 완성(1~6단 + 혼합, 궁극기 24·마스터리 24)**, **서장 NPC 직업 선택(magiccity 개인 퀘스트 1장 "왕의 소명")**, **기사 기본 가드·패리, 바닐라 방패 금지, 장착 프리셋 3개**, **유산 무기(하나뿐인 성장형 주무기)**, **2~12장 챕터 퀘스트(magiccity)·각성 강화 재료**, **보스 고정 피해 패턴(magiccity)·직업 방어 통과** — 모두 게임 확인 전. **Better Combat 연동 준비**(순수 로직·컴파일 의존성)는 `main`에 있음 |
-| 플랫폼 | Minecraft 1.21.1 / NeoForge **21.1.266** / Java 21 / ModDevGradle 2.0.141. **필수 의존 모드 magiccity** (JitPack `com.github.aswq0258:magic-city-mod:7dad744` (2026-11-19 퀘스트 API·NPC 상시 선택지·2~12장 챕터 퀘스트·보스 고정 피해 `isBossFixed`), `gradle.properties`의 `magiccity_commit`) |
+| 구현 진행 | 8.3장 **1단계(피해 계산 엔진) 완료**. **방어 등급 상한은 2026-11-18 폐지**, 바닐라 갑옷은 원래 수치로 복원. **계열 방어구 20종(5계열×4부위, 1~10급, 방어력 최대 30)** 등록, **룬석 소켓(6종·4등급, 제작대 끼우기·빼기·합성·연마)**, **플레이어 성장 최소판(직업·레벨·경험치·SP)**, **실제 전투 연결(직업 무기 6종, 근접·활·지팡이 기본 공격 → RPG 피해, PvP 차단)**, **스킬트리 틀(투자·되돌리기·초기화권·장착칸, 코어 자원, 공통 패시브, K 화면·Z X C V B·HUD)**, **6직업 스킬트리 156노드 완성(1~6단 + 혼합, 궁극기 24·마스터리 24)**, **서장 NPC 직업 선택(magiccity 개인 퀘스트 1장 "왕의 소명")**, **기사 기본 가드·패리, 바닐라 방패 금지, 장착 프리셋 3개**, **유산 무기(하나뿐인 성장형 주무기)**, **2~12장 챕터 퀘스트(magiccity)·각성 강화 재료**, **보스 고정 피해 패턴(magiccity)·직업 방어 통과**, **장별 중간 단계(magiccity)·중간 단계 경험치** — 모두 게임 확인 전. **Better Combat 연동 준비**(순수 로직·컴파일 의존성)는 `main`에 있음 |
+| 플랫폼 | Minecraft 1.21.1 / NeoForge **21.1.266** / Java 21 / ModDevGradle 2.0.141. **필수 의존 모드 magiccity** (JitPack `com.github.aswq0258:magic-city-mod:887924c` (2026-11-19 퀘스트 API·NPC 상시 선택지·2~12장 챕터 퀘스트·보스 고정 피해 `isBossFixed`·중간 단계 `QuestStepCompleteEvent`), `gradle.properties`의 `magiccity_commit`) |
 | CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄). 모드 구성이 바뀌면 `modpack smoke`가 외부 모드 18개 + 우리 모드 2개로 **NeoForge 전용 서버를 실제 기동** |
 | 1차 외부 모드 구성 | `modpack/mods.lock.json` (필수 13 + 권장 5, 버전 고정). 2026-11-17 전용 서버 기동 통과 (run 44061047052). 클라이언트 실행은 아직 확인 안 함 |
 | 우리 모드 3개 | `fantasyrpg`(이 저장소), `magiccity`(JitPack), `royalqol`(클라이언트 전용 편의 모드, `magic-city-mod` 저장소 `royalqol/`, `mods.lock.json`의 `royalqol.commit`으로 빌드 — `tools/build_royalqol.sh`). 테스트 팩과 서버 기동 검사에 셋 다 들어감 |
-| 최신 테스트 팩 | **v0.17.0-test.1** (스킬트리 156노드 + 서장 NPC 직업 선택 + 기사 가드·프리셋 + 유산 무기 + 2~12장 챕터 퀘스트 + 보스 고정 피해 패턴, 게임 확인 전 — Releases 탭). 통합 팩 `magic-kingdom-testpack-*.mrpack`(우리 모드 3개 + 외부 18개, Prism 가져오기) + `fantasyrpg-testpack-*.zip`. 이전 판은 v0.2~v0.16 |
+| 최신 테스트 팩 | **v0.18.0-test.1** (장별 중간 단계 + 심층 광산·보라빛 숲 병합 + 스킬트리 156노드 + 서장 NPC 직업 선택 + 기사 가드·프리셋 + 유산 무기 + 2~12장 챕터 퀘스트 + 보스 고정 피해 패턴, 게임 확인 전 — Releases 탭). 통합 팩 `magic-kingdom-testpack-*.mrpack`(우리 모드 3개 + 외부 18개, Prism 가져오기) + `fantasyrpg-testpack-*.zip`. 이전 판은 v0.2~v0.17 |
 | 게임 테스트 | `docs/TESTING.md`의 v0.1·v0.2 체크리스트 |
 
 ### 테스트 팩 Release 만드는 법
@@ -41,6 +41,7 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - **(v0.13, 게임 확인 전) 서장 NPC 직업 선택:** magiccity 가 왕좌의 전당에 퀘스트 NPC "왕실 시종장 에드윈"을 두고, 대화 선택지 `choose_class`를 서버에서 확인한 뒤 `NpcActionEvent`를 발행 → `playerdata/ClassSelection`이 무직이면 직업 선택 화면(`client/ClassSelectScreen`, 패킷 `OpenClassSelect`)을 열고 5분 동안 기억 → 클라이언트 `ChooseClass` 요청은 기억이 있고 무직일 때만 받아 직업 선택 + **1급 직업 무기 지급** → `MagicCityApi.questSignal(fantasyrpg:class_chosen)`로 퀘스트 다음 단계. `/rpg class choose`도 신호를 보냄. 신호를 기다리는 단계가 시작·접속될 때(`QuestStepStartEvent`) 이미 직업이 있으면 바로 신호. 직업 **변경**은 NPC에 없음(비용 [미정], 명령만). magiccity 커밋 `magiccity_commit`을 퀘스트 API가 들어간 커밋으로 올림
 - **(v0.14, 게임 확인 전) 기사 기본 가드·장착 프리셋:** 기사가 창(`ClassWeaponItem` SPEAR, 사용 동작 BLOCK)으로 오른쪽 버튼을 누르고 있으면 `combat/GuardEvents`가 받는 피해에서 정면 감소·패리(들어 올린 시각과 직전 시각으로 `GuardSettings.isParry`). 스킬 완벽 방어가 켜져 있으면 기본 가드는 건너뜀. 패리는 `lastParryTick`만 갱신해 "패리 후" 효과 창을 열고, 완벽 방어 랭크 효과·패리 패시브(쿨타임 감소·흡수 체력·창돌진 초기화)는 스킬 패리에만. 직업이 있으면 바닐라 방패(`ItemAbilities.SHIELD_BLOCK`) 사용 시작을 서버·클라이언트 모두에서 취소. 수치 `combat/guard.json` [초안]. 프리셋: `RpgPlayerData.presets`(3개, `SkillPreset` 장착칸 5 + 마스터리), 요청 `PRESET_SAVE`·`PRESET_APPLY`, 적용은 `PresetRules.apply`로 배운 노드·칸 종류 확인, 마스터리는 `isSafe`일 때만. 해금 레벨 `skill_settings/presets.json` [초안]. 직업 변경 때 비움
 - **(v0.15, 게임 확인 전) 유산 무기:** 무기는 하나뿐(기획 6.1 2026-11-19). 진짜 상태는 `RpgPlayerData.heirloom`(`HeirloomData`: 받음·등급·깨어남·특성·일련번호), 아이템은 직업 무기 + 컴포넌트 `fantasyrpg:heirloom`(주인·일련번호) + `gear_tier`. `RpgAttacks.check(p, …)`가 주인·일련번호가 다르면 `DENY_NOT_OWNER`(유산 표식이 없는 직업 무기는 시험용이라 허용). 강화 한계 = 깨어났으면 `MagicCityApi.grade`, 특성 고르기 = 각성 단계 − 1(`HeirloomRules`). 강화는 K 화면 유산 탭(`HEIRLOOM_ENHANCE`, 인벤토리 재료 소모), 특성 `HEIRLOOM_TRAIT`. 특성 효과: `RpgDamage.apply`에서 물리·마법 보너스, `SkillPassives.critBonus`에 치명타(트리 15%p 상한과 따로), `SkillEvents` 받는 피해 마지막에 감소(최대 50%). 1장 첫 완료 이벤트로 깨어남(접속 때도 맞춤), 등급 상승·봉인 장에 서술 문장. 죽을 때 `LivingDropsEvent`에서 빼 두었다가 `PlayerEvent.Clone`에서 돌려줌. 다시 부르기는 magiccity 시종장 상시 선택지 `recall_heirloom` → `NpcActionEvent` → `ClassSelection` → `HeirloomService.recall`(일련번호 +1). 직업 변경 때 `reform`. 스킬 전체 초기화 때 특성도 비움. 수치·재료 `heirloom/settings.json` [초안·시험용]. (v0.16) 각성 단계가 오를 때 새로 열린 등급의 강화 비용만큼 재료 지급(`stage_up_materials`, `HeirloomRules.stageUpGift`) — 2~6급 합계가 오버월드 강화에 딱 맞음
+- **(v0.18, 게임 확인 전) 중간 단계 경험치:** magiccity `QuestStepCompleteEvent`(직접 끝낸 단계마다, 장을 깨서 건너뛴 단계는 없음)의 `isMidStep()`이면 `RpgProgress.onQuestStepComplete`가 지금 등급 × `mid_step_xp_per_grade`(50 [초안], `progression/leveling.json`) 경험치. 계산 `ProgressionMath.midStepXp`
 - **(v0.17, 게임 확인 전) 보스 고정 피해 통과:** magiccity 피해 유형 `magiccity:boss_fixed`(예고 뒤 범위 안에만, 바닐라 감소는 태그로 건너뜀)이면 `SkillEvents.onIncomingDamage` 맨 앞에서 바로 돌아감 → 도적 회피·무효 궁극기·불굴의 성벽·기사 완벽 방어·기본 가드·패리·모든 감소 스킬·마력 방벽·유산 수호 특성이 적용되지 않음(기획 5.3, 2026-11-19). 피해 뒤 반응(`onDamagePost`: 수호 패시브 코어 획득·위기 반응)은 그대로. 판정은 `MagicCityApi.isBossFixed`
 - **(준비, 게임 연결 없음) 무기 사용 권한·기본 공격 입력:** `combat/WeaponPermission`(정책 P1 판정), `combat/BasicAttackMath`(콤보 배율 정리·바닐라 충전 곡선). 아직 어떤 이벤트에도 연결하지 않음
 - **도구:** `tools/check_mods.py` — mods 폴더 jar 의존성·버전 범위 검사. `tools/fetch_mods.py` — `mods.lock.json`의 외부 모드 내려받기. `tools/smoke_server.py` — 전용 서버 기동·콘솔 명령·로그 검사
@@ -201,6 +202,15 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 ---
 
 ## 작업 기록
+
+### 2026-11-19 — 장별 중간 단계 v0.18 (magiccity `887924c`)
+- 사용자 결정: 초안 `claude/장별중간단계_초안.md` 승인("진행하자", 추천안) — 빠진 커밋 병합, 안내형, 8개 장 전부, 단계마다 경험치 등급 × 50
+- 발견·처리: 통합문서에 "구현됨"이던 magiccity `d5a4a3c`(심층 광산)·`791459a`(보라빛 숲)가 옛 작업 브랜치에만 있었음 → `main`에 병합(`1d9f710`, 충돌 없음, CI 통과)
+- magiccity: 단계 종류 `talk_npcs`·`use_blocks`, 자리 이름 `QuestMarks`(사이트 상수에서 계산, 높이 범위 포함), 퀘스트 판 번호·여러 개 표시 저장, 장을 깨면 건너뛰기, `QuestStepCompleteEvent`, 지하 NPC 높이·크기, 심층 광산 광부·문지기를 퀘스트 NPC로, 8개 장 데이터(판 2), 지하·하늘 보스 도착 단계 높이 범위. JUnit `MidStepRulesTest` 9개
+- fantasyrpg: 중간 단계 경험치, magiccity 커밋 `887924c`, mod_version 0.18.0, 서버 기동 검사 NPC 14명. JUnit 1개(전체 87개)
+- 초안과 달라진 점: 2장 교수대(브란이 바로 옆에 서 있음)·9장 학자 야영지(셀레스 자리)는 빼고, 10장 사슬 다리 → 나선 계단 중턱, 11장 모험가 야영지(미궁 방 배치가 시드마다 다름) → 상층·하층 미궁
+- 복구 지점 `backup/main-before-mid-steps-2026-11-19`(두 저장소)
+- 게임 확인: 하지 않음 → `docs/TESTING.md` v0.18 J1~J12, 빠른 확인 11회차
 
 ### 2026-11-19 — 보스 고정 피해 패턴 v0.17 (magiccity `7dad744`)
 - 사용자 결정: 초안 `claude/보스고정피해_초안.md` 승인("진행하자", 추천안) — 직업 방어 기술 모두 통과(A안), 비율형은 등급 무관·고정형은 등급 계수, 12장 보스 모두 1개씩, 수치 초안
