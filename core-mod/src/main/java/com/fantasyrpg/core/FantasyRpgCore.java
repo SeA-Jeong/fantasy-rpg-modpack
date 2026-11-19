@@ -83,6 +83,9 @@ public final class FantasyRpgCore {
         NeoForge.EVENT_BUS.addListener(RpgProgress::onChangeDimension);
         NeoForge.EVENT_BUS.addListener(CoreService::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(FantasyRpgCore::onLogout);
+        // 서장 NPC 직업 선택 (magiccity 퀘스트 NPC 선택지·단계 신호)
+        NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.playerdata.ClassSelection::onNpcAction);
+        NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.playerdata.ClassSelection::onQuestStepStart);
         NeoForge.EVENT_BUS.addListener(FantasyRpgCore::onDatapackSync);
         // 6직업 1~2단 스킬: 효과 등록, 받는 피해·틱·예약 실행
         WarriorSkills.register();
@@ -115,6 +118,7 @@ public final class FantasyRpgCore {
 
     private static void onLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         if (event.getEntity() instanceof ServerPlayer p) {
+            com.fantasyrpg.core.playerdata.ClassSelection.forget(p);
             CoreService.forget(p);
             SkillRuntime.forget(p);
         }

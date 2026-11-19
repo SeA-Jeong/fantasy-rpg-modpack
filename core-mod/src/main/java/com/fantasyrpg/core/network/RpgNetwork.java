@@ -99,6 +99,28 @@ public final class RpgNetwork {
         }
     }
 
+    /** 서버 → 클라: 직업 선택 화면 열기 (서장 NPC 선택지를 서버가 확인한 뒤) */
+    public record OpenClassSelect() implements CustomPacketPayload {
+        public static final Type<OpenClassSelect> TYPE = new Type<>(id("open_class_select"));
+        public static final StreamCodec<ByteBuf, OpenClassSelect> CODEC = StreamCodec.unit(new OpenClassSelect());
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
+    /** 클라 → 서버: 고른 직업 id (서버가 화면을 열어 준 기록·무직을 다시 확인) */
+    public record ChooseClass(String classId) implements CustomPacketPayload {
+        public static final Type<ChooseClass> TYPE = new Type<>(id("choose_class"));
+        public static final StreamCodec<ByteBuf, ChooseClass> CODEC = ByteBufCodecs.STRING_UTF8.map(ChooseClass::new, ChooseClass::classId);
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
     public static void register(IEventBus modBus) {
         modBus.addListener(RegisterPayloadHandlersEvent.class, RpgNetwork::onRegister);
     }
@@ -109,6 +131,10 @@ public final class RpgNetwork {
         r.playToClient(Defs.TYPE, Defs.CODEC, (p, ctx) -> ctx.enqueueWork(() -> ClientRpgState.acceptDefs(p.classId(), p.nodes(), p.passives())));
         r.playToClient(Core.TYPE, Core.CODEC, (p, ctx) -> ctx.enqueueWork(() -> ClientRpgState.acceptCore(p.coreId(), p.value(), p.max())));
         r.playToClient(Cooldown.TYPE, Cooldown.CODEC, (p, ctx) -> ctx.enqueueWork(() -> ClientRpgState.acceptCooldown(p.nodeId(), p.ticks())));
+        r.playToClient(OpenClassSelect.TYPE, OpenClassSelect.CODEC, (p, ctx) -> ctx.enqueueWork(() -> ClientRpgState.openClassSelect()));
+        r.playToServer(ChooseClass.TYPE, ChooseClass.CODEC, (p, ctx) -> ctx.enqueueWork(() -> {
+            if (ctx.player() instanceof ServerPlayer sp) com.fantasyrpg.core.playerdata.ClassSelection.handleChoose(sp, p.classId());
+        }));
         r.playToServer(Action.TYPE, Action.CODEC, (p, ctx) -> ctx.enqueueWork(() -> {
             if (ctx.player() instanceof ServerPlayer sp) SkillService.handle(sp, p.action(), p.nodeId(), p.slot());
         }));
