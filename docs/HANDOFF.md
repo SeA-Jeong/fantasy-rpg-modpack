@@ -11,7 +11,7 @@
 |---|---|
 | 기준 기획 | `docs/design/직업_전투시스템_v0.4.md` |
 | 구현 진행 | 8.3장 **1단계(피해 계산 엔진) 완료**. **방어 등급 상한은 2026-11-18 폐지**, 바닐라 갑옷은 원래 수치로 복원. **계열 방어구 20종(5계열×4부위, 1~10급, 방어력 최대 30)** 등록, **룬석 소켓(6종·4등급, 제작대 끼우기·빼기·합성·연마)**, **플레이어 성장 최소판(직업·레벨·경험치·SP)**, **실제 전투 연결(직업 무기 6종, 근접·활·지팡이 기본 공격 → RPG 피해, PvP 차단)**, **스킬트리 틀(투자·되돌리기·초기화권·장착칸, 코어 자원, 공통 패시브, K 화면·Z X C V B·HUD)**, **6직업 스킬트리 156노드 완성(1~6단 + 혼합, 궁극기 24·마스터리 24)**, **서장 NPC 직업 선택(magiccity 개인 퀘스트 1장 "왕의 소명")** — 모두 게임 확인 전. **Better Combat 연동 준비**(순수 로직·컴파일 의존성)는 `main`에 있음 |
-| 플랫폼 | Minecraft 1.21.1 / NeoForge **21.1.266** / Java 21 / ModDevGradle 2.0.141. **필수 의존 모드 magiccity** (JitPack `com.github.aswq0258:magic-city-mod:46ce844` (2026-11-19 퀘스트 API), `gradle.properties`의 `magiccity_commit`) |
+| 플랫폼 | Minecraft 1.21.1 / NeoForge **21.1.266** / Java 21 / ModDevGradle 2.0.141. **필수 의존 모드 magiccity** (JitPack `com.github.aswq0258:magic-city-mod:9051cbd` (2026-11-19 퀘스트 API), `gradle.properties`의 `magiccity_commit`) |
 | CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄). 모드 구성이 바뀌면 `modpack smoke`가 외부 모드 18개 + 우리 모드 2개로 **NeoForge 전용 서버를 실제 기동** |
 | 1차 외부 모드 구성 | `modpack/mods.lock.json` (필수 13 + 권장 5, 버전 고정). 2026-11-17 전용 서버 기동 통과 (run 44061047052). 클라이언트 실행은 아직 확인 안 함 |
 | 우리 모드 3개 | `fantasyrpg`(이 저장소), `magiccity`(JitPack), `royalqol`(클라이언트 전용 편의 모드, `magic-city-mod` 저장소 `royalqol/`, `mods.lock.json`의 `royalqol.commit`으로 빌드 — `tools/build_royalqol.sh`). 테스트 팩과 서버 기동 검사에 셋 다 들어감 |
