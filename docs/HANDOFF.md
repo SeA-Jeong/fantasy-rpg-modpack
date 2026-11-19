@@ -15,7 +15,7 @@
 | CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄). 모드 구성이 바뀌면 `modpack smoke`가 외부 모드 18개 + 우리 모드 2개로 **NeoForge 전용 서버를 실제 기동** |
 | 1차 외부 모드 구성 | `modpack/mods.lock.json` (필수 13 + 권장 5, 버전 고정). 2026-11-17 전용 서버 기동 통과 (run 44061047052). 클라이언트 실행은 아직 확인 안 함 |
 | 우리 모드 3개 | `fantasyrpg`(이 저장소), `magiccity`(JitPack), `royalqol`(클라이언트 전용 편의 모드, `magic-city-mod` 저장소 `royalqol/`, `mods.lock.json`의 `royalqol.commit`으로 빌드 — `tools/build_royalqol.sh`). 테스트 팩과 서버 기동 검사에 셋 다 들어감 |
-| 최신 테스트 팩 | **v0.14.0-test.1** (스킬트리 156노드 + 서장 NPC 직업 선택 + 기사 가드·프리셋, 게임 확인 전 — Releases 탭). 통합 팩 `magic-kingdom-testpack-*.mrpack`(우리 모드 3개 + 외부 18개, Prism 가져오기) + `fantasyrpg-testpack-*.zip`. 이전 판은 v0.2~v0.13 |
+| 최신 테스트 팩 | **v0.15.0-test.1** (스킬트리 156노드 + 서장 NPC 직업 선택 + 기사 가드·프리셋 + 유산 무기, 게임 확인 전 — Releases 탭). 통합 팩 `magic-kingdom-testpack-*.mrpack`(우리 모드 3개 + 외부 18개, Prism 가져오기) + `fantasyrpg-testpack-*.zip`. 이전 판은 v0.2~v0.14 |
 | 게임 테스트 | `docs/TESTING.md`의 v0.1·v0.2 체크리스트 |
 
 ### 테스트 팩 Release 만드는 법
@@ -204,6 +204,7 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - 사용자 결정: 메인 스토리는 무기 하나를 계속 강화하는 흐름, 성장은 섞기(진행 + 재료), 하나뿐인 주무기, 무기에 성격·대사 없음. 초안 `claude/유산무기_초안.md` 기본값 승인("진행하자")
 - 기획 v0.4 6.1·6.3 먼저 수정 → fantasyrpg 유산 무기 전체(위 "동작하는 것"), JUnit 5개(전체 85개), 서버 기동 검사 확인 줄, mod_version 0.15.0
 - magiccity: 퀘스트 NPC 상시 선택지(services), 시종장 `[유산을 다시 부른다]`, 1장 완료 대사
+- CI: 첫 빌드에서 레코드 생성자 안 인자 실수로 컴파일 오류 → 고친 뒤 JUnit 85개·서버 기동 검사(유산 설정 로드 줄) 통과. `main` 병합(`7125f03`), 복구 지점 `backup/main-before-heirloom-2026-11-19`, 테스트 팩 v0.15.0-test.1
 - 게임 확인: 하지 않음 → `docs/TESTING.md` v0.15 H1~H14, 빠른 확인 8회차
 
 ### 2026-11-19 — 기사 기본 가드·장착 프리셋 v0.14 (브랜치 `claude/guard-presets`)
