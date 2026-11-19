@@ -15,7 +15,7 @@
 | CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄). 모드 구성이 바뀌면 `modpack smoke`가 외부 모드 18개 + 우리 모드 2개로 **NeoForge 전용 서버를 실제 기동** |
 | 1차 외부 모드 구성 | `modpack/mods.lock.json` (필수 13 + 권장 5, 버전 고정). 2026-11-17 전용 서버 기동 통과 (run 44061047052). 클라이언트 실행은 아직 확인 안 함 |
 | 우리 모드 3개 | `fantasyrpg`(이 저장소), `magiccity`(JitPack), `royalqol`(클라이언트 전용 편의 모드, `magic-city-mod` 저장소 `royalqol/`, `mods.lock.json`의 `royalqol.commit`으로 빌드 — `tools/build_royalqol.sh`). 테스트 팩과 서버 기동 검사에 셋 다 들어감 |
-| 최신 테스트 팩 | v0.7.0-test.1 (방어구 + 룬석 + 성장 + 전투 연결 + 스킬트리 틀, 게임 확인 전 — Releases 탭). 이전: v0.6.0-test.1, v0.5.0-test.1, v0.4.0-test.1, v0.3.0-test.1, v0.2.0-test.4: 통합 팩 `magic-kingdom-testpack-*.mrpack`(우리 모드 3개 + 외부 18개, Prism 가져오기) + 기존 `fantasyrpg-testpack-*.zip` |
+| 최신 테스트 팩 | **v0.13.0-test.1** (스킬트리 156노드 + 서장 NPC 직업 선택, 게임 확인 전 — Releases 탭). 통합 팩 `magic-kingdom-testpack-*.mrpack`(우리 모드 3개 + 외부 18개, Prism 가져오기) + `fantasyrpg-testpack-*.zip`. 이전 판은 v0.2~v0.12 |
 | 게임 테스트 | `docs/TESTING.md`의 v0.1·v0.2 체크리스트 |
 
 ### 테스트 팩 Release 만드는 법
@@ -193,6 +193,7 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - 사용자 결정: 초안 `claude/서장NPC_직업선택_초안.md` 승인("진행하자") — A안(자체 대화), 왕실 시종장 에드윈·왕좌의 전당, 1급 무기 지급, 직업 변경은 NPC에 넣지 않음
 - magiccity: `quest` 패키지(정의·규칙·저장·대화·명령, JUnit 7개), 왕좌의 전당 NPC 자동 소환·`/magiccity fix npcs`, 공개 API `questSignal`·`questState`·`questDone`·`NpcActionEvent`·`QuestStepStartEvent`, 데이터 `quests/kings_call.json`·`quest_npcs/steward.json`
 - fantasyrpg: `ClassSelection`, `ClassSelectScreen`, 패킷 2개, 언어 30줄, `/rpg class choose`도 퀘스트 신호, 서버 기동 검사에 퀘스트 로드 줄 확인 추가, mod_version 0.13.0
+- CI: magiccity `9051cbd`(퀘스트 JUnit 7개 포함) 통과, fantasyrpg 빌드·JUnit 73개·서버 기동 검사(퀘스트 1개·NPC 1명 로드, `magiccity quest list`) 통과. 빌드 캐시에 예전 magiccity jar가 남아 테스트 팩에 두 개 들어가던 문제를 고침(`magiccity_commit` jar만 복사). 테스트 팩 v0.13.0-test.1
 - 게임 확인: 하지 않음 → `docs/TESTING.md` v0.13 W1~W15, 빠른 확인 6회차
 
 ### 2026-11-19 — 6단 마스터리·혼합 노드 (브랜치 `claude/mastery-mixed`)
