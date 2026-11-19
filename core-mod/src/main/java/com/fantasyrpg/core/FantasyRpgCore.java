@@ -68,6 +68,7 @@ public final class FantasyRpgCore {
         RpgProgress.register(modEventBus);
         NeoForge.EVENT_BUS.addListener(RpgProgress::onLivingDeath);
         NeoForge.EVENT_BUS.addListener(RpgProgress::onChapterFirstClear);
+        NeoForge.EVENT_BUS.addListener(RpgProgress::onQuestStepComplete);
         // 유산 무기: 각성, 죽어도 떨어뜨리지 않음
         NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.heirloom.HeirloomService::onChapterFirstClear);
         NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.heirloom.HeirloomService::onDrops);

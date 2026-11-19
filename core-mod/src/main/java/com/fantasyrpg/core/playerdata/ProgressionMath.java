@@ -67,6 +67,11 @@ public final class ProgressionMath {
     }
 
     /** 챕터 최초 완료 경험치 = 완료 뒤 등급 × 값 */
+    /** 장 퀘스트 중간 단계 경험치 = 지금 등급 × 단계당 값 (중간 단계가 아니면 0) */
+    public static int midStepXp(boolean midStep, int grade, ProgressionSettings s) {
+        return midStep ? Math.max(1, grade) * s.midStepXpPerGrade() : 0;
+    }
+
     public static int chapterClearXp(int gradeAfter, ProgressionSettings s) {
         return Math.max(0, gradeAfter) * s.chapterClearXpPerGrade();
     }

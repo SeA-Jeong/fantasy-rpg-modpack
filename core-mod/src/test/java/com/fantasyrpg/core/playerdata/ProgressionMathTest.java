@@ -100,4 +100,17 @@ class ProgressionMathTest {
         assertNull(RpgClass.byId(""));
         assertEquals(6, RpgClass.values().length);
     }
+
+    @Test
+    @DisplayName("장 퀘스트 중간 단계 경험치 [초안]: 지금 등급 × 50 (1급 50, 6급 300), 중간 단계가 아니면 0, 데이터 = 문서 값")
+    void midStepXp() throws IOException {
+        ProgressionSettings s = load();
+        assertEquals(50, s.midStepXpPerGrade());
+        assertEquals(50, ProgressionMath.midStepXp(true, 1, s));
+        assertEquals(300, ProgressionMath.midStepXp(true, 6, s));
+        assertEquals(50, ProgressionMath.midStepXp(true, 0, s));
+        assertEquals(0, ProgressionMath.midStepXp(false, 6, s));
+        // 한 장 완료 경험치(등급 × 400)의 1/8
+        assertEquals(ProgressionMath.chapterClearXp(3, s) / 8, ProgressionMath.midStepXp(true, 3, s));
+    }
 }

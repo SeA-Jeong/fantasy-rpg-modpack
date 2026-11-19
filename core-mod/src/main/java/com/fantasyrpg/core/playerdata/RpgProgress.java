@@ -162,6 +162,13 @@ public final class RpgProgress {
         if (event.levelCapChanged()) applyHeldXp(p);
     }
 
+    /** 장 퀘스트 중간 단계를 끝냄 (magiccity, 2026-11-19): 지금 등급 × 단계당 경험치 */
+    public static void onQuestStepComplete(io.github.aswq0258.magiccity.api.QuestStepCompleteEvent event) {
+        ServerPlayer p = event.getPlayer();
+        int xp = ProgressionMath.midStepXp(event.isMidStep(), MagicCityApi.grade(p), settings());
+        if (xp > 0) grantXp(p, xp, "quest_step");
+    }
+
     public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer p) {
             reconcileClearBonus(p);
