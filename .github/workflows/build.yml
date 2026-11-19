@@ -52,7 +52,9 @@ jobs:
           mkdir -p testpack/mods testpack/datapacks
           find core-mod/build/libs -name '*.jar' ! -name '*-sources.jar' -exec cp {} testpack/mods/ \;
           # 필수 의존 모드 magiccity (빌드 때 JitPack에서 받은 같은 커밋의 jar)
-          find ~/.gradle/caches -path '*com.github.aswq0258*' -name 'magic-city-mod-*.jar' ! -name '*-sources.jar' -exec cp {} testpack/mods/ \;
+          MC_COMMIT=$(grep '^magiccity_commit=' core-mod/gradle.properties | cut -d= -f2)
+          # 캐시에 예전 커밋 jar가 남아 있을 수 있어서 gradle.properties 의 커밋 jar 하나만 고른다
+          find ~/.gradle/caches -path '*com.github.aswq0258*' -name "magic-city-mod-${MC_COMMIT}.jar" -exec cp {} testpack/mods/ \;
           bash tools/build_royalqol.sh modpack/mods.lock.json testpack/mods
           ls testpack/mods
           # magiccity jar가 게임에 넣을 수 있는 모드 jar인지 확인
