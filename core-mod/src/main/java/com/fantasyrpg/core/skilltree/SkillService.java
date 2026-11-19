@@ -41,7 +41,7 @@ public final class SkillService {
     private SkillService() {
     }
 
-    public enum ActionType { INVEST, REFUND, FULL_RESET, EQUIP, UNEQUIP, PASSIVE_INVEST, PASSIVE_REFUND, CAST, SET_MASTERY }
+    public enum ActionType { INVEST, REFUND, FULL_RESET, EQUIP, UNEQUIP, PASSIVE_INVEST, PASSIVE_REFUND, CAST, SET_MASTERY, PRESET_SAVE, PRESET_APPLY }
 
     public static void handle(ServerPlayer p, int action, String id, int slot) {
         if (action < 0 || action >= ActionType.values().length) return;
@@ -55,6 +55,8 @@ public final class SkillService {
             case PASSIVE_REFUND -> passiveRefund(p, id);
             case CAST -> cast(p, slot);
             case SET_MASTERY -> setMastery(p, id);
+            case PRESET_SAVE -> savePreset(p, slot);
+            case PRESET_APPLY -> applyPreset(p, slot);
         }
     }
 
@@ -113,6 +115,57 @@ public final class SkillService {
         }
         RpgProgress.set(p, d.withActiveMastery(nodeId));
         tell(p, "message.fantasyrpg.skill.mastery_set", ChatFormatting.GREEN, n.name());
+        return true;
+    }
+
+    /** 레벨로 쓸 수 있는 장착 프리셋 수 (기획 7.1, skill_settings/presets.json) */
+    public static int presetsUnlocked(RpgPlayerData d) {
+        return PresetRules.unlocked(d.level(), com.fantasyrpg.core.skills.SkillSettings.INSTANCE.presetUnlockLevels());
+    }
+
+    /** 지금 장착칸·활성 마스터리를 프리셋에 저장 */
+    public static boolean savePreset(ServerPlayer p, int index) {
+        RpgPlayerData d = RpgProgress.get(p);
+        if (d.classOrNull() == null || index < 0 || index >= PresetRules.COUNT) return false;
+        if (index >= presetsUnlocked(d)) {
+            tell(p, "message.fantasyrpg.preset.locked", ChatFormatting.RED,
+                    com.fantasyrpg.core.skills.SkillSettings.INSTANCE.presetUnlockLevels().get(index));
+            return false;
+        }
+        RpgProgress.set(p, d.withPreset(index, new com.fantasyrpg.core.playerdata.SkillPreset(d.slots(), d.activeMastery())));
+        tell(p, "message.fantasyrpg.preset.saved", ChatFormatting.GREEN, index + 1);
+        return true;
+    }
+
+    /**
+     * 프리셋 적용: 배운 노드만 다시 장착(SP 배분은 그대로, 전투 중에도 가능). 마스터리는 안전할 때만 바뀜.
+     */
+    public static boolean applyPreset(ServerPlayer p, int index) {
+        RpgPlayerData d = RpgProgress.get(p);
+        RpgClass c = d.classOrNull();
+        if (c == null || index < 0 || index >= PresetRules.COUNT) return false;
+        if (index >= presetsUnlocked(d)) {
+            tell(p, "message.fantasyrpg.preset.locked", ChatFormatting.RED,
+                    com.fantasyrpg.core.skills.SkillSettings.INSTANCE.presetUnlockLevels().get(index));
+            return false;
+        }
+        com.fantasyrpg.core.playerdata.SkillPreset preset = d.presets().get(index);
+        if (preset.isEmpty()) {
+            tell(p, "message.fantasyrpg.preset.empty", ChatFormatting.RED, index + 1);
+            return false;
+        }
+        Map<String, SkillNode> nodes = SkillData.nodes(c.id());
+        PresetRules.Applied a = PresetRules.apply(preset.slots(), d.nodeRanks(), nodes);
+        RpgPlayerData next = d.withNodeRanks(d.nodeRanks(), a.slots());
+        boolean masteryKept = false;
+        if (PresetRules.masteryChanges(preset.mastery(), d.activeMastery(), d.nodeRanks(), nodes)) {
+            if (isSafe(p)) next = next.withActiveMastery(preset.mastery());
+            else masteryKept = true;
+        }
+        RpgProgress.set(p, next);
+        String key = masteryKept ? "message.fantasyrpg.preset.applied_mastery_kept"
+                : a.dropped() > 0 ? "message.fantasyrpg.preset.applied_dropped" : "message.fantasyrpg.preset.applied";
+        tell(p, key, masteryKept || a.dropped() > 0 ? ChatFormatting.YELLOW : ChatFormatting.GREEN, index + 1, a.dropped());
         return true;
     }
 
@@ -347,6 +400,17 @@ public final class SkillService {
         t.putInt("passive_spent", SkillTreeRules.spent(d.passiveRanks()));
         t.putInt("free_resets", freeResets(p, d));
         t.putString("active_mastery", d.activeMastery());
+        t.putInt("presets_unlocked", presetsUnlocked(d));
+        ListTag presets = new ListTag();
+        for (com.fantasyrpg.core.playerdata.SkillPreset ps : d.presets()) {
+            CompoundTag pt = new CompoundTag();
+            ListTag ps2 = new ListTag();
+            for (String s2 : ps.slots()) ps2.add(StringTag.valueOf(s2));
+            pt.put("slots", ps2);
+            pt.putString("mastery", ps.mastery());
+            presets.add(pt);
+        }
+        t.put("presets", presets);
         CompoundTag ranks = new CompoundTag();
         d.nodeRanks().forEach(ranks::putInt);
         t.put("ranks", ranks);

@@ -57,6 +57,11 @@ public class ClassWeaponItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+        if (type == WeaponType.SPEAR) {
+            // 기사 기본 가드: 누르고 있는 동안 들어 올림 (가드 효과는 서버가 기사일 때만 적용)
+            player.startUsingItem(hand);
+            return InteractionResultHolder.consume(stack);
+        }
         if (type != WeaponType.STAFF) return InteractionResultHolder.pass(stack);
         if (level.isClientSide()) return InteractionResultHolder.success(stack);
         if (!(player instanceof ServerPlayer p)) return InteractionResultHolder.pass(stack);
@@ -75,6 +80,16 @@ public class ClassWeaponItem extends Item {
         p.getCooldowns().addCooldown(this, SkillPassives.boltCooldown(p, attack.bolt().cooldownTicks()));
         SkillPassives.afterBolt(p);
         return InteractionResultHolder.consume(stack);
+    }
+
+    @Override
+    public net.minecraft.world.item.UseAnim getUseAnimation(ItemStack stack) {
+        return type == WeaponType.SPEAR ? net.minecraft.world.item.UseAnim.BLOCK : super.getUseAnimation(stack);
+    }
+
+    @Override
+    public int getUseDuration(ItemStack stack, net.minecraft.world.entity.LivingEntity entity) {
+        return type == WeaponType.SPEAR ? 72000 : super.getUseDuration(stack, entity);
     }
 
     /** 마법 탄: 블록에 막히기 전까지 시선 방향으로 사거리 안 첫 생물에게 즉시 명중 */

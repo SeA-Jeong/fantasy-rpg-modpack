@@ -160,6 +160,11 @@ public final class SkillEvents {
                 }
             }
         }
+        // 기사 기본 가드 (창 오른쪽 버튼, 스킬 완벽 방어가 꺼져 있을 때)
+        if (st.guardEnd <= now) {
+            amount = com.fantasyrpg.core.combat.GuardEvents.apply(p, event, attacker, amount);
+            if (amount < 0) return;
+        }
         // 전사 불굴
         if (st.indomitableEnd > now) {
             SkillPassives.Learned l = SkillPassives.learned(p, SkillIds.W_INDOMITABLE);

@@ -1,0 +1,9 @@
+{
+  "_comment": "기사 기본 가드·패리 [초안] (기획 v0.4 5.3, 프로젝트 문서 claude/가드_프리셋_초안.md 1절). 창을 들고 오른쪽 버튼을 누르고 있는 동안 정면 피해 감소, 들어 올린 직후 parry_ticks 안에 맞으면 피해 0. 직전에 들어 올린 때부터 rearm_ticks 가 지나야 다시 패리",
+  "reduction": 0.3,
+  "front_angle": 120,
+  "parry_ticks": 6,
+  "rearm_ticks": 20,
+  "parry_core": 10,
+  "parry_stun_ticks": 10
+}
