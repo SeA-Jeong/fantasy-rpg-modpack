@@ -50,6 +50,12 @@ public final class HeirloomRules {
         return have >= c.count() ? EnhanceResult.OK : EnhanceResult.NOT_ENOUGH;
     }
 
+    /** 각성 단계가 오를 때 줄 재료: 새로 열린 한계 등급의 강화 비용 (1급·비용 없음이면 null) */
+    public static HeirloomSettings.Cost stageUpGift(int newGrade, HeirloomSettings s) {
+        if (!s.stageUpMaterials() || newGrade < 2) return null;
+        return s.enhance().get(Math.min(MAX_TIER, newGrade));
+    }
+
     public enum PickResult { OK, UNKNOWN_DIRECTION, NONE_LEFT }
 
     public static PickResult canPick(String direction, int grade, boolean awakened, Map<String, Integer> picks) {

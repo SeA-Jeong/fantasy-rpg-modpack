@@ -204,5 +204,6 @@
   "screen.fantasyrpg.heirloom.trait.guard": "Guard: −2% damage taken per stage",
   "screen.fantasyrpg.heirloom.trait.finesse": "Finesse: +2%p crit chance per stage",
   "screen.fantasyrpg.heirloom.trait_help": "Click: one stage in this direction (cleared together with a full skill reset)",
-  "screen.fantasyrpg.heirloom.help": "Awakening stages rise when your progress grade rises. If lost, ask the steward to recall it."
+  "screen.fantasyrpg.heirloom.help": "Awakening stages rise when your progress grade rises. If lost, ask the steward to recall it.",
+  "message.fantasyrpg.heirloom.gift": "[Legacy] The kingdom sent enhancement materials for your new awakening: %s × %s"
 }
