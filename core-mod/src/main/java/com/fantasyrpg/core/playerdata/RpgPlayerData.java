@@ -24,14 +24,17 @@ import java.util.Map;
  * @param passiveRanks 공통 패시브 노드 id → 랭크
  * @param freeResetsUsed 쓴 무료 전체 초기화권 수
  * @param activeMastery 효과가 켜진 마스터리 노드 id (빈 문자열 = 없음, 기획 2.4 활성 1개)
+ * @param presets 장착 프리셋 3개 (기획 7.1, 2026-11-19)
  */
 public record RpgPlayerData(String rpgClass, int level, int xp, boolean startSpGranted, int clearBonusGranted,
                             int classChanges, Map<String, Integer> nodeRanks, List<String> slots,
-                            Map<String, Integer> passiveRanks, int freeResetsUsed, String activeMastery) {
+                            Map<String, Integer> passiveRanks, int freeResetsUsed, String activeMastery,
+                            List<SkillPreset> presets) {
     public static final int SLOT_COUNT = 5;
     public static final int ULTIMATE_SLOT = 4;
     public static final List<String> EMPTY_SLOTS = Collections.nCopies(SLOT_COUNT, "");
-    public static final RpgPlayerData DEFAULT = new RpgPlayerData("", 1, 0, false, 0, 0, Map.of(), EMPTY_SLOTS, Map.of(), 0, "");
+    public static final List<SkillPreset> EMPTY_PRESETS = Collections.nCopies(3, SkillPreset.EMPTY);
+    public static final RpgPlayerData DEFAULT = new RpgPlayerData("", 1, 0, false, 0, 0, Map.of(), EMPTY_SLOTS, Map.of(), 0, "", EMPTY_PRESETS);
 
     public static final Codec<RpgPlayerData> CODEC = RecordCodecBuilder.create(i -> i.group(
             Codec.STRING.optionalFieldOf("class", "").forGetter(RpgPlayerData::rpgClass),
@@ -44,7 +47,8 @@ public record RpgPlayerData(String rpgClass, int level, int xp, boolean startSpG
             Codec.STRING.listOf().optionalFieldOf("slots", EMPTY_SLOTS).forGetter(RpgPlayerData::slots),
             Codec.unboundedMap(Codec.STRING, Codec.INT).optionalFieldOf("passive_ranks", Map.of()).forGetter(RpgPlayerData::passiveRanks),
             Codec.INT.optionalFieldOf("free_resets_used", 0).forGetter(RpgPlayerData::freeResetsUsed),
-            Codec.STRING.optionalFieldOf("active_mastery", "").forGetter(RpgPlayerData::activeMastery)
+            Codec.STRING.optionalFieldOf("active_mastery", "").forGetter(RpgPlayerData::activeMastery),
+            SkillPreset.CODEC.listOf().optionalFieldOf("presets", EMPTY_PRESETS).forGetter(RpgPlayerData::presets)
     ).apply(i, RpgPlayerData::new));
 
     public RpgPlayerData {
@@ -54,6 +58,9 @@ public record RpgPlayerData(String rpgClass, int level, int xp, boolean startSpG
         while (s.size() < SLOT_COUNT) s.add("");
         slots = List.copyOf(s.subList(0, SLOT_COUNT));
         if (activeMastery == null || !nodeRanks.containsKey(activeMastery)) activeMastery = "";
+        List<SkillPreset> pr = new ArrayList<>(presets == null ? List.of() : presets);
+        while (pr.size() < 3) pr.add(SkillPreset.EMPTY);
+        presets = List.copyOf(pr.subList(0, 3));
     }
 
     public RpgClass classOrNull() {
@@ -74,37 +81,46 @@ public record RpgPlayerData(String rpgClass, int level, int xp, boolean startSpG
 
     public RpgPlayerData withLevel(int newLevel, int newXp) {
         return new RpgPlayerData(rpgClass, newLevel, newXp, startSpGranted, clearBonusGranted, classChanges, nodeRanks, slots,
-                passiveRanks, freeResetsUsed, activeMastery);
+                passiveRanks, freeResetsUsed, activeMastery, presets);
     }
 
     /** 직업 선택·변경. 변경이면 전투 트리 투자·장착을 모두 비움(SP 반환) */
     public RpgPlayerData withClass(RpgClass c, boolean change) {
         return new RpgPlayerData(c.id(), level, xp, true, clearBonusGranted, classChanges + (change ? 1 : 0),
-                change ? Map.of() : nodeRanks, change ? EMPTY_SLOTS : slots, passiveRanks, freeResetsUsed, activeMastery);
+                change ? Map.of() : nodeRanks, change ? EMPTY_SLOTS : slots, passiveRanks, freeResetsUsed, activeMastery,
+                change ? EMPTY_PRESETS : presets);
     }
 
     public RpgPlayerData withClearBonus(int granted) {
         return new RpgPlayerData(rpgClass, level, xp, startSpGranted, granted, classChanges, nodeRanks, slots, passiveRanks,
-                freeResetsUsed, activeMastery);
+                freeResetsUsed, activeMastery, presets);
     }
 
     public RpgPlayerData withNodeRanks(Map<String, Integer> ranks, List<String> newSlots) {
         return new RpgPlayerData(rpgClass, level, xp, startSpGranted, clearBonusGranted, classChanges, ranks, newSlots,
-                passiveRanks, freeResetsUsed, activeMastery);
+                passiveRanks, freeResetsUsed, activeMastery, presets);
     }
 
     public RpgPlayerData withPassiveRanks(Map<String, Integer> ranks) {
         return new RpgPlayerData(rpgClass, level, xp, startSpGranted, clearBonusGranted, classChanges, nodeRanks, slots, ranks,
-                freeResetsUsed, activeMastery);
+                freeResetsUsed, activeMastery, presets);
     }
 
     public RpgPlayerData withActiveMastery(String nodeId) {
         return new RpgPlayerData(rpgClass, level, xp, startSpGranted, clearBonusGranted, classChanges, nodeRanks, slots,
-                passiveRanks, freeResetsUsed, nodeId);
+                passiveRanks, freeResetsUsed, nodeId, presets);
+    }
+
+    /** 프리셋 하나 바꾸기 */
+    public RpgPlayerData withPreset(int index, SkillPreset preset) {
+        List<SkillPreset> pr = new ArrayList<>(presets);
+        pr.set(index, preset);
+        return new RpgPlayerData(rpgClass, level, xp, startSpGranted, clearBonusGranted, classChanges, nodeRanks, slots,
+                passiveRanks, freeResetsUsed, activeMastery, pr);
     }
 
     public RpgPlayerData withFreeResetsUsed(int used) {
         return new RpgPlayerData(rpgClass, level, xp, startSpGranted, clearBonusGranted, classChanges, nodeRanks, slots,
-                passiveRanks, used, activeMastery);
+                passiveRanks, used, activeMastery, presets);
     }
 }

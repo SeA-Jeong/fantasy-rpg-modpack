@@ -129,6 +129,19 @@ public final class SkillTreeScreen extends Screen {
             hits.add(h);
             if (h.contains(mx, my) && n != null) tip = nodeTooltip(n);
         }
+        // 장착 프리셋 (기획 7.1): 왼쪽 클릭 적용, Shift+왼쪽 저장
+        for (int i = 0; i < 3; i++) {
+            int x = left + 264 + i * 30;
+            int y = slotY + 11;
+            boolean open = i < ClientRpgState.presetsUnlocked;
+            boolean empty = ClientRpgState.presetSlots.get(i).stream().allMatch(String::isEmpty) && ClientRpgState.presetMastery.get(i).isEmpty();
+            g.fill(x, y, x + 26, y + 20, open ? 0xA0102030 : 0xA0200000);
+            g.renderOutline(x, y, 26, 20, !open ? 0xFF505050 : empty ? 0xFF808080 : 0xFF6FD0FF);
+            g.drawCenteredString(font, "P" + (i + 1), x + 13, y + 6, open ? 0xFFFFFFFF : 0xFF707070);
+            Hit h = new Hit(x, y, 26, 20, "preset", "", i);
+            hits.add(h);
+            if (h.contains(mx, my)) tip = presetTooltip(i, open);
+        }
         g.drawString(font, Component.translatable("screen.fantasyrpg.help"), left, slotY + 36, 0xFF909090);
         return tip;
     }
@@ -194,6 +207,33 @@ public final class SkillTreeScreen extends Screen {
         return t;
     }
 
+    private List<Component> presetTooltip(int i, boolean open) {
+        List<Component> t = new ArrayList<>();
+        t.add(Component.translatable("screen.fantasyrpg.preset.title", i + 1));
+        if (!open) {
+            t.add(Component.translatable("screen.fantasyrpg.preset.locked").withStyle(net.minecraft.ChatFormatting.RED));
+            return t;
+        }
+        String[] keys = {"Z", "X", "C", "V", "B"};
+        List<String> sl = ClientRpgState.presetSlots.get(i);
+        boolean any = false;
+        for (int k = 0; k < Math.min(5, sl.size()); k++) {
+            if (sl.get(k).isEmpty()) continue;
+            SkillNode n = ClientRpgState.nodes.get(sl.get(k));
+            t.add(Component.literal(keys[k] + ": " + (n == null ? sl.get(k) : n.name())).withStyle(net.minecraft.ChatFormatting.GRAY));
+            any = true;
+        }
+        String m = ClientRpgState.presetMastery.get(i);
+        if (!m.isEmpty()) {
+            SkillNode n = ClientRpgState.nodes.get(m);
+            t.add(Component.translatable("screen.fantasyrpg.preset.mastery", n == null ? m : n.name()).withStyle(net.minecraft.ChatFormatting.AQUA));
+            any = true;
+        }
+        if (!any) t.add(Component.translatable("screen.fantasyrpg.preset.empty").withStyle(net.minecraft.ChatFormatting.DARK_GRAY));
+        t.add(Component.translatable("screen.fantasyrpg.preset.help").withStyle(net.minecraft.ChatFormatting.DARK_GRAY));
+        return t;
+    }
+
     private List<Component> renderPassives(GuiGraphics g, int mx, int my) {
         g.drawString(font, Component.translatable("screen.fantasyrpg.passive_points",
                 ClientRpgState.passivePoints - ClientRpgState.passiveSpent, ClientRpgState.passivePoints), left, 26, 0xFFFFFFFF);
@@ -246,6 +286,9 @@ public final class SkillTreeScreen extends Screen {
                 }
                 case "passive" -> {
                     if (button == 0) FantasyRpgClient.send(shift ? ActionType.PASSIVE_REFUND : ActionType.PASSIVE_INVEST, h.id(), 0);
+                }
+                case "preset" -> {
+                    if (button == 0) FantasyRpgClient.send(shift ? ActionType.PRESET_SAVE : ActionType.PRESET_APPLY, "", h.slot());
                 }
                 default -> {
                 }

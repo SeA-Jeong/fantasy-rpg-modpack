@@ -56,6 +56,8 @@ public final class SkillRuntime {
         public long lastParryTick = -1000;
         public boolean forceCritBasic;
         public long guardStart = -1, guardEnd = -1;
+        /** 기사 기본 가드: 이번·직전에 창을 들어 올린 틱 */
+        public long basicGuardStart = -1000, basicGuardPrev = -1000;
         // 도적: 회피(스킬이면 성공 효과), 암영
         public long evadeEnd = -1;
         public boolean evadeFromSkill, evadeSucceeded;

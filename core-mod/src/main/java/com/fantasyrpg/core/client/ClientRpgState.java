@@ -41,6 +41,10 @@ public final class ClientRpgState {
     public static volatile float coreMax;
     public static volatile boolean received;
     public static volatile String activeMastery = "";
+    /** 장착 프리셋: 쓸 수 있는 수, 프리셋마다 장착칸 5개와 마스터리 */
+    public static volatile int presetsUnlocked = 1;
+    public static volatile List<List<String>> presetSlots = List.of(List.of(), List.of(), List.of());
+    public static volatile List<String> presetMastery = List.of("", "", "");
     /** 노드 id → 쿨타임 끝나는 시각(ms) */
     public static final Map<String, Long> cooldownEnd = new java.util.concurrent.ConcurrentHashMap<>();
 
@@ -105,6 +109,20 @@ public final class ClientRpgState {
         for (int i = 0; i < list.size(); i++) s.add(list.getString(i));
         while (s.size() < 5) s.add("");
         slots = List.copyOf(s);
+        presetsUnlocked = t.getInt("presets_unlocked");
+        List<List<String>> ps = new ArrayList<>();
+        List<String> pm = new ArrayList<>();
+        ListTag pl = t.getList("presets", Tag.TAG_COMPOUND);
+        for (int i = 0; i < 3; i++) {
+            CompoundTag pt = i < pl.size() ? pl.getCompound(i) : new CompoundTag();
+            List<String> one = new ArrayList<>();
+            ListTag sl = pt.getList("slots", Tag.TAG_STRING);
+            for (int j = 0; j < sl.size(); j++) one.add(sl.getString(j));
+            ps.add(List.copyOf(one));
+            pm.add(pt.getString("mastery"));
+        }
+        presetSlots = List.copyOf(ps);
+        presetMastery = List.copyOf(pm);
         received = true;
     }
 

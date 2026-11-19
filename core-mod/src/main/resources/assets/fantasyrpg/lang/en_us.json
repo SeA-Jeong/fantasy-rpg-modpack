@@ -159,5 +159,18 @@
   "class.fantasyrpg.cleric.weapon": "Mace",
   "class.fantasyrpg.cleric.core": "Divinity",
   "class.fantasyrpg.cleric.desc": "A battle priest who heals, smites and exorcises with mace and divine power.",
-  "class.fantasyrpg.cleric.play": "Best for: enduring and protecting yourself and allies"
+  "class.fantasyrpg.cleric.play": "Best for: enduring and protecting yourself and allies",
+  "message.fantasyrpg.shield_blocked": "Players with a class cannot use vanilla shields (knights guard with the spear: hold right-click)",
+  "message.fantasyrpg.preset.locked": "This preset unlocks at Lv.%s",
+  "message.fantasyrpg.preset.saved": "Saved current loadout to preset %s",
+  "message.fantasyrpg.preset.empty": "Preset %s is empty (Shift+click to save)",
+  "message.fantasyrpg.preset.applied": "Applied preset %s",
+  "message.fantasyrpg.preset.applied_dropped": "Applied preset %s — cleared %s slot(s) not learned or not fitting",
+  "message.fantasyrpg.preset.applied_mastery_kept": "Applied preset %s — not safe, active mastery unchanged (%s slot(s) cleared)",
+  "screen.fantasyrpg.presets": "Presets",
+  "screen.fantasyrpg.preset.title": "Preset %s",
+  "screen.fantasyrpg.preset.locked": "Locked (unlocks with level)",
+  "screen.fantasyrpg.preset.mastery": "Mastery: %s",
+  "screen.fantasyrpg.preset.empty": "Empty",
+  "screen.fantasyrpg.preset.help": "Left-click: apply · Shift+left: save current loadout"
 }

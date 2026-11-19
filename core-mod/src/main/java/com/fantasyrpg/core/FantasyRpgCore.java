@@ -76,6 +76,7 @@ public final class FantasyRpgCore {
         NeoForge.EVENT_BUS.addListener(CombatEvents::onEntityJoin);
         NeoForge.EVENT_BUS.addListener(CombatEvents::onProjectileImpact);
         NeoForge.EVENT_BUS.addListener(CombatEvents::onUseStart);
+        NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.combat.GuardEvents::onUseStart);   // 기사 기본 가드·바닐라 방패 금지
         NeoForge.EVENT_BUS.addListener(CombatEvents::onIncomingDamage);
         // 스킬트리 틀: 노드·공통 패시브·코어 데이터, 서버↔클라 패킷, 코어 회복·감소, /reload 뒤 다시 보내기
         RpgNetwork.register(modEventBus);

@@ -18,6 +18,7 @@ public final class CombatManager extends SimpleJsonResourceReloadListener {
     public static final CombatManager INSTANCE = new CombatManager();
 
     private volatile CombatSettings settings;
+    private volatile GuardSettings guard;
 
     private CombatManager() {
         super(new Gson(), "combat");
@@ -25,6 +26,19 @@ public final class CombatManager extends SimpleJsonResourceReloadListener {
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> files, ResourceManager manager, ProfilerFiller profiler) {
+        JsonElement g = files.get(ResourceLocation.fromNamespaceAndPath(FantasyRpgCore.MOD_ID, "guard"));
+        if (g == null) {
+            FantasyRpgCore.LOGGER.error("[전투] combat/guard.json 없음 — 기사 기본 가드가 꺼짐");
+        } else {
+            try {
+                GuardSettings gs = GuardSettings.parse(g.getAsJsonObject());
+                guard = gs;
+                FantasyRpgCore.LOGGER.info("[전투] 기본 가드 로드: 감소 {}%, 패리 {}틱, 재무장 {}틱",
+                        Math.round(gs.reduction() * 100), gs.parryTicks(), gs.rearmTicks());
+            } catch (RuntimeException ex) {
+                FantasyRpgCore.LOGGER.error("[전투] guard.json 읽기 실패, 이전 값 유지: {}", ex.getMessage());
+            }
+        }
         JsonElement json = files.get(ResourceLocation.fromNamespaceAndPath(FantasyRpgCore.MOD_ID, "basic_attack"));
         if (json == null) {
             FantasyRpgCore.LOGGER.error("[전투] combat/basic_attack.json 없음 — 직업 기본 공격이 바닐라로 처리됨");
@@ -38,6 +52,11 @@ public final class CombatManager extends SimpleJsonResourceReloadListener {
         } catch (RuntimeException ex) {
             FantasyRpgCore.LOGGER.error("[전투] basic_attack.json 읽기 실패, 이전 값 유지: {}", ex.getMessage());
         }
+    }
+
+    /** 기사 기본 가드 수치, 없으면 null */
+    public GuardSettings guard() {
+        return guard;
     }
 
     /** 없으면 null */
