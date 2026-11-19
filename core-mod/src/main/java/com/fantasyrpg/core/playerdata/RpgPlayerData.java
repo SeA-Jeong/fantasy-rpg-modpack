@@ -60,7 +60,7 @@ public record RpgPlayerData(String rpgClass, int level, int xp, boolean startSpG
         while (s.size() < SLOT_COUNT) s.add("");
         slots = List.copyOf(s.subList(0, SLOT_COUNT));
         if (activeMastery == null || !nodeRanks.containsKey(activeMastery)) activeMastery = "";
-        List<SkillPreset> pr = new ArrayList<>(presets == null ? List.of() : presets, heirloom);
+        List<SkillPreset> pr = new ArrayList<>(presets == null ? List.of() : presets);
         while (pr.size() < 3) pr.add(SkillPreset.EMPTY);
         presets = List.copyOf(pr.subList(0, 3));
         if (heirloom == null) heirloom = HeirloomData.NONE;
