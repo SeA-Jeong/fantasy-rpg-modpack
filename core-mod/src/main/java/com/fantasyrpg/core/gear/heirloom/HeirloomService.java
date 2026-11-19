@@ -203,6 +203,15 @@ public final class HeirloomService {
         if (!h.awakened()) return;
         if (e.gradeChanged()) {
             narrate(p, "message.fantasyrpg.heirloom.stage_up", e.getGrade(), HeirloomRules.cap(e.getGrade(), true));
+            // 새로 열린 등급의 강화 재료 (메인 진행만으로 재료 확보, 기획 6.2)
+            HeirloomSettings s = settings();
+            HeirloomSettings.Cost gift = s == null ? null : HeirloomRules.stageUpGift(e.getGrade(), s);
+            Item item = gift == null ? null : BuiltInRegistries.ITEM.get(ResourceLocation.parse(gift.item()));
+            if (item != null && item != net.minecraft.world.item.Items.AIR) {
+                p.getInventory().placeItemBackInInventory(new ItemStack(item, gift.count()));
+                p.sendSystemMessage(Component.translatable("message.fantasyrpg.heirloom.gift",
+                        Component.translatable(item.getDescriptionId()), gift.count()).withStyle(ChatFormatting.GOLD));
+            }
         } else if (SEAL_CHAPTERS.contains(e.getChapter())) {
             narrate(p, "message.fantasyrpg.heirloom.seal");
         }

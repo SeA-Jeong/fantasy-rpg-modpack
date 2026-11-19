@@ -66,6 +66,22 @@ class HeirloomRulesTest {
     }
 
     @Test
+    @DisplayName("각성 선물: 진행 등급이 오르면 새로 열린 등급 강화 재료 — 2~6급 합계가 오버월드 강화에 딱 맞음")
+    void stageUpGift() throws Exception {
+        HeirloomSettings s = shipped();
+        assertEquals(null, HeirloomRules.stageUpGift(1, s));
+        assertEquals("minecraft:iron_ingot", HeirloomRules.stageUpGift(2, s).item());
+        int iron = 0, diamond = 0;
+        for (int g = 2; g <= 6; g++) {
+            HeirloomSettings.Cost c = HeirloomRules.stageUpGift(g, s);
+            if (c.item().equals("minecraft:iron_ingot")) iron += c.count();
+            else diamond += c.count();
+        }
+        assertEquals(24, iron);
+        assertEquals(24, diamond);
+    }
+
+    @Test
     @DisplayName("잘못된 설정 거부: 모르는 방향, 특성 값 50% 초과, 강화 목표 1급")
     void invalid() {
         assertThrows(IllegalArgumentException.class, () -> HeirloomSettings.parse(JsonParser.parseString(

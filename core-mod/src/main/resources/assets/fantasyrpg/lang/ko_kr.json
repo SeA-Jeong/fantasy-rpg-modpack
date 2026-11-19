@@ -204,5 +204,6 @@
   "screen.fantasyrpg.heirloom.trait.guard": "수호: 단계마다 받는 피해 −2%",
   "screen.fantasyrpg.heirloom.trait.finesse": "기교: 단계마다 치명타 확률 +2%p",
   "screen.fantasyrpg.heirloom.trait_help": "클릭: 이 방향 특성 1단계 (스킬 전체 초기화 때 함께 비워짐)",
-  "screen.fantasyrpg.heirloom.help": "각성 단계는 메인 챕터를 완료해 진행 등급이 오를 때 오릅니다. 잃어버리면 시종장에게서 다시 받으세요."
+  "screen.fantasyrpg.heirloom.help": "각성 단계는 메인 챕터를 완료해 진행 등급이 오를 때 오릅니다. 잃어버리면 시종장에게서 다시 받으세요.",
+  "message.fantasyrpg.heirloom.gift": "[유산] 새 각성에 맞춰 왕국이 강화 재료를 보냈다: %s %s개"
 }

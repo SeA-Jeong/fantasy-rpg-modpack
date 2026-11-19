@@ -14,8 +14,9 @@ import java.util.Map;
  *
  * @param traits 방향 id(attack·spell·guard·finesse) → 단계당 효과 (키: physical_bonus·magic_bonus·damage_reduction·crit_chance)
  * @param enhance 강화 비용: 목표 등급마다 재료 아이템 id·개수 (2~10급)
+ * @param stageUpMaterials 각성 단계가 오를 때 새로 열린 등급의 강화 재료를 지급할지 (기획 6.2: 메인 진행만으로 재료 확보)
  */
-public record HeirloomSettings(Map<String, Map<String, Double>> traits, Map<Integer, Cost> enhance) {
+public record HeirloomSettings(Map<String, Map<String, Double>> traits, Map<Integer, Cost> enhance, boolean stageUpMaterials) {
     public static final List<String> DIRECTIONS = List.of("attack", "spell", "guard", "finesse");
 
     /** 한 단계 강화 비용 */
@@ -54,7 +55,7 @@ public record HeirloomSettings(Map<String, Map<String, Double>> traits, Map<Inte
             JsonObject c = e.getAsJsonObject();
             enhance.put(c.get("to").getAsInt(), new Cost(c.get("item").getAsString(), c.get("count").getAsInt()));
         }
-        return new HeirloomSettings(traits, enhance);
+        return new HeirloomSettings(traits, enhance, !o.has("stage_up_materials") || o.get("stage_up_materials").getAsBoolean());
     }
 
     /** 고른 특성 단계로 합친 효과 (예: physical_bonus) */
