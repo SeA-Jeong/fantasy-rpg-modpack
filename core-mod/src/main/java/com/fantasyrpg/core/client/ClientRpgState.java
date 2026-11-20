@@ -47,6 +47,8 @@ public final class ClientRpgState {
     public static volatile CompoundTag heirloom = new CompoundTag();
     public static volatile List<List<String>> presetSlots = List.of(List.of(), List.of(), List.of());
     public static volatile List<String> presetMastery = List.of("", "", "");
+    /** 프리셋에 저장된 빌드 SP (0 = 장착만, 2026-11-21) */
+    public static volatile List<Integer> presetBuildSp = List.of(0, 0, 0);
     /** 노드 id → 쿨타임 끝나는 시각(ms) */
     public static final Map<String, Long> cooldownEnd = new java.util.concurrent.ConcurrentHashMap<>();
 
@@ -132,6 +134,7 @@ public final class ClientRpgState {
         heirloom = t.getCompound("heirloom");
         List<List<String>> ps = new ArrayList<>();
         List<String> pm = new ArrayList<>();
+        List<Integer> pb = new ArrayList<>();
         ListTag pl = t.getList("presets", Tag.TAG_COMPOUND);
         for (int i = 0; i < 3; i++) {
             CompoundTag pt = i < pl.size() ? pl.getCompound(i) : new CompoundTag();
@@ -140,7 +143,9 @@ public final class ClientRpgState {
             for (int j = 0; j < sl.size(); j++) one.add(sl.getString(j));
             ps.add(List.copyOf(one));
             pm.add(pt.getString("mastery"));
+            pb.add(pt.getInt("build_sp"));
         }
+        presetBuildSp = List.copyOf(pb);
         presetSlots = List.copyOf(ps);
         presetMastery = List.copyOf(pm);
         received = true;

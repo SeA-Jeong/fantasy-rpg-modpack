@@ -45,6 +45,7 @@ public final class RpgCommands {
     }
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(PlayerCommands.playerClassChange());   // 플레이어용 직업 변경 (권한 0, 2026-11-21)
         dispatcher.register(literal("rpg")
                 .requires(s -> s.hasPermission(2))
                 .then(literal("simulate")

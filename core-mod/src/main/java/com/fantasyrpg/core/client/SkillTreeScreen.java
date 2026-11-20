@@ -301,6 +301,11 @@ public final class SkillTreeScreen extends Screen {
             t.add(Component.translatable("screen.fantasyrpg.preset.mastery", n == null ? m : n.name()).withStyle(net.minecraft.ChatFormatting.AQUA));
             any = true;
         }
+        int bsp = ClientRpgState.presetBuildSp.get(i);
+        if (bsp > 0) {
+            t.add(Component.translatable("screen.fantasyrpg.preset.build", bsp).withStyle(net.minecraft.ChatFormatting.GOLD));
+            any = true;
+        }
         if (!any) t.add(Component.translatable("screen.fantasyrpg.preset.empty").withStyle(net.minecraft.ChatFormatting.DARK_GRAY));
         t.add(Component.translatable("screen.fantasyrpg.preset.help").withStyle(net.minecraft.ChatFormatting.DARK_GRAY));
         return t;

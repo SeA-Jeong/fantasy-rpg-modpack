@@ -172,7 +172,7 @@
   "screen.fantasyrpg.preset.locked": "아직 잠김 (레벨이 오르면 열림)",
   "screen.fantasyrpg.preset.mastery": "마스터리: %s",
   "screen.fantasyrpg.preset.empty": "비어 있음",
-  "screen.fantasyrpg.preset.help": "왼쪽 클릭: 적용 · Shift+왼쪽: 지금 장착 상태 저장",
+  "screen.fantasyrpg.preset.help": "왼쪽 클릭: 적용 · Shift+왼쪽: 지금 장착·SP 배분 저장",
   "item.fantasyrpg.heirloom": "왕의 유산 · %s (%s급)",
   "message.fantasyrpg.heirloom.not_owner": "내 유산 무기가 아닙니다 (다시 부르기 전의 옛것이거나 다른 사람의 것)",
   "message.fantasyrpg.heirloom.granted": "[유산] 왕실 보물고의 낡은 무기 %s을(를) 받았다. 오래 잠든 듯 손에 묵직하다.",
@@ -254,5 +254,13 @@
   "item.fantasyrpg.rune_haste": "가속의 룬석",
   "attribute.fantasyrpg.core_regen": "코어 자원 회복",
   "attribute.fantasyrpg.skill_haste": "스킬 가속",
-  "tooltip.fantasyrpg.rune_light_only": "엘프·마도 갑옷 전용"
+  "tooltip.fantasyrpg.rune_light_only": "엘프·마도 갑옷 전용",
+  "message.fantasyrpg.cost.missing": "재료가 부족합니다: %s",
+  "message.fantasyrpg.cost.paid": "재료 사용: %s",
+  "message.fantasyrpg.preset.build_unsafe": "프리셋 %s의 SP 배분으로 바꾸려면 마을 안에서 안전할 때여야 합니다",
+  "message.fantasyrpg.preset.build_done": "프리셋 %s의 SP 배분으로 다시 찍었습니다",
+  "message.fantasyrpg.preset.build_partial": "프리셋 %s의 SP 배분으로 다시 찍었습니다 — 지금 레벨·SP로 못 찍은 랭크 %s개",
+  "message.fantasyrpg.class_change.unsafe": "직업은 마을 안에서 안전할 때만 바꿀 수 있습니다 (16칸 안 적대 몬스터 없음, 10초 동안 피해 없음)",
+  "message.fantasyrpg.class_change.confirm": "§e[성장] %s(으)로 직업을 바꿉니다. 레벨은 그대로, 쓴 SP는 모두 돌려받습니다. 비용: %s. 확인: /rpgclass change %s confirm",
+  "screen.fantasyrpg.preset.build": "SP 배분 저장됨 (%s SP) — 다르면 적용할 때 마을 안에서 재료를 내고 다시 찍음"
 }

@@ -134,7 +134,7 @@ public final class SkillService {
         return PresetRules.unlocked(d.level(), com.fantasyrpg.core.skills.SkillSettings.INSTANCE.presetUnlockLevels());
     }
 
-    /** 지금 장착칸·활성 마스터리를 프리셋에 저장 */
+    /** 지금 장착칸·활성 마스터리·SP 배분(빌드)을 프리셋에 저장 */
     public static boolean savePreset(ServerPlayer p, int index) {
         RpgPlayerData d = RpgProgress.get(p);
         if (d.classOrNull() == null || index < 0 || index >= PresetRules.COUNT) return false;
@@ -143,13 +143,15 @@ public final class SkillService {
                     com.fantasyrpg.core.skills.SkillSettings.INSTANCE.presetUnlockLevels().get(index));
             return false;
         }
-        RpgProgress.set(p, d.withPreset(index, new com.fantasyrpg.core.playerdata.SkillPreset(d.slots(), d.activeMastery())));
+        RpgProgress.set(p, d.withPreset(index, new com.fantasyrpg.core.playerdata.SkillPreset(d.slots(), d.activeMastery(), d.nodeRanks())));
         tell(p, "message.fantasyrpg.preset.saved", ChatFormatting.GREEN, index + 1);
         return true;
     }
 
     /**
-     * 프리셋 적용: 배운 노드만 다시 장착(SP 배분은 그대로, 전투 중에도 가능). 마스터리는 안전할 때만 바뀜.
+     * 프리셋 적용: 배운 노드만 다시 장착(전투 중에도 가능). 마스터리는 마을 안에서 안전할 때만 바뀜.
+     * 빌드 프리셋(SP 배분 저장, 2026-11-21): 지금 배분과 다르면 마을 안에서 안전할 때 재료(costs.json build_change)를 내고
+     * 빈 트리에서 낮은 단부터 다시 찍음(지금 레벨·SP로 못 찍는 만큼은 빠짐). 유산 특성은 전체 초기화처럼 비움.
      */
     public static boolean applyPreset(ServerPlayer p, int index) {
         RpgPlayerData d = RpgProgress.get(p);
@@ -166,6 +168,19 @@ public final class SkillService {
             return false;
         }
         Map<String, SkillNode> nodes = SkillData.nodes(c.id());
+        int buildMissing = 0;
+        if (!preset.ranks().isEmpty() && !preset.ranks().equals(d.nodeRanks())) {
+            if (!masterySwapOk(p)) {
+                tell(p, "message.fantasyrpg.preset.build_unsafe", ChatFormatting.RED, index + 1);
+                return false;
+            }
+            if (!CostService.pay(p, CostService.table().buildChange(), 1)) return false;
+            BuildRules.Rebuilt rb = BuildRules.rebuild(preset.ranks(), c.id(), d.level(), d.spTotal(), nodes);
+            buildMissing = rb.missing();
+            d = com.fantasyrpg.core.gear.heirloom.HeirloomService.clearTraits(d.withNodeRanks(rb.ranks(), d.slots()));
+            tell(p, buildMissing > 0 ? "message.fantasyrpg.preset.build_partial" : "message.fantasyrpg.preset.build_done",
+                    buildMissing > 0 ? ChatFormatting.YELLOW : ChatFormatting.GREEN, index + 1, buildMissing);
+        }
         PresetRules.Applied a = PresetRules.apply(preset.slots(), d.nodeRanks(), nodes);
         RpgPlayerData next = d.withNodeRanks(d.nodeRanks(), a.slots());
         boolean masteryKept = false;
@@ -180,7 +195,7 @@ public final class SkillService {
         return true;
     }
 
-    /** 노드 하나 1랭크 되돌리기. 비용 [미정]: 데이터가 정해지기 전까지 무료 */
+    /** 노드 하나 1랭크 되돌리기. 비용: costs.json node_refund (비어 있으면 무료, 2026-11-21) */
     public static boolean refund(ServerPlayer p, String nodeId) {
         RpgPlayerData d = RpgProgress.get(p);
         RpgClass c = d.classOrNull();
@@ -190,6 +205,7 @@ public final class SkillService {
             fail(p, r);
             return false;
         }
+        if (!CostService.pay(p, CostService.table().nodeRefund(), 1)) return false;
         Map<String, Integer> ranks = SkillTreeRules.withRank(d.nodeRanks(), nodeId, -1);
         RpgProgress.set(p, d.withNodeRanks(ranks, ranks.containsKey(nodeId) ? d.slots() : clearSlot(d.slots(), nodeId)));
         return true;
@@ -203,12 +219,18 @@ public final class SkillService {
             return false;
         }
         int available = freeResets(p, d);
+        boolean paid = false;
         if (!force && available <= 0) {
-            tell(p, "message.fantasyrpg.skill.no_free_reset", ChatFormatting.RED);
-            return false;
+            // 무료 초기화권이 없으면 재료 (costs.json full_reset, 비어 있으면 예전처럼 거부, 2026-11-21)
+            if (CostService.table().fullReset().isEmpty()) {
+                tell(p, "message.fantasyrpg.skill.no_free_reset", ChatFormatting.RED);
+                return false;
+            }
+            if (!CostService.pay(p, CostService.table().fullReset(), 1)) return false;
+            paid = true;
         }
         RpgPlayerData next = com.fantasyrpg.core.gear.heirloom.HeirloomService.clearTraits(d.withNodeRanks(Map.of(), RpgPlayerData.EMPTY_SLOTS));
-        if (!force) next = next.withFreeResetsUsed(d.freeResetsUsed() + 1);
+        if (!force && !paid) next = next.withFreeResetsUsed(d.freeResetsUsed() + 1);
         RpgProgress.set(p, next);
         tell(p, "message.fantasyrpg.skill.reset_done", ChatFormatting.GREEN, d.spSpent());
         return true;
@@ -419,6 +441,7 @@ public final class SkillService {
             for (String s2 : ps.slots()) ps2.add(StringTag.valueOf(s2));
             pt.put("slots", ps2);
             pt.putString("mastery", ps.mastery());
+            pt.putInt("build_sp", SkillTreeRules.spent(ps.ranks()));                  // 빌드 프리셋 SP (0 = 장착만)
             presets.add(pt);
         }
         t.put("presets", presets);

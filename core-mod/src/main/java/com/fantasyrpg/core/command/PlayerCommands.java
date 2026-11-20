@@ -58,6 +58,51 @@ public final class PlayerCommands {
                 .then(literal("change").then(classArg().executes(c -> setClass(c, true))));
     }
 
+    /**
+     * 플레이어용 직업 변경 (권한 0, 2026-11-21): /rpgclass change &lt;직업&gt; → 확인 안내, /rpgclass change &lt;직업&gt; confirm → 실행.
+     * 마을 안에서 안전할 때만, 재료 costs.json class_change [초안]. 레벨·경험치 유지, 쓴 SP 반환.
+     */
+    public static LiteralArgumentBuilder<CommandSourceStack> playerClassChange() {
+        return literal("rpgclass")
+                .then(literal("change").then(classArg()
+                        .executes(c -> playerChange(c, false))
+                        .then(literal("confirm").executes(c -> playerChange(c, true)))));
+    }
+
+    private static int playerChange(CommandContext<CommandSourceStack> ctx, boolean confirm) throws CommandSyntaxException {
+        ServerPlayer p = ctx.getSource().getPlayerOrException();
+        RpgClass c = RpgClass.byId(getString(ctx, "class"));
+        RpgPlayerData d = RpgProgress.get(p);
+        if (c == null) {
+            ctx.getSource().sendFailure(Component.literal("모르는 직업입니다. warrior, knight, rogue, archer, mage, cleric 중 하나"));
+            return 0;
+        }
+        if (d.classOrNull() == null) {
+            ctx.getSource().sendFailure(Component.literal("아직 직업이 없습니다. 서장 NPC에게서 직업을 고르세요"));
+            return 0;
+        }
+        if (d.classOrNull() == c) {
+            send(ctx, "§7[성장] 이미 그 직업입니다");
+            return 0;
+        }
+        if (!com.fantasyrpg.core.skilltree.SkillService.masterySwapOk(p)) {
+            ctx.getSource().sendFailure(Component.translatable("message.fantasyrpg.class_change.unsafe"));
+            return 0;
+        }
+        var need = com.fantasyrpg.core.skilltree.CostRules.amounts(com.fantasyrpg.core.skilltree.CostService.table().classChange(),
+                io.github.aswq0258.magiccity.api.MagicCityApi.grade(p), 1);
+        if (!confirm) {
+            var cost = com.fantasyrpg.core.skilltree.CostService.describe(need);
+            p.sendSystemMessage(Component.translatable("message.fantasyrpg.class_change.confirm",
+                    Component.translatable("class.fantasyrpg." + c.id()), cost == null ? Component.literal("무료") : cost, c.id()));
+            return 1;
+        }
+        if (!com.fantasyrpg.core.skilltree.CostService.pay(p, com.fantasyrpg.core.skilltree.CostService.table().classChange(), 1)) return 0;
+        RpgProgress.changeClass(p, c);
+        send(ctx, "§6[성장] §f직업 변경: " + Component.translatable("class.fantasyrpg." + c.id()).getString() + " (쓴 SP 반환)");
+        return 1;
+    }
+
     public static LiteralArgumentBuilder<CommandSourceStack> xp() {
         return literal("xp")
                 .then(literal("add").then(argument("amount", integer(1, 1_000_000)).executes(c -> {

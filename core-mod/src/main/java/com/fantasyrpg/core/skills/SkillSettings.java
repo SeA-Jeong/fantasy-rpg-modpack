@@ -33,6 +33,8 @@ public final class SkillSettings extends SimpleJsonResourceReloadListener {
     private volatile boolean masteryTownOnly = true;
     /** 파티 대상 스킬·경험치 나누기 (skill_settings/party.json, [초안] 2026-11-21) */
     private volatile com.fantasyrpg.core.party.PartyRules.Settings party = com.fantasyrpg.core.party.PartyRules.Settings.DEFAULT;
+    /** 초기화·직업 변경·빌드 바꾸기 비용 (skill_settings/costs.json, [초안] 2026-11-21) */
+    private volatile com.fantasyrpg.core.skilltree.CostRules.Table costs = com.fantasyrpg.core.skilltree.CostRules.Table.FREE;
 
     private SkillSettings() {
         super(new Gson(), "skill_settings");
@@ -46,6 +48,7 @@ public final class SkillSettings extends SimpleJsonResourceReloadListener {
         List<Integer> unlock = List.of(1, 20, 40);
         boolean townOnly = true;
         com.fantasyrpg.core.party.PartyRules.Settings partyS = com.fantasyrpg.core.party.PartyRules.Settings.DEFAULT;
+        com.fantasyrpg.core.skilltree.CostRules.Table costT = com.fantasyrpg.core.skilltree.CostRules.Table.FREE;
         for (Map.Entry<ResourceLocation, JsonElement> e : files.entrySet()) {
             try {
                 JsonObject o = e.getValue().getAsJsonObject();
@@ -55,6 +58,7 @@ public final class SkillSettings extends SimpleJsonResourceReloadListener {
                     if (lv.size() != 3) throw new IllegalArgumentException("presets.unlock_levels 는 3개");
                     unlock = List.copyOf(lv);
                 }
+                if (o.has("costs")) costT = com.fantasyrpg.core.skilltree.CostRules.parse(o.getAsJsonObject("costs"));
                 if (o.has("party")) partyS = com.fantasyrpg.core.party.PartyRules.Settings.parse(o.getAsJsonObject("party"));
                 if (o.has("mastery_swap")) {
                     JsonObject m = o.getAsJsonObject("mastery_swap");
@@ -76,6 +80,9 @@ public final class SkillSettings extends SimpleJsonResourceReloadListener {
         presetUnlockLevels = unlock;
         masteryTownOnly = townOnly;
         party = partyS;
+        costs = costT;
+        FantasyRpgCore.LOGGER.info("[스킬] 비용: 노드 되돌리기 {}개, 전체 초기화 {}개, 빌드 바꾸기 {}개, 직업 변경 {}개 항목",
+                costT.nodeRefund().size(), costT.fullReset().size(), costT.buildChange().size(), costT.classChange().size());
         FantasyRpgCore.LOGGER.info("[파티] 회복 {}칸 ×{}, 방벽 {}칸 ×{}, 경험치 {}칸 +{}/명", partyS.healRadius(), partyS.healShare(),
                 partyS.buffRadius(), partyS.buffShare(), partyS.xpRadius(), partyS.xpBonus());
         FantasyRpgCore.LOGGER.info("[스킬] 제어 면역: 엔티티 태그 {}개, 스코어보드 태그 {}개, 최대 체력 {} 이상", types.size(), tags.size(), minHealth);
@@ -84,6 +91,10 @@ public final class SkillSettings extends SimpleJsonResourceReloadListener {
 
     public com.fantasyrpg.core.party.PartyRules.Settings party() {
         return party;
+    }
+
+    public com.fantasyrpg.core.skilltree.CostRules.Table costs() {
+        return costs;
     }
 
     public boolean masteryTownOnly() {

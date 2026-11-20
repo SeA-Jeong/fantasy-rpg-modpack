@@ -172,7 +172,7 @@
   "screen.fantasyrpg.preset.locked": "Locked (unlocks with level)",
   "screen.fantasyrpg.preset.mastery": "Mastery: %s",
   "screen.fantasyrpg.preset.empty": "Empty",
-  "screen.fantasyrpg.preset.help": "Left-click: apply · Shift+left: save current loadout",
+  "screen.fantasyrpg.preset.help": "Left click: apply · Shift+Left: save current loadout and SP build",
   "item.fantasyrpg.heirloom": "King's Legacy · %s (Tier %s)",
   "message.fantasyrpg.heirloom.not_owner": "Not your legacy weapon (an old copy before recall, or someone else's)",
   "message.fantasyrpg.heirloom.granted": "[Legacy] You received the old weapon from the royal vault: %s. It feels heavy, as if long asleep.",
@@ -254,5 +254,13 @@
   "item.fantasyrpg.rune_haste": "Rune of Haste",
   "attribute.fantasyrpg.core_regen": "Core Regeneration",
   "attribute.fantasyrpg.skill_haste": "Skill Haste",
-  "tooltip.fantasyrpg.rune_light_only": "Elf / Arcane armor only"
+  "tooltip.fantasyrpg.rune_light_only": "Elf / Arcane armor only",
+  "message.fantasyrpg.cost.missing": "Missing materials: %s",
+  "message.fantasyrpg.cost.paid": "Materials used: %s",
+  "message.fantasyrpg.preset.build_unsafe": "Switching to preset %s's SP build requires being safe in a town",
+  "message.fantasyrpg.preset.build_done": "Rebuilt skill points from preset %s",
+  "message.fantasyrpg.preset.build_partial": "Rebuilt skill points from preset %s — %s ranks could not be learned at your level/SP",
+  "message.fantasyrpg.class_change.unsafe": "You can only change class in a town while safe",
+  "message.fantasyrpg.class_change.confirm": "§e[Growth] Change class to %s? Level kept, all SP refunded. Cost: %s. Confirm: /rpgclass change %s confirm",
+  "screen.fantasyrpg.preset.build": "SP build saved (%s SP) — applying a different build costs materials in a town"
 }

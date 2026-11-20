@@ -1,0 +1,28 @@
+{
+  "_comment": "[초안] 초기화·빌드·직업 변경 재료 (claude/스킬트리_설계.md 4절, 2026-11-21). 항목 = 아이템 × (base + per_grade × 진행 등급 1~6). 목록이 비면 무료. node_refund 노드 1랭크 되돌리기, full_reset 무료 초기화권이 없을 때 전체 초기화, build_change 빌드 프리셋으로 SP 배분 바꾸기, class_change /rpgclass change 직업 변경",
+  "costs": {
+    "node_refund": [],
+    "full_reset": [
+      {
+        "item": "minecraft:emerald",
+        "per_grade": 8
+      }
+    ],
+    "build_change": [
+      {
+        "item": "minecraft:emerald",
+        "per_grade": 4
+      }
+    ],
+    "class_change": [
+      {
+        "item": "minecraft:emerald",
+        "per_grade": 16
+      },
+      {
+        "item": "minecraft:diamond",
+        "per_grade": 1
+      }
+    ]
+  }
+}
