@@ -11,11 +11,11 @@
 |---|---|
 | 기준 기획 | `docs/design/직업_전투시스템_v0.4.md` |
 | 구현 진행 | 8.3장 **1단계(피해 계산 엔진) 완료**. **방어 등급 상한은 2026-11-18 폐지**, 바닐라 갑옷은 원래 수치로 복원. **계열 방어구 20종(5계열×4부위, 1~10급, 방어력 최대 30)** 등록, **룬석 소켓(6종·4등급, 제작대 끼우기·빼기·합성·연마)**, **플레이어 성장 최소판(직업·레벨·경험치·SP)**, **실제 전투 연결(직업 무기 6종, 근접·활·지팡이 기본 공격 → RPG 피해, PvP 차단)**, **스킬트리 틀(투자·되돌리기·초기화권·장착칸, 코어 자원, 공통 패시브, K 화면·Z X C V B·HUD)**, **6직업 스킬트리 156노드 완성(1~6단 + 혼합, 궁극기 24·마스터리 24)**, **서장 NPC 직업 선택(magiccity 개인 퀘스트 1장 "왕의 소명")**, **기사 기본 가드·패리, 바닐라 방패 금지, 장착 프리셋 3개**, **유산 무기(하나뿐인 성장형 주무기)**, **2~12장 챕터 퀘스트(magiccity)·각성 강화 재료**, **보스 고정 피해 패턴(magiccity)·직업 방어 통과**, **장별 중간 단계(magiccity)·중간 단계 경험치**, **챕터 보스 인스턴스 전장·필드보스 꾸러미(magiccity)** — 모두 게임 확인 전. **Better Combat 연동 준비**(순수 로직·컴파일 의존성)는 `main`에 있음 |
-| 플랫폼 | Minecraft 1.21.1 / NeoForge **21.1.266** / Java 21 / ModDevGradle 2.0.141. **필수 의존 모드 magiccity** (JitPack `com.github.aswq0258:magic-city-mod:8265530` (2026-11-20 외부 보스 방어구 무시 공격 배율 제외, 2026-11-20 라디키온 보스 전장 연결, 2026-11-20 보스 수치 데이터·외부 보스 연결, 2026-11-20 크리퍼 없음, 2026-11-20 보스 방 복사 전장·보스 꾸러미 지역 소재, 하수도 납골당 물 샘 수정·`fix crypt`, 전장 종료 멈춤·좀벌레 사라짐 수정, 2026-11-19 인스턴스 전장·필드보스 꾸러미 포함, 2026-11-19 퀘스트 API·NPC 상시 선택지·2~12장 챕터 퀘스트·보스 고정 피해 `isBossFixed`·중간 단계 `QuestStepCompleteEvent`), `gradle.properties`의 `magiccity_commit`) |
+| 플랫폼 | Minecraft 1.21.1 / NeoForge **21.1.266** / Java 21 / ModDevGradle 2.0.141. **필수 의존 모드 magiccity** (JitPack `com.github.aswq0258:magic-city-mod:e15c297` (2026-11-21 꾸러미 룬석, 2026-11-20 외부 보스 방어구 무시 공격 배율 제외, 2026-11-20 라디키온 보스 전장 연결, 2026-11-20 보스 수치 데이터·외부 보스 연결, 2026-11-20 크리퍼 없음, 2026-11-20 보스 방 복사 전장·보스 꾸러미 지역 소재, 하수도 납골당 물 샘 수정·`fix crypt`, 전장 종료 멈춤·좀벌레 사라짐 수정, 2026-11-19 인스턴스 전장·필드보스 꾸러미 포함, 2026-11-19 퀘스트 API·NPC 상시 선택지·2~12장 챕터 퀘스트·보스 고정 피해 `isBossFixed`·중간 단계 `QuestStepCompleteEvent`), `gradle.properties`의 `magiccity_commit`) |
 | CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄). 모드 구성이 바뀌면 `modpack smoke`가 외부 모드 18개 + 우리 모드 2개로 **NeoForge 전용 서버를 실제 기동** |
 | 1차 외부 모드 구성 | `modpack/mods.lock.json` (필수 13 + 권장 5, 버전 고정). 2026-11-17 전용 서버 기동 통과 (run 44061047052). 클라이언트 실행은 아직 확인 안 함 |
 | 우리 모드 3개 | `fantasyrpg`(이 저장소), `magiccity`(JitPack), `royalqol`(클라이언트 전용 편의 모드, `magic-city-mod` 저장소 `royalqol/`, `mods.lock.json`의 `royalqol.commit`으로 빌드 — `tools/build_royalqol.sh`). 테스트 팩과 서버 기동 검사에 셋 다 들어감. **챕터 보스 모드 `fantasybosses`**(3장 라디키온, ARR — 사용자 허락으로 공개 저장소): `magic-city-mod` 저장소 `fantasybosses/`, `mods.lock.json` 의 `fantasybosses.commit` 으로 빌드(`tools/build_fantasybosses.sh`) → 테스트 팩·통합 팩, 서버 기동 검사는 2단계(GeckoLib 필요)에만. `modpack/local-mods/` 는 지금 비어 있음 |
-| 최신 테스트 팩 | **v0.22.0-test.1** (바닐라 전투 인챈트 정리 + 라디키온 마디를 지팡이·스킬로도 맞힘·방어구 무시 공격 배율 없음 + 라디키온 3장 보스 전장에서 전투(fantasybosses 0.8.0)·마디 RPG 피해 + 라디키온 0.7.5.1 + 외부 보스 연결(3장 라디키온)·보스 수치 데이터 + 크리퍼 없음 + 보스 방 복사 전장 + 확장 작업대·방어구 제작법 + 챕터 보스 인스턴스 전장 + 필드보스 꾸러미 + 장별 중간 단계 + 심층 광산·보라빛 숲 병합 + 스킬트리 156노드 + 서장 NPC 직업 선택 + 기사 가드·프리셋 + 유산 무기 + 2~12장 챕터 퀘스트 + 보스 고정 피해 패턴, 게임 확인 전 — Releases 탭). 통합 팩 `magic-kingdom-testpack-*.mrpack`(우리 모드 3개 + 파일 1개 + 외부 18개 = 22개, 견본 데이터팩 `magiccity_boss_stats_sample`, Prism 가져오기) + `fantasyrpg-testpack-*.zip`. 이전 판은 v0.2~v0.18 |
+| 최신 테스트 팩 | **v0.23.0-test.1** (룬석 정식 재료·드롭 + 바닐라 전투 인챈트 정리 + 라디키온 마디를 지팡이·스킬로도 맞힘·방어구 무시 공격 배율 없음 + 라디키온 3장 보스 전장에서 전투(fantasybosses 0.8.0)·마디 RPG 피해 + 라디키온 0.7.5.1 + 외부 보스 연결(3장 라디키온)·보스 수치 데이터 + 크리퍼 없음 + 보스 방 복사 전장 + 확장 작업대·방어구 제작법 + 챕터 보스 인스턴스 전장 + 필드보스 꾸러미 + 장별 중간 단계 + 심층 광산·보라빛 숲 병합 + 스킬트리 156노드 + 서장 NPC 직업 선택 + 기사 가드·프리셋 + 유산 무기 + 2~12장 챕터 퀘스트 + 보스 고정 피해 패턴, 게임 확인 전 — Releases 탭). 통합 팩 `magic-kingdom-testpack-*.mrpack`(우리 모드 3개 + 파일 1개 + 외부 18개 = 22개, 견본 데이터팩 `magiccity_boss_stats_sample`, Prism 가져오기) + `fantasyrpg-testpack-*.zip`. 이전 판은 v0.2~v0.18 |
 | 게임 테스트 | `docs/TESTING.md`의 v0.1·v0.2 체크리스트 |
 
 ### 테스트 팩 Release 만드는 법
@@ -208,6 +208,12 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 ---
 
 ## 작업 기록
+
+### 2026-11-21 — 룬석 정식 재료·드롭 v0.23.0 (magiccity `e15c297`)
+- 사용자 결정: `claude/룬석_재료드롭_초안.md` A~D 추천안(원석은 몬스터·보스만, 보스마다 정한 종류, 하급은 일반 제작대, 수치 초안)
+- fantasyrpg: 재료 `rune_ore`(CraftRegistry `RUNE_MATS`), 하급 룬석 6·하급 연마재·추출 도구 조합식 교체, 자수정 임시 중급·상급 연마재 조합식 삭제 → `grid_recipes` 8개 추가(중급 룬석 6·중급·상급 연마재, 결과 `rune_grade`), 아이템 태그 `fantasyrpg:regional_materials`, `CraftRules.GridRecipe.resultGrade`·`resultKey`, `GridCrafting.resultOf`(JEI 도), 몬스터 드롭 `RuneDropRules`(순수, JUnit 3)·`RuneDrops`(데이터 `rune_drops/settings.json`, 플레이어가 잡은 `Enemy`, magiccity 표식 몹 제외)
+- magiccity: 꾸러미 항목 `components`(DataComponentPatch, 못 읽으면 건너뜀), 챕터 보스 12종 `boss_materials`(5개 새로)·필드보스 10마리 `field_boss_loot` 에 룬석·원석 (JUnit 2)
+- 게임 확인: `docs/TESTING.md` v0.23 L1~L8, 빠른 확인 17회차
 
 ### 2026-11-21 — 바닐라 전투 인챈트 정리 v0.22.0 (정책 P2·P2-1)
 - 사용자 결정(`claude/바닐라인챈트_정리_초안.md` A·B·C 추천안): 이미 붙은 전투 인챈트는 지움, 모든 플레이어·몹, 최대치 넘는 보호는 최대치만큼
