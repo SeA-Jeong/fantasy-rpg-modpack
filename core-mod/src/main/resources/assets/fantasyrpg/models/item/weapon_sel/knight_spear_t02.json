@@ -1,0 +1,11 @@
+{
+  "loader": "neoforge:separate_transforms",
+  "base": {
+    "parent": "fantasyrpg:item/weapons/knight_spear_t02"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "fantasyrpg:item/weapon_icons/knight_spear_t02"
+    }
+  }
+}

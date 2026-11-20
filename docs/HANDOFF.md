@@ -216,6 +216,12 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 
 ## 작업 기록
 
+### 2026-11-21 — 오버월드 최대 7급, 직업 무기 그림 v0.1 (fantasyrpg 0.26.0, magiccity `4da6f55`)
+- 사용자 결정(`claude/등급재배치_7급오버월드_초안.md` A~E 추천안): 12장까지 모두 완료 → 7급, 12장 보스 7급 고정, 레벨 Lv.60 그대로, 네더 13~15장 첫 완료 수 → 8·9·10급(설계만), 16장 최종 각성(방향만)
+- magiccity `ProgressionRules`(MAX_GRADE 7, LEVEL_GRADE 6), 등급표 7칸(예전 6칸 데이터도 읽음). fantasyrpg `CraftRules.MAX_UPGRADE` 7, 7급 승급·유산 7급 재료
+- 무기 그림: 사용자 제공 zip(`fantasyrpg_weapon_assets_v0.1`)의 텍스처 120장·모델 120개를 `assets/fantasyrpg/{textures,models}/item/weapons|weapon_models|weapon_icons` 에, 등급 선택 모델 `weapon_sel/*_tNN`(NeoForge `separate_transforms`: gui = 아이콘, 나머지 = 3D) 60개 생성, 무기 6종 모델에 `fantasyrpg:tier` overrides. 클라이언트 속성 등록 `FantasyRpgClient`(FMLClientSetupEvent). zip 안 생성 스크립트는 쓰지 않음
+- 게임 확인: G7-1~G7-6, WA1~WA6
+
 ### 2026-11-21 — 갑옷 파손·수리, 방어구 성향
 - 파손: `FamilyArmorItem.damageItem` 이 내구도 1에서 멈춤, `isBroken` 이면 `FamilyArmorAttributes`·`SetEffects.worn`·`AffinityEffects` 가 건너뜀. 수리 `craft/FamilyArmorRepairRecipe`(일반 제작대), 재료 `ReworkRules.repairCost`
 - 성향: 컴포넌트 `fantasyrpg:affinity`, 순수 `gear/armor/AffinityRules`(JUnit 3), `AffinityEffects`(10틱마다 합계 → 체력·가속 속성, `bonus()` 를 `RpgDamage`·`Cast.hit`·`SkillPassives.critBonus` 가 읽음), `AffinityTooltip`, 각인석 4종(`CraftRegistry.AFFINITY_STONES`), 1급 만들기에 각인석 선택, `FamilyArmorRetuneRecipe`. 데이터 `armor_affinity/settings.json`(전용 서버 동기화 포함)

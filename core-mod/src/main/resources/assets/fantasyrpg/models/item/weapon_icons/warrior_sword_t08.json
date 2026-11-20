@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "fantasyrpg:item/weapons/warrior_sword_t08"
+  }
+}

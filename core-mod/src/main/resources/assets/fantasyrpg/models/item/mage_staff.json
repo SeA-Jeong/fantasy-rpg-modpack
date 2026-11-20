@@ -1,1 +1,67 @@
-{"parent": "minecraft:item/handheld", "textures": {"layer0": "minecraft:item/blaze_rod"}}
+{
+  "loader": "neoforge:separate_transforms",
+  "base": {
+    "parent": "fantasyrpg:item/weapons/mage_staff_t01"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "fantasyrpg:item/weapon_icons/mage_staff_t01"
+    }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.15
+      },
+      "model": "fantasyrpg:item/weapon_sel/mage_staff_t02"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.25
+      },
+      "model": "fantasyrpg:item/weapon_sel/mage_staff_t03"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.35
+      },
+      "model": "fantasyrpg:item/weapon_sel/mage_staff_t04"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.45
+      },
+      "model": "fantasyrpg:item/weapon_sel/mage_staff_t05"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.55
+      },
+      "model": "fantasyrpg:item/weapon_sel/mage_staff_t06"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.65
+      },
+      "model": "fantasyrpg:item/weapon_sel/mage_staff_t07"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.75
+      },
+      "model": "fantasyrpg:item/weapon_sel/mage_staff_t08"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.85
+      },
+      "model": "fantasyrpg:item/weapon_sel/mage_staff_t09"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.95
+      },
+      "model": "fantasyrpg:item/weapon_sel/mage_staff_t10"
+    }
+  ]
+}

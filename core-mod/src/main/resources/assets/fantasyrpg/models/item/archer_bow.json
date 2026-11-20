@@ -1,1 +1,67 @@
-{"parent": "minecraft:item/generated", "textures": {"layer0": "minecraft:item/bow"}}
+{
+  "loader": "neoforge:separate_transforms",
+  "base": {
+    "parent": "fantasyrpg:item/weapons/archer_bow_t01"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "fantasyrpg:item/weapon_icons/archer_bow_t01"
+    }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.15
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t02"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.25
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t03"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.35
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t04"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.45
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t05"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.55
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t06"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.65
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t07"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.75
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t08"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.85
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t09"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.95
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t10"
+    }
+  ]
+}

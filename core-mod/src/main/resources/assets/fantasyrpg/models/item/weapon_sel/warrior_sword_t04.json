@@ -1,0 +1,11 @@
+{
+  "loader": "neoforge:separate_transforms",
+  "base": {
+    "parent": "fantasyrpg:item/weapons/warrior_sword_t04"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "fantasyrpg:item/weapon_icons/warrior_sword_t04"
+    }
+  }
+}

@@ -1,1 +1,67 @@
-{"parent": "minecraft:item/handheld", "textures": {"layer0": "minecraft:item/trident"}}
+{
+  "loader": "neoforge:separate_transforms",
+  "base": {
+    "parent": "fantasyrpg:item/weapons/knight_spear_t01"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "fantasyrpg:item/weapon_icons/knight_spear_t01"
+    }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.15
+      },
+      "model": "fantasyrpg:item/weapon_sel/knight_spear_t02"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.25
+      },
+      "model": "fantasyrpg:item/weapon_sel/knight_spear_t03"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.35
+      },
+      "model": "fantasyrpg:item/weapon_sel/knight_spear_t04"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.45
+      },
+      "model": "fantasyrpg:item/weapon_sel/knight_spear_t05"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.55
+      },
+      "model": "fantasyrpg:item/weapon_sel/knight_spear_t06"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.65
+      },
+      "model": "fantasyrpg:item/weapon_sel/knight_spear_t07"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.75
+      },
+      "model": "fantasyrpg:item/weapon_sel/knight_spear_t08"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.85
+      },
+      "model": "fantasyrpg:item/weapon_sel/knight_spear_t09"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.95
+      },
+      "model": "fantasyrpg:item/weapon_sel/knight_spear_t10"
+    }
+  ]
+}

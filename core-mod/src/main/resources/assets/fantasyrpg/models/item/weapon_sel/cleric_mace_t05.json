@@ -1,0 +1,11 @@
+{
+  "loader": "neoforge:separate_transforms",
+  "base": {
+    "parent": "fantasyrpg:item/weapons/cleric_mace_t05"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "fantasyrpg:item/weapon_icons/cleric_mace_t05"
+    }
+  }
+}

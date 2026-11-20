@@ -1,0 +1,11 @@
+{
+  "loader": "neoforge:separate_transforms",
+  "base": {
+    "parent": "fantasyrpg:item/weapons/rogue_dagger_t07"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "fantasyrpg:item/weapon_icons/rogue_dagger_t07"
+    }
+  }
+}

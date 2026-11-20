@@ -1,0 +1,11 @@
+{
+  "loader": "neoforge:separate_transforms",
+  "base": {
+    "parent": "fantasyrpg:item/weapons/mage_staff_t06"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "fantasyrpg:item/weapon_icons/mage_staff_t06"
+    }
+  }
+}

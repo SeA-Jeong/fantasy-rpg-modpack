@@ -50,6 +50,14 @@ public final class FantasyRpgClient {
             e.register(com.fantasyrpg.core.craft.CraftRegistry.MENU_5.get(), GridCraftScreen::new);
         });
         NeoForge.EVENT_BUS.addListener(ClientTickEvent.Post.class, FantasyRpgClient::onClientTick);
+        // 직업 무기 등급별 모양 (2026-11-21): 모델 overrides 가 fantasyrpg:tier (= 등급 ÷ 10) 로 _t01~_t10 을 고름
+        modBus.addListener(net.neoforged.fml.event.lifecycle.FMLClientSetupEvent.class, e -> e.enqueueWork(() -> {
+            for (com.fantasyrpg.core.gear.weapon.WeaponType t : com.fantasyrpg.core.gear.weapon.WeaponType.values()) {
+                net.minecraft.client.renderer.item.ItemProperties.register(com.fantasyrpg.core.gear.weapon.WeaponRegistry.item(t),
+                        net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(FantasyRpgCore.MOD_ID, "tier"),
+                        (stack, level, entity, seed) -> com.fantasyrpg.core.gear.armor.GearRegistry.tierOf(stack) / 10f);
+            }
+        }));
     }
 
     private static void onClientTick(ClientTickEvent.Post event) {
