@@ -25,7 +25,7 @@ class ReworkRulesTest {
     }
 
     @Test
-    @DisplayName("배포 설정: 숫돌, 50%, 핵심 부품은 4급부터")
+    @DisplayName("배포 설정: 숫돌, 50%, 핵심 부품은 4급부터, 수리 강화합금·4급부터 핵심 부품")
     void settings() throws IOException {
         assertEquals(ReworkRules.Settings.DEFAULT, ReworkRules.Settings.parse(json()));
     }
@@ -39,6 +39,17 @@ class ReworkRulesTest {
         assertEquals(Map.of("minecraft:iron_ingot", 1, "fantasyrpg:reinforced_alloy", 2), ReworkRules.dismantle(t, s, "knight", "chestplate", 2));
         // 6급은 4~6급 핵심 부품 2+3+4 = 9 → 4
         assertEquals(Integer.valueOf(4), ReworkRules.dismantle(t, s, "knight", "chestplate", 6).get("fantasyrpg:sanctum_plate"));
+    }
+
+    @Test
+    @DisplayName("수리: 1~3급 강화합금 × 등급, 4급부터 그 계열 핵심 부품 × (등급 − 3)")
+    void repair() throws IOException {
+        ArmorTable t = CraftRules.parseArmor(json());
+        ReworkRules.Settings s = ReworkRules.Settings.parse(json());
+        assertEquals(List.of(new Entry("fantasyrpg:reinforced_alloy", 1)), ReworkRules.repairCost(t, s, "knight", 1));
+        assertEquals(List.of(new Entry("fantasyrpg:reinforced_alloy", 3)), ReworkRules.repairCost(t, s, "elf", 3));
+        assertEquals(List.of(new Entry("fantasyrpg:sanctum_plate", 1)), ReworkRules.repairCost(t, s, "knight", 4));
+        assertEquals(List.of(new Entry("fantasyrpg:rune_frame", 3)), ReworkRules.repairCost(t, s, "arcane", 6));
     }
 
     @Test

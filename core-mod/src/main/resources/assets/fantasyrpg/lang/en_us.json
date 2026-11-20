@@ -262,5 +262,7 @@
   "message.fantasyrpg.preset.build_partial": "Rebuilt skill points from preset %s — %s ranks could not be learned at your level/SP",
   "message.fantasyrpg.class_change.unsafe": "You can only change class in a town while safe",
   "message.fantasyrpg.class_change.confirm": "§e[Growth] Change class to %s? Level kept, all SP refunded. Cost: %s. Confirm: /rpgclass change %s confirm",
-  "screen.fantasyrpg.preset.build": "SP build saved (%s SP) — applying a different build costs materials in a town"
+  "screen.fantasyrpg.preset.build": "SP build saved (%s SP) — applying a different build costs materials in a town",
+  "tooltip.fantasyrpg.armor_broken": "Broken — needs repair (armor, runes and set bonus off)",
+  "message.fantasyrpg.armor_broken": "%s is broken! Repair it at a crafting table"
 }

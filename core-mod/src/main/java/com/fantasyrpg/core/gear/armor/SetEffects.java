@@ -90,7 +90,7 @@ public final class SetEffects {
         Map<ArmorFamily, List<Integer>> tiers = new EnumMap<>(ArmorFamily.class);
         for (EquipmentSlot s : ARMOR) {
             ItemStack st = e.getItemBySlot(s);
-            if (st.getItem() instanceof FamilyArmorItem fa) tiers.computeIfAbsent(fa.family(), k -> new ArrayList<>()).add(GearRegistry.tierOf(st));
+            if (st.getItem() instanceof FamilyArmorItem fa && !FamilyArmorItem.isBroken(st)) tiers.computeIfAbsent(fa.family(), k -> new ArrayList<>()).add(GearRegistry.tierOf(st));
         }
         Map<ArmorFamily, SetRules.Worn> out = new EnumMap<>(ArmorFamily.class);
         for (var t : tiers.entrySet()) out.put(t.getKey(), SetRules.worn(t.getValue()));

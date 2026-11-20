@@ -71,6 +71,9 @@ public final class CraftRegistry {
 
     public static final DeferredHolder<RecipeSerializer<?>, SimpleCraftingRecipeSerializer<FamilyArmorCreateRecipe>> ARMOR_CREATE =
             SERIALIZERS.register("family_armor_create", () -> new SimpleCraftingRecipeSerializer<>(FamilyArmorCreateRecipe::new));
+    /** 계열 갑옷 수리 (2026-11-21) */
+    public static final DeferredHolder<RecipeSerializer<?>, SimpleCraftingRecipeSerializer<FamilyArmorRepairRecipe>> ARMOR_REPAIR =
+            SERIALIZERS.register("family_armor_repair", () -> new SimpleCraftingRecipeSerializer<>(FamilyArmorRepairRecipe::new));
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = TABS.register("crafting", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.fantasyrpg.crafting"))

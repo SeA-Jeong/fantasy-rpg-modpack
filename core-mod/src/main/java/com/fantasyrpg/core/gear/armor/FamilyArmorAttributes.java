@@ -34,6 +34,7 @@ public final class FamilyArmorAttributes {
         if (!(stack.getItem() instanceof FamilyArmorItem item)) return;
         ArmorStatTable table = ArmorStatManager.INSTANCE.get(item.family());
         if (table == null) return; // 표 없음(전용 서버 클라이언트 툴팁 등): 재질 기본값 0 그대로
+        if (FamilyArmorItem.isBroken(stack)) return; // 파손: 방어력·룬석 없음 (재질 기본값 0, 2026-11-21)
 
         int tier = GearRegistry.tierOf(stack);
         ArmorPart part = item.part();

@@ -16,17 +16,20 @@ import java.util.Map;
  *       태그 재료는 돌려주지 않음. 룬석이 끼워져 있으면 안 됨(먼저 빼기). 인챈트는 사라짐</li>
  *   <li>계열 전환: 갑옷 1개 + 바꿀 계열의 1급 만들기 재료 + (4급부터) 그 계열 핵심 부품 × (등급 − 3) → 같은 부위·같은 등급의
  *       다른 계열 갑옷. 인챈트·룬석·이름 그대로. 경갑 전용 룬석이 있으면 중갑으로는 안 됨</li>
+ *   <li>수리 (2026-11-21): 파손(내구도 1)되거나 닳은 갑옷 + 수리 재료 → 내구도 가득, 나머지 그대로. 일반 제작대.
+ *       1~3급은 강화합금 × 등급, 4급부터는 그 계열 핵심 부품 × (등급 − 3)</li>
  * </ul>
  */
 public final class ReworkRules {
     private ReworkRules() {}
 
-    public record Settings(String dismantleTool, double dismantleRatio, int convertCoreFromTier) {
-        public static final Settings DEFAULT = new Settings("minecraft:grindstone", 0.5, 4);
+    public record Settings(String dismantleTool, double dismantleRatio, int convertCoreFromTier, String repairItem, int repairCoreFromTier) {
+        public static final Settings DEFAULT = new Settings("minecraft:grindstone", 0.5, 4, "fantasyrpg:reinforced_alloy", 4);
 
         public Settings {
             if (dismantleRatio < 0 || dismantleRatio > 1) throw new IllegalArgumentException("dismantle_ratio 는 0~1");
             if (convertCoreFromTier < 1) throw new IllegalArgumentException("convert_core_from_tier 는 1 이상");
+            if (repairCoreFromTier < 1) throw new IllegalArgumentException("repair_core_from_tier 는 1 이상");
         }
 
         public static Settings parse(JsonObject root) {
@@ -34,7 +37,9 @@ public final class ReworkRules {
             JsonObject o = root.getAsJsonObject("rework");
             return new Settings(o.has("dismantle_tool") ? o.get("dismantle_tool").getAsString() : DEFAULT.dismantleTool,
                     o.has("dismantle_ratio") ? o.get("dismantle_ratio").getAsDouble() : DEFAULT.dismantleRatio,
-                    o.has("convert_core_from_tier") ? o.get("convert_core_from_tier").getAsInt() : DEFAULT.convertCoreFromTier);
+                    o.has("convert_core_from_tier") ? o.get("convert_core_from_tier").getAsInt() : DEFAULT.convertCoreFromTier,
+                    o.has("repair_item") ? o.get("repair_item").getAsString() : DEFAULT.repairItem,
+                    o.has("repair_core_from_tier") ? o.get("repair_core_from_tier").getAsInt() : DEFAULT.repairCoreFromTier);
         }
     }
 
@@ -68,6 +73,14 @@ public final class ReworkRules {
             out.add(new Entry(core, tier - s.convertCoreFromTier() + 1));
         }
         return List.copyOf(out);
+    }
+
+    /** 수리 재료 (갑옷 자신은 빼고). 핵심 부품이 없는 계열이면 null */
+    public static List<Entry> repairCost(ArmorTable t, Settings s, String family, int tier) {
+        if (tier < s.repairCoreFromTier()) return List.of(new Entry(s.repairItem(), Math.max(1, tier)));
+        String core = t.core().get(family);
+        if (core == null) return null;
+        return List.of(new Entry(core, tier - s.repairCoreFromTier() + 1));
     }
 
     /** 계열 전환 작업대 크기: 1~3급 4×4, 4급부터 5×5 */
