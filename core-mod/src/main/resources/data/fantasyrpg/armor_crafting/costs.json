@@ -1,5 +1,5 @@
 {
-  "_comment": "[초안] 계열 방어구 1급 만들기·2~6급 승급 재료 (claude/작업대_방어구제작_초안.md 5절). upgrade 는 흉갑 기준, 다른 부위는 각반 7/8·투구 5/8·장화 4/8 올림(최소 1). core = 그 계열 핵심 부품. 2·3급 4×4, 4~6급 5×5 작업대. 조합하는 사람의 진행 등급 ≥ 목표 등급",
+  "_comment": "[초안] 계열 방어구 1급 만들기·2~6급 승급 재료 (claude/작업대_방어구제작_초안.md 5절). upgrade 는 흉갑 기준, 다른 부위는 각반 7/8·투구 5/8·장화 4/8 올림(최소 1). core = 그 계열 핵심 부품. 2·3급 4×4, 4~6급 5×5 작업대. 조합하는 사람의 진행 등급 ≥ 목표 등급 2026-11-21: 7급(오버월드 최대, 12장 완료) 승급 = 오버월드 재료 [초안] (claude/등급재배치_7급오버월드_초안.md).",
   "weight": {
     "knight": "heavy",
     "dwarf": "heavy",
@@ -85,6 +85,24 @@
           "item": "fantasyrpg:gear_frame",
           "count": 1
         }
+      ],
+      "7": [
+        {
+          "item": "core",
+          "count": 5
+        },
+        {
+          "item": "fantasyrpg:armor_plate",
+          "count": 5
+        },
+        {
+          "item": "fantasyrpg:precision_part",
+          "count": 3
+        },
+        {
+          "item": "fantasyrpg:gear_frame",
+          "count": 2
+        }
       ]
     },
     "light": {
@@ -156,6 +174,24 @@
         {
           "item": "fantasyrpg:reinforced_lining",
           "count": 1
+        }
+      ],
+      "7": [
+        {
+          "item": "core",
+          "count": 5
+        },
+        {
+          "item": "fantasyrpg:mana_conductor",
+          "count": 5
+        },
+        {
+          "item": "fantasyrpg:precision_part",
+          "count": 3
+        },
+        {
+          "item": "fantasyrpg:reinforced_lining",
+          "count": 2
         }
       ]
     }

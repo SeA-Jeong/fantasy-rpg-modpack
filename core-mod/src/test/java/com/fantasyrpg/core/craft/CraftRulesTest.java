@@ -76,7 +76,7 @@ class CraftRulesTest {
     }
 
     @Test
-    @DisplayName("배포 방어구 제작표: 5계열 × 4부위 × 2~6급 승급과 1급 만들기가 모두 있고 작업대 칸 안에 들어감")
+    @DisplayName("배포 방어구 제작표: 5계열 × 4부위 × 2~7급 승급과 1급 만들기가 모두 있고 작업대 칸 안에 들어감")
     void shippedArmor() throws IOException {
         ArmorTable t = armor();
         assertEquals(5, t.weight().size());
@@ -101,7 +101,9 @@ class CraftRulesTest {
         assertEquals("fantasyrpg:sanctum_plate", k6.get(0).id());
         assertEquals(4, k6.get(0).count());
         // 7급은 아직 없음 (네더)
-        assertEquals(null, t.upgradeCost("knight", "chestplate", 7));
+        // 7급(오버월드 최대, 2026-11-21) = 성역 장갑판 5 + 장갑판 5 + 정밀 3 + 골조 2
+        assertEquals(5, t.upgradeCost("knight", "chestplate", 7).get(0).count());
+        assertEquals(null, t.upgradeCost("knight", "chestplate", 8));
     }
 
     @Test

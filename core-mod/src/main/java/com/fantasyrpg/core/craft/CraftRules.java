@@ -121,8 +121,8 @@ public final class CraftRules {
         return target <= 3 ? 4 : 5;
     }
 
-    /** 이번에 다루는 최고 승급 등급 (7~10급은 네더, 다음 작업) */
-    public static final int MAX_UPGRADE = 6;
+    /** 이번에 다루는 최고 승급 등급: 오버월드 최대 7급 (2026-11-21, 12장 완료). 8~10급은 네더, 다음 작업 */
+    public static final int MAX_UPGRADE = 7;
 
     /**
      * 방어구 제작표 (armor_crafting/costs.json):

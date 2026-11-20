@@ -70,14 +70,15 @@ class HeirloomRulesTest {
     }
 
     @Test
-    @DisplayName("각성 선물: 진행 등급이 오르면 새로 열린 등급 강화 재료 — 2~6급 선물이 강화 비용과 똑같음 (메인 진행만으로 막히지 않음)")
+    @DisplayName("각성 선물: 진행 등급이 오르면 새로 열린 등급 강화 재료 — 2~7급 선물이 강화 비용과 똑같음 (메인 진행만으로 막히지 않음)")
     void stageUpGift() throws Exception {
         HeirloomSettings s = shipped();
         assertEquals(null, HeirloomRules.stageUpGift(1, s));
         assertEquals("fantasyrpg:reinforced_alloy", HeirloomRules.stageUpGift(2, s).parts().get(0).item());
-        for (int g = 2; g <= 6; g++) assertEquals(s.enhance().get(g), HeirloomRules.stageUpGift(g, s));
-        // 7급부터는 시험용 네더라이트 조각 그대로
-        assertEquals("minecraft:netherite_scrap", s.enhance().get(7).parts().get(0).item());
+        for (int g = 2; g <= 7; g++) assertEquals(s.enhance().get(g), HeirloomRules.stageUpGift(g, s));
+        // 7급(오버월드 최대)은 장비 부품, 8급부터는 시험용 네더라이트 조각 그대로
+        assertEquals("fantasyrpg:armor_plate", s.enhance().get(7).parts().get(0).item());
+        assertEquals("minecraft:netherite_scrap", s.enhance().get(8).parts().get(0).item());
     }
 
     @Test

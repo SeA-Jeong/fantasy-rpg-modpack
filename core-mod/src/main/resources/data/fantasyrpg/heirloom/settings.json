@@ -1,5 +1,5 @@
 {
-  "_comment": "유산 무기 [초안] (기획 v0.4 6.1, 프로젝트 문서 claude/유산무기_초안.md). traits: 각성 특성 단계당 효과. enhance: 목표 등급마다 강화 재료 — 정식 재료(장비제작 v2) 전까지 시험용 임시. stage_up_materials: 진행 등급이 오를 때 새로 열린 등급의 강화 재료를 줌(2026-11-19, 챕터 퀘스트 v2 3번) 2026-11-20: 2~6급은 장비 부품(작업대 조합)으로 교체(claude/작업대_방어구제작_초안.md 6절), 7~10급은 시험용 그대로.",
+  "_comment": "유산 무기 [초안] (기획 v0.4 6.1, 프로젝트 문서 claude/유산무기_초안.md). traits: 각성 특성 단계당 효과. enhance: 목표 등급마다 강화 재료 — 정식 재료(장비제작 v2) 전까지 시험용 임시. stage_up_materials: 진행 등급이 오를 때 새로 열린 등급의 강화 재료를 줌(2026-11-19, 챕터 퀘스트 v2 3번) 2026-11-20: 2~6급은 장비 부품(작업대 조합)으로 교체(claude/작업대_방어구제작_초안.md 6절), 7~10급은 시험용 그대로. 2026-11-21: 7급(오버월드 최대)도 장비 부품 [초안], 8~10급은 시험용 그대로.",
   "traits": {
     "attack": {
       "physical_bonus": 0.04
@@ -82,8 +82,20 @@
     },
     {
       "to": 7,
-      "item": "minecraft:netherite_scrap",
-      "count": 2
+      "items": [
+        {
+          "item": "fantasyrpg:armor_plate",
+          "count": 10
+        },
+        {
+          "item": "fantasyrpg:mana_conductor",
+          "count": 8
+        },
+        {
+          "item": "fantasyrpg:precision_part",
+          "count": 6
+        }
+      ]
     },
     {
       "to": 8,
