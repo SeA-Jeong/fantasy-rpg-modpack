@@ -26,10 +26,9 @@ public class GridCategory implements IRecipeCategory<GridCategory.Display> {
     public static final RecipeType<Display> TYPE = RecipeType.create(FantasyRpgCore.MOD_ID, "grid", Display.class);
     private static final int W = 150, H = 104, OUT_X = 122, OUT_Y = 36;
 
-    private final IDrawable background, icon;
+    private final IDrawable icon;
 
     public GridCategory(IGuiHelper gui) {
-        this.background = gui.createBlankDrawable(W, H);
         this.icon = gui.createDrawableItemStack(new ItemStack(CraftRegistry.BENCH_5_ITEM.get()));
     }
 
@@ -48,15 +47,12 @@ public class GridCategory implements IRecipeCategory<GridCategory.Display> {
         return icon;
     }
 
-    // JEI 판에 따라 크기를 묻는 방법이 달라 둘 다 둠 (@Override 없이)
-    public IDrawable getBackground() {
-        return background;
-    }
-
+    @Override
     public int getWidth() {
         return W;
     }
 
+    @Override
     public int getHeight() {
         return H;
     }

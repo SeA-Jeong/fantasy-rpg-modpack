@@ -11,11 +11,11 @@
 |---|---|
 | 기준 기획 | `docs/design/직업_전투시스템_v0.4.md` |
 | 구현 진행 | 8.3장 **1단계(피해 계산 엔진) 완료**. **방어 등급 상한은 2026-11-18 폐지**, 바닐라 갑옷은 원래 수치로 복원. **계열 방어구 20종(5계열×4부위, 1~10급, 방어력 최대 30)** 등록, **룬석 소켓(6종·4등급, 제작대 끼우기·빼기·합성·연마)**, **플레이어 성장 최소판(직업·레벨·경험치·SP)**, **실제 전투 연결(직업 무기 6종, 근접·활·지팡이 기본 공격 → RPG 피해, PvP 차단)**, **스킬트리 틀(투자·되돌리기·초기화권·장착칸, 코어 자원, 공통 패시브, K 화면·Z X C V B·HUD)**, **6직업 스킬트리 156노드 완성(1~6단 + 혼합, 궁극기 24·마스터리 24)**, **서장 NPC 직업 선택(magiccity 개인 퀘스트 1장 "왕의 소명")**, **기사 기본 가드·패리, 바닐라 방패 금지, 장착 프리셋 3개**, **유산 무기(하나뿐인 성장형 주무기)**, **2~12장 챕터 퀘스트(magiccity)·각성 강화 재료**, **보스 고정 피해 패턴(magiccity)·직업 방어 통과**, **장별 중간 단계(magiccity)·중간 단계 경험치**, **챕터 보스 인스턴스 전장·필드보스 꾸러미(magiccity)** — 모두 게임 확인 전. **Better Combat 연동 준비**(순수 로직·컴파일 의존성)는 `main`에 있음 |
-| 플랫폼 | Minecraft 1.21.1 / NeoForge **21.1.266** / Java 21 / ModDevGradle 2.0.141. **필수 의존 모드 magiccity** (JitPack `com.github.aswq0258:magic-city-mod:8d2c924` (하수도 납골당 물 샘 수정·`fix crypt`, 전장 종료 멈춤·좀벌레 사라짐 수정, 2026-11-19 인스턴스 전장·필드보스 꾸러미 포함, 2026-11-19 퀘스트 API·NPC 상시 선택지·2~12장 챕터 퀘스트·보스 고정 피해 `isBossFixed`·중간 단계 `QuestStepCompleteEvent`), `gradle.properties`의 `magiccity_commit`) |
+| 플랫폼 | Minecraft 1.21.1 / NeoForge **21.1.266** / Java 21 / ModDevGradle 2.0.141. **필수 의존 모드 magiccity** (JitPack `com.github.aswq0258:magic-city-mod:4b0cb3d` (2026-11-20 보스 방 복사 전장·보스 꾸러미 지역 소재, 하수도 납골당 물 샘 수정·`fix crypt`, 전장 종료 멈춤·좀벌레 사라짐 수정, 2026-11-19 인스턴스 전장·필드보스 꾸러미 포함, 2026-11-19 퀘스트 API·NPC 상시 선택지·2~12장 챕터 퀘스트·보스 고정 피해 `isBossFixed`·중간 단계 `QuestStepCompleteEvent`), `gradle.properties`의 `magiccity_commit`) |
 | CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄). 모드 구성이 바뀌면 `modpack smoke`가 외부 모드 18개 + 우리 모드 2개로 **NeoForge 전용 서버를 실제 기동** |
 | 1차 외부 모드 구성 | `modpack/mods.lock.json` (필수 13 + 권장 5, 버전 고정). 2026-11-17 전용 서버 기동 통과 (run 44061047052). 클라이언트 실행은 아직 확인 안 함 |
 | 우리 모드 3개 | `fantasyrpg`(이 저장소), `magiccity`(JitPack), `royalqol`(클라이언트 전용 편의 모드, `magic-city-mod` 저장소 `royalqol/`, `mods.lock.json`의 `royalqol.commit`으로 빌드 — `tools/build_royalqol.sh`). 테스트 팩과 서버 기동 검사에 셋 다 들어감 |
-| 최신 테스트 팩 | **v0.19.0-test.3** (챕터 보스 인스턴스 전장 + 필드보스 꾸러미 + 장별 중간 단계 + 심층 광산·보라빛 숲 병합 + 스킬트리 156노드 + 서장 NPC 직업 선택 + 기사 가드·프리셋 + 유산 무기 + 2~12장 챕터 퀘스트 + 보스 고정 피해 패턴, 게임 확인 전 — Releases 탭). 통합 팩 `magic-kingdom-testpack-*.mrpack`(우리 모드 3개 + 외부 18개, Prism 가져오기) + `fantasyrpg-testpack-*.zip`. 이전 판은 v0.2~v0.18 |
+| 최신 테스트 팩 | **v0.20.0-test.1** (보스 방 복사 전장 + 확장 작업대·방어구 제작법 + 챕터 보스 인스턴스 전장 + 필드보스 꾸러미 + 장별 중간 단계 + 심층 광산·보라빛 숲 병합 + 스킬트리 156노드 + 서장 NPC 직업 선택 + 기사 가드·프리셋 + 유산 무기 + 2~12장 챕터 퀘스트 + 보스 고정 피해 패턴, 게임 확인 전 — Releases 탭). 통합 팩 `magic-kingdom-testpack-*.mrpack`(우리 모드 3개 + 외부 18개, Prism 가져오기) + `fantasyrpg-testpack-*.zip`. 이전 판은 v0.2~v0.18 |
 | 게임 테스트 | `docs/TESTING.md`의 v0.1·v0.2 체크리스트 |
 
 ### 테스트 팩 Release 만드는 법
@@ -202,6 +202,15 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 ---
 
 ## 작업 기록
+
+### 2026-11-20 — 보스 방 복사 전장·확장 작업대·방어구 제작법 v0.20 (fantasyrpg 0.20.0, magiccity `89538b4`·`4b0cb3d`)
+- 사용자 결정(두 초안 모두 추천안): `claude/보스방복사전장_초안.md`(처음 입장 때 뜨기, 보이지 않는 벽, 자석석만 빼기) + 크리에이티브 예외 없앰, `claude/작업대_방어구제작_초안.md`(모양 없음, JEI, 지역 소재 = 챕터 보스 + 지역 필드보스, 유산 2~6급 부품)
+- magiccity: `arena/BossRoomRules`(순수, JUnit 4)·`BossRooms`(뜨기·저장 `magiccity/boss_rooms/chN.nbt`·깔기·정리·경계·스폰 자리), 데이터 `boss_rooms/*.json` 12, `/magiccity boss room-capture|room-clear`, 보스 꾸러미 지역 소재(`boss_materials` 7 + 필드보스 5), 다른 모드 아이템 없으면 건너뜀
+- fantasyrpg `craft/`: `CraftRules`(순수, JUnit 5), `CraftData`(grid_recipes 13·armor_crafting/costs.json), `GridCrafting`(승급 먼저, 그다음 조합식), `GridCraftMenu`·`GridBenchBlock`·`client/GridCraftScreen`(그림 없이 칸 그림), `FamilyArmorCreateRecipe`(일반 제작대 1급), `CraftRegistry`(블록 2·재료 17·메뉴 2·창작 탭), `compat/jei`(JEI API 19.51.0.418 compileOnly, maven.blamejared.com). 유산 `HeirloomSettings.Cost` 여러 재료(`items`), 2~6급 부품
+- 알려진 한계: 전용 서버에 접속한 클라이언트는 조합식 데이터가 없어 JEI 분류가 비어 보임(혼자 하기는 보임) → 동기화 필요. 재료 그림은 바닐라 임시. 7~10급 승급·분해·계열 전환 없음
+- CI: JitPack 첫 요청 시간 초과·429 → 몇 분 뒤 다시 실행해 통과. JUnit 92개, 서버 기동 검사 통과
+- 복구 지점 `backup/main-before-workbench-2026-11-20`(fantasyrpg), `backup/main-before-boss-rooms-2026-11-20`(magiccity)
+- 게임 확인: 하지 않음 → `docs/TESTING.md` v0.20 R1~R9·W1~W11, 빠른 확인 13회차
 
 ### 2026-11-19 — 챕터 보스 인스턴스 전장·필드보스 꾸러미 v0.19 (magiccity `357cfee`)
 - 사용자 결정(초안 `claude/인스턴스전장_구현초안.md` v1→v3): FTB 파티 전원 투표(30초, 만장일치, 거절·시간 초과 뒤 10초), 투표 대상·입장 = 접속 중인 파티원 전원(어디에 있든), 전장 지형은 나중에(1차 공용 기본 + 6장 물 돔), 인벤토리 보존·사망 = 관전·부활은 아이템만(부활의 기도 허용), 챕터당 한 팀, 30분, 보스 12종 한 번에. 필드보스: 15분 재등장 유지, 기여도 없이 파티원 꾸러미, 첫 처치 큰 보상 / 반복 작은 보상, 반복에도 다이아 1·철 3
