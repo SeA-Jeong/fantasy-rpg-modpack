@@ -211,7 +211,8 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - magiccity: `boss/BossDataRules`(순수, JUnit 6) · `BossData`(로더 3개 `boss_stats`·`field_boss_stats`·`boss_entity`, 값을 준 데이터팩 이름 기억, 외부 몹 소환 `loadEntityRecursive` + 기준점 `NbtUtils.writeBlockPos`) · `ManagedBoss.wake/fight`(외부면 기술·부하·광폭화·대상 지정·묶어 두기·체력바 끔) · `Progression`(등급표 데이터) · `FieldBosses` · `/magiccity boss stats [키|장]`. 데이터 12 + `_grades` + 10 + `boss_entity/parasite.json`
 - 팩: `modpack/local-mods/fantasybosses-0.7.2.2.jar`(sha1 b9bb5631…), build.yml 테스트 팩·통합 팩에 넣고 모드 수 22, 서버 기동 검사 1단계(없음 → 기본 보스 1)·2단계(몹 있음 1) 로그 확인, 견본 데이터팩 `modpack/datapacks/magiccity_boss_stats_sample`(지금 값 + 안내.md)
 - 알려진 한계: 라디키온은 경로가 왕국 대륙 둥지 좌표(x −2895~−2825, z −895~−825)에 고정이라 전장에서는 움직이지 않음, 전투도 아직 없음 → 외부 모드가 `RadicionAnchor`(정수 배열 x,y,z = 전장 안 보스 자리)를 읽어 상대 좌표로 재생하도록 바뀌어야 함(초안 3절). 기준점 기준: 왕국 대륙 = RootDungeon `BOSS_X/Y/Z`
-- 복구 지점 `backup/main-before-boss-data-2026-11-20`(magiccity)
+- CI: magiccity JUnit(새 6개 포함) 통과, fantasyrpg JUnit 92·서버 기동 검사 통과 — 1단계(우리 모드만) `몹 없음 → 기본 보스 1`, 2단계(전체 22개) `FantasyBosses 0.7.2.2` 불러짐·`몹 있음 1`. 사전 릴리스 `v0.20.0-test.3`
+- 복구 지점 `backup/main-before-boss-data-2026-11-20`(magiccity), `backup/main-before-external-boss-2026-11-20`(fantasyrpg)
 - 게임 확인: 하지 않음 → `docs/TESTING.md` v0.20 X1~X8, 빠른 확인 14회차
 
 ### 2026-11-20 — 보스 방 복사 전장·확장 작업대·방어구 제작법 v0.20 (fantasyrpg 0.20.0, magiccity `89538b4`·`4b0cb3d`)
