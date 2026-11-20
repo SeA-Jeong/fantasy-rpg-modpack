@@ -15,7 +15,7 @@ on:
       - 'tools/build_mrpack.py'
       - 'tools/check_mods.py'
       - '.github/workflows/modpack-smoke.yml'
-      - 'modpack/local-mods/**'
+      - 'tools/build_fantasybosses.sh'
 
 concurrency:
   group: smoke-${{ github.ref }}
@@ -114,8 +114,8 @@ jobs:
 
       - name: "통합 팩(.mrpack) 만들기·설치"
         run: |
-          # 파일로 넣는 외부 모드(fantasybosses, GeckoLib 필요)는 1단계 뒤에 더함
-          cp modpack/local-mods/*.jar ours/
+          # 챕터 보스 모드 fantasybosses(GeckoLib 필요)는 1단계 뒤에 더함 (magic-city-mod 고정 커밋 빌드)
+          bash tools/build_fantasybosses.sh modpack/mods.lock.json ours
           python3 tools/build_mrpack.py --lock modpack/mods.lock.json --resolved external/resolved.json \
             --ours ours --datapacks modpack/datapacks --guide docs/TESTING.md --version smoke --out smoke.mrpack
           python3 tools/install_mrpack.py smoke.mrpack packinst
@@ -139,7 +139,7 @@ jobs:
           grep -E "Royal QoL .*\(royalqol\)" server/logs/latest.log
           # 외부 보스 모드가 서버에서 불러지고 3장 연결이 그 몹을 찾는지 (2026-11-20)
           grep -E "\[보스\] 외부 보스 연결 1개 로드 \(몹 있음 1, 몹 없음 → 기본 보스 0\), 오류 0건" server/logs/latest.log
-          grep -E "FantasyBosses 0\.7\.5\.1 \(fantasybosses\)" server/logs/latest.log
+          grep -E "FantasyBosses 0\.8\.0 \(fantasybosses\)" server/logs/latest.log
 
       - name: 로그 보관
         if: always()

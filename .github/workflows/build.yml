@@ -56,8 +56,8 @@ jobs:
           # 캐시에 예전 커밋 jar가 남아 있을 수 있어서 gradle.properties 의 커밋 jar 하나만 고른다
           find ~/.gradle/caches -path '*com.github.aswq0258*' -name "magic-city-mod-${MC_COMMIT}.jar" -exec cp {} testpack/mods/ \;
           bash tools/build_royalqol.sh modpack/mods.lock.json testpack/mods
-          # 주소가 없어 파일로 넣는 외부 모드 (fantasybosses — 3장 보스, 2026-11-20)
-          cp modpack/local-mods/*.jar testpack/mods/
+          # 챕터 보스 모드 fantasybosses (magic-city-mod 고정 커밋 빌드, 2026-11-20)
+          bash tools/build_fantasybosses.sh modpack/mods.lock.json testpack/mods
           ls testpack/mods
           # magiccity jar가 게임에 넣을 수 있는 모드 jar인지 확인
           unzip -l testpack/mods/magic-city-mod-*.jar | grep -q 'META-INF/neoforge.mods.toml' && echo 'magiccity mods.toml 확인' || { echo 'magiccity jar에 neoforge.mods.toml 없음'; exit 1; }
@@ -72,7 +72,7 @@ jobs:
           name: fantasyrpg-testpack
           path: testpack/
 
-      # 통합 테스트 팩: 우리 모드 3개 + 파일로 넣는 외부 모드(local-mods) + 외부 모드 18개(주소만). Prism Launcher 에서 가져오기 한 번으로 설치
+      # 통합 테스트 팩: 우리 모드 3개 + 챕터 보스 모드 fantasybosses + 외부 모드 18개(주소만). Prism Launcher 에서 가져오기 한 번으로 설치
       - name: 통합 팩(.mrpack) 만들기
         run: |
           VER="$(grep '^mod_version=' core-mod/gradle.properties | cut -d= -f2)-$(git rev-parse --short HEAD)"
@@ -80,10 +80,10 @@ jobs:
           python3 tools/build_mrpack.py --lock modpack/mods.lock.json --resolved external/resolved.json \
             --ours testpack/mods --datapacks modpack/datapacks --guide docs/TESTING.md --version "$VER" \
             --out magic-kingdom-testpack.mrpack
-          # launcher 처럼 설치해 보고(주소·해시 확인) 모드 22개(우리 3 + 파일 1 + 주소 18)가 모이는지 확인
+          # launcher 처럼 설치해 보고(주소·해시 확인) 모드 22개(우리 3 + fantasybosses + 주소 18)가 모이는지 확인
           python3 tools/install_mrpack.py magic-kingdom-testpack.mrpack packcheck
           test "$(ls packcheck/mods/*.jar | wc -l)" -eq 22
-          test -f packcheck/mods/fantasybosses-0.7.5.1.jar
+          test -f packcheck/mods/fantasybosses-0.8.0.jar
 
       - name: 통합 팩 업로드
         uses: actions/upload-artifact@v4
