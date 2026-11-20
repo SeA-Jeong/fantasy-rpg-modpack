@@ -30,6 +30,8 @@ public class GridCraftMenu extends AbstractContainerMenu {
     private final Player player;
     /** 0 = 문제없음, N = 진행 N급 필요 */
     private final DataSlot needGrade = DataSlot.standalone();
+    /** 결과와 함께 줄 것 (분해, 서버만) */
+    private List<ItemStack> extras = List.of();
 
     public static final int GRID_X = 8, GRID_Y = 18;
 
@@ -81,8 +83,10 @@ public class GridCraftMenu extends AbstractContainerMenu {
         if (!out.isEmpty() && MagicCityApi.grade(sp) < r.needGrade()) {
             needGrade.set(r.needGrade());
             out = ItemStack.EMPTY;
+            extras = List.of();
         } else {
             needGrade.set(0);
+            extras = r.extras();
         }
         result.setItem(0, out);
         setRemoteSlot(0, out);
@@ -103,6 +107,11 @@ public class GridCraftMenu extends AbstractContainerMenu {
         @Override
         public void onTake(Player p, ItemStack stack) {
             stack.onCraftedBy(p.level(), p, stack.getCount());
+            for (ItemStack ex : extras) {                                                      // 분해: 나머지 재료 (2026-11-21)
+                ItemStack give = ex.copy();
+                if (!p.getInventory().add(give)) p.drop(give, false);
+            }
+            extras = List.of();
             for (int i = 0; i < craft.getContainerSize(); i++) {
                 if (!craft.getItem(i).isEmpty()) craft.removeItem(i, 1);
             }

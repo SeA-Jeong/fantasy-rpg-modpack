@@ -23,6 +23,12 @@ public final class CraftData {
 
     private static volatile List<GridRecipe> recipes = List.of();
     private static volatile ArmorTable armor;
+    private static volatile ReworkRules.Settings rework = ReworkRules.Settings.DEFAULT;
+
+    /** 분해·계열 전환 설정 (2026-11-21) */
+    public static ReworkRules.Settings rework() {
+        return rework;
+    }
 
     public static List<GridRecipe> recipes() {
         return recipes;
@@ -84,6 +90,9 @@ public final class CraftData {
                 t.upgrade().values().forEach(m -> m.values().forEach(l -> l.forEach(i -> check(i.id()))));
                 t.create().values().forEach(c -> c.items().forEach(i -> check(i.id())));
                 armor = t;
+                rework = ReworkRules.Settings.parse(json.getAsJsonObject());
+                FantasyRpgCore.LOGGER.info("[제작] 분해: {} + 갑옷 → 재료 {}%, 계열 전환: 핵심 부품은 {}급부터", rework.dismantleTool(),
+                        Math.round(rework.dismantleRatio() * 100), rework.convertCoreFromTier());
                 FantasyRpgCore.LOGGER.info("[제작] 방어구 제작표 로드: 계열 {}개, 승급 2~{}급, 오류 0건", t.weight().size(), CraftRules.MAX_UPGRADE);
             } catch (RuntimeException ex) {
                 FantasyRpgCore.LOGGER.error("[제작] costs.json 읽기 실패, 이전 값 유지: {}", ex.getMessage());
