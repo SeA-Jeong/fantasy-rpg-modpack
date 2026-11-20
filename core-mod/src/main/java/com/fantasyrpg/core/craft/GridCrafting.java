@@ -36,6 +36,13 @@ public final class GridCrafting {
         return new ItemStack(it, count);
     }
 
+    /** 조합식 결과 (룬석·연마재는 등급을 붙임) */
+    public static ItemStack resultOf(CraftRules.GridRecipe r) {
+        ItemStack s = stackOf(r.result(), r.resultCount());
+        if (r.resultGrade() > 0) s.set(com.fantasyrpg.core.gear.rune.RuneRegistry.RUNE_GRADE.get(), r.resultGrade());
+        return s;
+    }
+
     /** @param bench 작업대 크기 (4·5) */
     public static Result find(int bench, List<ItemStack> grid) {
         List<ItemStack> filled = new ArrayList<>();
@@ -45,7 +52,7 @@ public final class GridCrafting {
         if (up != null) return up;
         for (GridRecipe r : CraftData.recipes()) {
             if (r.grid() > bench) continue;
-            if (CraftRules.matches(r.ingredients(), filled, GridCrafting::accepts)) return new Result(stackOf(r.result(), r.resultCount()), r.grade());
+            if (CraftRules.matches(r.ingredients(), filled, GridCrafting::accepts)) return new Result(resultOf(r), r.grade());
         }
         return Result.NONE;
     }

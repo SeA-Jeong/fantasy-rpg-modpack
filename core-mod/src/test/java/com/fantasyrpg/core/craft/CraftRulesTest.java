@@ -108,11 +108,13 @@ class CraftRulesTest {
     @DisplayName("배포 작업대 조합식: 모두 읽히고, 결과가 겹치지 않고, 재료로 쓰는 우리 부품은 모두 만드는 법이 있거나 보스 소재")
     void shippedRecipes() throws IOException {
         List<GridRecipe> rs = recipes();
-        assertEquals(13, rs.size());
+        assertEquals(21, rs.size());   // 부품 13 + 중급 룬석 6 + 중급·상급 연마재 2 (2026-11-21)
         Set<String> results = new HashSet<>();
-        for (GridRecipe r : rs) assertTrue(results.add(r.result()), "결과 겹침: " + r.result());
+        for (GridRecipe r : rs) assertTrue(results.add(r.resultKey()), "결과 겹침: " + r.resultKey());
+        for (GridRecipe r : rs) results.add(r.result());
         Set<String> drops = Set.of("fantasyrpg:sanctum_crystal", "fantasyrpg:dwarf_steel", "fantasyrpg:dragon_scale",
-                "fantasyrpg:moonsilver_thread", "fantasyrpg:ancient_glyphstone", "fantasyrpg:workbench_4x4");
+                "fantasyrpg:moonsilver_thread", "fantasyrpg:ancient_glyphstone", "fantasyrpg:workbench_4x4",
+                "fantasyrpg:rune_ore");   // 룬 원석 = 몬스터·보스 드롭
         Map<String, Integer> gradeOf = new HashMap<>();
         for (GridRecipe r : rs) gradeOf.put(r.result(), r.grade());
         for (GridRecipe r : rs) {

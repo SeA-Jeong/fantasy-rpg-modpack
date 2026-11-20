@@ -1,13 +1,16 @@
 {
-  "_comment": "[시험용 임시] 정식 재료는 장비제작시스템 문서에서 정함",
+  "_comment": "[초안] 추출 도구 — 룬 원석 1 + 철 주괴 2",
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
     {
+      "item": "fantasyrpg:rune_ore"
+    },
+    {
       "item": "minecraft:iron_ingot"
     },
     {
-      "item": "minecraft:amethyst_shard"
+      "item": "minecraft:iron_ingot"
     }
   ],
   "result": {

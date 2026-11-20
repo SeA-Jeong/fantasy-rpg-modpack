@@ -27,8 +27,17 @@ public final class CraftRules {
         }
     }
 
-    /** 작업대 조합식: 작업대 크기(3·4·5), 필요한 진행 등급, 재료, 결과 */
-    public record GridRecipe(String name, int grid, int grade, List<Entry> ingredients, String result, int resultCount) {
+    /** 작업대 조합식: 작업대 크기(3·4·5), 필요한 진행 등급, 재료, 결과. resultGrade = 결과 룬석·연마재 등급(0 = 없음) */
+    public record GridRecipe(String name, int grid, int grade, List<Entry> ingredients, String result, int resultCount, int resultGrade) {
+        public GridRecipe(String name, int grid, int grade, List<Entry> ingredients, String result, int resultCount) {
+            this(name, grid, grade, ingredients, result, resultCount, 0);
+        }
+
+        /** 결과를 구별하는 이름 (같은 아이템이라도 등급이 다르면 다른 결과) */
+        public String resultKey() {
+            return resultGrade > 0 ? result + "@" + resultGrade : result;
+        }
+
         public int slots() {
             int n = 0;
             for (Entry e : ingredients) n += e.count();
@@ -55,7 +64,9 @@ public final class CraftRules {
         if (grade < 1 || grade > 10) throw new IllegalArgumentException("grade 는 1~10: " + grade);
         List<Entry> in = entries(o.getAsJsonArray("ingredients"));
         JsonObject r = o.getAsJsonObject("result");
-        GridRecipe g = new GridRecipe(name, grid, grade, List.copyOf(in), r.get("item").getAsString(), r.has("count") ? r.get("count").getAsInt() : 1);
+        int rg = r.has("rune_grade") ? r.get("rune_grade").getAsInt() : 0;
+        if (rg < 0 || rg > 4) throw new IllegalArgumentException(name + ": rune_grade 는 1~4");
+        GridRecipe g = new GridRecipe(name, grid, grade, List.copyOf(in), r.get("item").getAsString(), r.has("count") ? r.get("count").getAsInt() : 1, rg);
         if (g.slots() > grid * grid) throw new IllegalArgumentException(name + ": 재료 " + g.slots() + "칸이 " + grid + "×" + grid + " 작업대보다 많음");
         if (g.slots() == 0) throw new IllegalArgumentException(name + ": 재료 없음");
         return g;

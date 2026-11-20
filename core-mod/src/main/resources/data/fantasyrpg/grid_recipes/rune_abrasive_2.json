@@ -1,0 +1,20 @@
+{
+  "_comment": "[초안] 중급 연마재 — 4×4, 진행 2급",
+  "grid": 4,
+  "grade": 2,
+  "ingredients": [
+    {
+      "item": "fantasyrpg:rune_ore",
+      "count": 2
+    },
+    {
+      "item": "fantasyrpg:reinforced_alloy",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "fantasyrpg:rune_abrasive",
+    "count": 1,
+    "rune_grade": 2
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "_comment": "[초안] 중급 룬석 — 4×4, 진행 2급, 룬 원석 4 + 하급 재료 2배 + 지역 소재 아무거나 1",
+  "grid": 4,
+  "grade": 2,
+  "ingredients": [
+    {
+      "item": "fantasyrpg:rune_ore",
+      "count": 4
+    },
+    {
+      "item": "minecraft:rabbit_foot",
+      "count": 2
+    },
+    {
+      "tag": "fantasyrpg:regional_materials",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "fantasyrpg:rune_leap",
+    "count": 1,
+    "rune_grade": 2
+  }
+}

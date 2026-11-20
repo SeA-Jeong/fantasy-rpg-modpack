@@ -64,6 +64,9 @@ public final class FantasyRpgCore {
         RuneRegistry.register(modEventBus);
         NeoForge.EVENT_BUS.addListener(RuneEvents::onAnvil);
         NeoForge.EVENT_BUS.addListener(RuneEvents::onTooltip);
+        // 룬석 몬스터 드롭 (2026-11-21)
+        NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.rune.RuneDrops::onAddReloadListeners);
+        NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.rune.RuneDrops::onDrops);
         // 바닐라 전투 인챈트 정리 (정책 P2, 2026-11-21)
         NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.enchant.CombatEnchants::onLogin);
         NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.enchant.CombatEnchants::onPlayerTick);

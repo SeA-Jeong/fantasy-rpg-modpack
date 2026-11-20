@@ -1,0 +1,24 @@
+{
+  "_comment": "[초안] 상급 연마재 — 5×5, 진행 4급",
+  "grid": 5,
+  "grade": 4,
+  "ingredients": [
+    {
+      "item": "fantasyrpg:rune_ore",
+      "count": 4
+    },
+    {
+      "item": "fantasyrpg:precision_part",
+      "count": 1
+    },
+    {
+      "item": "minecraft:diamond",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "fantasyrpg:rune_abrasive",
+    "count": 1,
+    "rune_grade": 3
+  }
+}

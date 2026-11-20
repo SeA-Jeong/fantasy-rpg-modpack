@@ -53,12 +53,15 @@ public final class CraftRegistry {
     /** 지역 소재 (보스 꾸러미) */
     public static final List<String> REGIONAL = List.of("sanctum_crystal", "dwarf_steel", "dragon_scale", "moonsilver_thread", "ancient_glyphstone");
     /** 계열 핵심 부품 */
+    /** 룬석 공통 재료 (2026-11-21, claude/룬석_재료드롭_초안.md) */
+    public static final List<String> RUNE_MATS = List.of("rune_ore");
     public static final List<String> CORES = List.of("sanctum_plate", "dwarf_steel_plate", "dragonscale_plate", "spirit_weave", "rune_frame");
 
     static {
         for (String id : PARTS) MATERIALS.put(id, ITEMS.registerSimpleItem(id));
         for (String id : REGIONAL) MATERIALS.put(id, ITEMS.registerSimpleItem(id));
         for (String id : CORES) MATERIALS.put(id, ITEMS.registerSimpleItem(id));
+        for (String id : RUNE_MATS) MATERIALS.put(id, ITEMS.registerSimpleItem(id));
     }
 
     public static final DeferredHolder<MenuType<?>, MenuType<GridCraftMenu>> MENU_4 = MENUS.register("workbench_4x4",

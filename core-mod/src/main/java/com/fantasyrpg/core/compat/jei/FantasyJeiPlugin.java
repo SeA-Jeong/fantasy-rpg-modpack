@@ -60,7 +60,7 @@ public class FantasyJeiPlugin implements IModPlugin {
         for (CraftRules.GridRecipe r : CraftData.recipes()) {
             List<List<ItemStack>> in = new ArrayList<>();
             addEntries(in, r.ingredients());
-            list.add(new GridCategory.Display(r.grid(), r.grade(), in, GridCrafting.stackOf(r.result(), r.resultCount()), false));
+            list.add(new GridCategory.Display(r.grid(), r.grade(), in, GridCrafting.resultOf(r), false));
         }
         CraftRules.ArmorTable t = CraftData.armor();
         if (t != null) {

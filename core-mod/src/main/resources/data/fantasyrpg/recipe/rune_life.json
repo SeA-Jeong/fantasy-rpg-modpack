@@ -1,20 +1,18 @@
 {
-  "_comment": "[시험용 임시] 하급 룬석 제작법. 정식 재료는 장비제작시스템 문서에서 정함",
-  "type": "minecraft:crafting_shaped",
+  "_comment": "[초안] 하급 룬석 — 룬 원석 2 + 종류별 재료 (claude/룬석_재료드롭_초안.md 4절)",
+  "type": "minecraft:crafting_shapeless",
   "category": "equipment",
-  "pattern": [
-    " A ",
-    "AKA",
-    " A "
-  ],
-  "key": {
-    "A": {
-      "item": "minecraft:amethyst_shard"
+  "ingredients": [
+    {
+      "item": "fantasyrpg:rune_ore"
     },
-    "K": {
+    {
+      "item": "fantasyrpg:rune_ore"
+    },
+    {
       "item": "minecraft:glistering_melon_slice"
     }
-  },
+  ],
   "result": {
     "id": "fantasyrpg:rune_life",
     "count": 1
