@@ -130,7 +130,7 @@ public final class SkillIds {
 
     /** 코어 문턱(bonus_core_min)이 걸리는 합산 키 */
     public static final java.util.Set<String> CORE_GATED = java.util.Set.of("all_damage_bonus", "skill_magic_bonus",
-            "skill_physical_bonus", "cooldown_rate", "basic_hit_core_high");
+            "skill_physical_bonus", "skill_haste", "basic_hit_core_high");
 
     // ── 5단 궁극기 (claude/6직업_궁극기_초안.md) ──
     public static final String U_W_RUIN = "fantasyrpg:warrior_ult_ruin";

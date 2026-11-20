@@ -4,6 +4,16 @@ package com.fantasyrpg.core.skills;
  * 스킬 효과의 순수 계산 (Minecraft 비의존, JUnit 대상). 기준: claude/전사마법사_스킬_초안.md.
  */
 public final class SkillMath {
+    /** 스킬 가속 → 재사용 대기 배율: 100 ÷ (100 + 가속). 가속 100 = 절반, 음수는 0으로 (2026-11-21) */
+    public static double hasteMult(double haste) {
+        return 100.0 / (100.0 + Math.max(0, haste));
+    }
+
+    /** 예전 % 감소 r 과 같은 효과를 내는 가속 = 100r ÷ (1 − r) */
+    public static double hasteFromRate(double rate) {
+        return 100.0 * rate / (1.0 - rate);
+    }
+
     private SkillMath() {
     }
 

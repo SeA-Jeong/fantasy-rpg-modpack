@@ -35,6 +35,11 @@ public enum ArmorFamily {
         return placeholderLook.equals("golden") ? "gold" : placeholderLook;
     }
 
+    /** 경갑 (엘프·마도): 직업 룬석을 끼울 수 있음 */
+    public boolean light() {
+        return this == ELF || this == ARCANE;
+    }
+
     public static ArmorFamily byId(String id) {
         for (ArmorFamily f : values()) {
             if (f.id().equals(id)) return f;

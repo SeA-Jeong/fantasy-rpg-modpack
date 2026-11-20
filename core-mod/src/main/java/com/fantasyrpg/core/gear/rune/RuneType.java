@@ -15,7 +15,11 @@ public enum RuneType {
     STEADY("iron_nugget"),
     GALE("feather"),
     LEAP("rabbit_foot"),
-    CLIMB("amethyst_shard");
+    CLIMB("amethyst_shard"),
+    /** 경갑 직업 룬석 (2026-11-21, claude/직업룬석_초안.md): 코어 자원 회복 */
+    CYCLE("lapis_lazuli"),
+    /** 경갑 직업 룬석: 스킬 가속 */
+    HASTE("redstone");
 
     private final String placeholderTexture;
 

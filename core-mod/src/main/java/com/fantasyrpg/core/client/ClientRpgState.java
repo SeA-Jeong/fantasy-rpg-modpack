@@ -61,6 +61,23 @@ public final class ClientRpgState {
         return total;
     }
 
+    /** 표시용 스킬 가속: 배운 패시브 skill_haste (기세 조건 있는 것은 뺌) + 능력치 (직업 룬석) */
+    public static double haste() {
+        double total = 0;
+        for (SkillNode n : nodes.values()) {
+            int r = ranks.getOrDefault(n.id(), 0);
+            if (r <= 0 || (n.kind() == SkillNode.Kind.MASTERY && !n.id().equals(activeMastery))) continue;
+            if (n.value("bonus_core_min", r) > 0) continue;
+            total += n.value("skill_haste", r);
+        }
+        var pl = net.minecraft.client.Minecraft.getInstance().player;
+        if (pl != null) {
+            var inst = pl.getAttribute(com.fantasyrpg.core.gear.RpgAttributes.SKILL_HASTE);
+            if (inst != null) total += inst.getValue();
+        }
+        return total;
+    }
+
     /** effect 를 강화하는 배운 패시브 이름 */
     public static List<String> modifiers(String effect) {
         List<String> out = new ArrayList<>();

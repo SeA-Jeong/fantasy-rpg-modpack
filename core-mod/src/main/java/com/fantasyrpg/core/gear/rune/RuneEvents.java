@@ -59,6 +59,8 @@ public final class RuneEvents {
             }
             tip.add(Math.min(1, tip.size()), Component.translatable("tooltip.fantasyrpg.rune_parts", parts)
                     .withStyle(ChatFormatting.GRAY));
+            if (def.lightOnly()) tip.add(Math.min(2, tip.size()),                         // 직업 룬석 (2026-11-21)
+                    Component.translatable("tooltip.fantasyrpg.rune_light_only").withStyle(ChatFormatting.GREEN));
         }
     }
 }

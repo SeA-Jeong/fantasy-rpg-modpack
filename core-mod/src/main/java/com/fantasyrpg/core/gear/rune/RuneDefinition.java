@@ -15,12 +15,17 @@ import java.util.Set;
  * @param parts 끼울 수 있는 부위
  * @param values 하급·중급·상급·최고급 값 (4개)
  * @param lightBonus 경갑(class "light")에 끼웠을 때 더하는 값 (질풍 +0.01 등, 없으면 0)
+ * @param lightOnly 경갑(엘프·마도)에만 끼울 수 있음 (직업 룬석, 2026-11-21)
  */
 public record RuneDefinition(RuneType type, String attribute, String operation, Set<ArmorPart> parts,
-                             double[] values, double lightBonus) {
+                             double[] values, double lightBonus, boolean lightOnly) {
     public static final int MIN_GRADE = 1;
     public static final int MAX_GRADE = 4;
     public static final List<String> OPERATIONS = List.of("add_value", "add_multiplied_base", "add_multiplied_total");
+
+    public RuneDefinition(RuneType type, String attribute, String operation, Set<ArmorPart> parts, double[] values, double lightBonus) {
+        this(type, attribute, operation, parts, values, lightBonus, false);
+    }
 
     public RuneDefinition {
         parts = Set.copyOf(parts);
@@ -44,7 +49,7 @@ public record RuneDefinition(RuneType type, String attribute, String operation, 
     public boolean equals(Object o) {
         return o instanceof RuneDefinition d && type == d.type && attribute.equals(d.attribute)
                 && operation.equals(d.operation) && parts.equals(d.parts)
-                && Arrays.equals(values, d.values) && lightBonus == d.lightBonus;
+                && Arrays.equals(values, d.values) && lightBonus == d.lightBonus && lightOnly == d.lightOnly;
     }
 
     @Override

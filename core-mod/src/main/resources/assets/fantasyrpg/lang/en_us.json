@@ -249,5 +249,10 @@
   "set.fantasyrpg.elf.two": "2-piece Windstep: +5% movement speed",
   "set.fantasyrpg.elf.four": "4-piece Forest Flow: skill cooldowns tick 1.5x while sprinting, +20% speed for 1s on sprint start (6s)",
   "set.fantasyrpg.arcane.two": "2-piece Mana Flow: +10% natural core regeneration",
-  "set.fantasyrpg.arcane.four": "4-piece Spell Amp: +8% skill magic damage, next basic attack after a skill +W×0.3 magic"
+  "set.fantasyrpg.arcane.four": "4-piece Spell Amp: +8% skill magic damage, next basic attack after a skill +W×0.3 magic",
+  "item.fantasyrpg.rune_cycle": "Rune of Cycling",
+  "item.fantasyrpg.rune_haste": "Rune of Haste",
+  "attribute.fantasyrpg.core_regen": "Core Regeneration",
+  "attribute.fantasyrpg.skill_haste": "Skill Haste",
+  "tooltip.fantasyrpg.rune_light_only": "Elf / Arcane armor only"
 }

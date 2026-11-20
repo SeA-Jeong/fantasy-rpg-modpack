@@ -77,7 +77,7 @@ public final class RuneRecipes {
             RuneDefinition def = RuneRegistry.def(type);
             if (def == null) return ItemStack.EMPTY;
             RuneSockets sockets = RuneRegistry.socketsOf(p[0]);
-            if (RuneRules.canInsert(def, armor.part(), sockets.runes().size(), RuneRegistry.socketCount(p[0]))
+            if (RuneRules.canInsert(def, armor.part(), sockets.runes().size(), RuneRegistry.socketCount(p[0]), armor.family().light())
                     != RuneRules.InsertResult.OK) {
                 return ItemStack.EMPTY;
             }

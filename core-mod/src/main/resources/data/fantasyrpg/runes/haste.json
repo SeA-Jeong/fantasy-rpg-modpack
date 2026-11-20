@@ -1,0 +1,17 @@
+{
+  "_comment": "[초안] 경갑 직업 룬석 — 가속 (claude/직업룬석_초안.md). 엘프·마도 갑옷 전용. 스킬 가속 +2/4/6/8 (재사용 대기 = 기본 × 100 ÷ (100 + 가속))",
+  "rune": "haste",
+  "attribute": "fantasyrpg:skill_haste",
+  "operation": "add_value",
+  "parts": [
+    "helmet",
+    "leggings"
+  ],
+  "values": [
+    2,
+    4,
+    6,
+    8
+  ],
+  "light_only": true
+}

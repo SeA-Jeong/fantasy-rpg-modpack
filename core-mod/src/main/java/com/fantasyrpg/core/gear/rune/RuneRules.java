@@ -29,10 +29,16 @@ public final class RuneRules {
     public record Socketed(RuneType type, int grade) {
     }
 
-    public enum InsertResult { OK, NO_FREE_SOCKET, WRONG_PART }
+    public enum InsertResult { OK, NO_FREE_SOCKET, WRONG_PART, LIGHT_ONLY }
 
     public static InsertResult canInsert(RuneDefinition def, ArmorPart part, int filled, int socketCount) {
+        return canInsert(def, part, filled, socketCount, true);
+    }
+
+    /** lightArmor = 엘프·마도 갑옷 (직업 룬석은 경갑에만) */
+    public static InsertResult canInsert(RuneDefinition def, ArmorPart part, int filled, int socketCount, boolean lightArmor) {
         if (!def.fits(part)) return InsertResult.WRONG_PART;
+        if (def.lightOnly() && !lightArmor) return InsertResult.LIGHT_ONLY;
         if (filled >= socketCount) return InsertResult.NO_FREE_SOCKET;
         return InsertResult.OK;
     }

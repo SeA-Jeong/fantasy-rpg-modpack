@@ -203,6 +203,8 @@ public final class SkillTreeScreen extends Screen {
         }
         int r = Math.max(1, ClientRpgState.ranks.getOrDefault(n.id(), 0));
         double cd = Math.max(0, n.cooldownTicks(r) + ClientRpgState.modSum(n.effect(), "cooldown_ticks"));
+        if (n.kind() != SkillNode.Kind.PASSIVE && n.kind() != SkillNode.Kind.MASTERY)
+            cd *= com.fantasyrpg.core.skills.SkillMath.hasteMult(ClientRpgState.haste());   // 스킬 가속 반영 (2026-11-21)
         if (cd > 0 || n.cost(r) > 0) {
             t.add(Component.translatable("screen.fantasyrpg.node.cd_cost", r, String.format("%.1f", cd / 20.0),
                     (int) n.cost(r)).withStyle(net.minecraft.ChatFormatting.AQUA));

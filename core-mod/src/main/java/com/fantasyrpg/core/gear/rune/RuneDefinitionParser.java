@@ -65,7 +65,8 @@ public final class RuneDefinitionParser {
         if (!(lightBonus >= 0) || !Double.isFinite(lightBonus)) {
             throw new IllegalArgumentException("light_bonus는 0 이상: " + lightBonus);
         }
-        return new RuneDefinition(type, attribute, operation, parts, values, lightBonus);
+        boolean lightOnly = json.has("light_only") && json.get("light_only").getAsBoolean();
+        return new RuneDefinition(type, attribute, operation, parts, values, lightBonus, lightOnly);
     }
 
     private static ArmorPart partOf(String suffix) {

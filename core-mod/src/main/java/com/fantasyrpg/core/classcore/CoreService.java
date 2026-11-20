@@ -61,7 +61,7 @@ public final class CoreService {
         double amount = d.gainFor(event);
         if (amount == 0) return;
         State s = STATES.computeIfAbsent(p.getUUID(), k -> new State());
-        s.value = d.add(s.value, amount);
+        s.value = d.add(s.value, amount > 0 ? amount * (1 + regenAttr(p)) : amount);   // 순환의 룬석: 늘어나는 양 +%
         s.lastGainTick = p.level().getGameTime();
         send(p, d, s, false);
     }
@@ -71,7 +71,7 @@ public final class CoreService {
         CoreDef d = def(p);
         if (d == null || amount <= 0) return;
         State s = STATES.computeIfAbsent(p.getUUID(), k -> new State());
-        s.value = d.add(s.value, amount);
+        s.value = d.add(s.value, amount > 0 ? amount * (1 + regenAttr(p)) : amount);   // 순환의 룬석: 늘어나는 양 +%
         s.lastGainTick = p.level().getGameTime();
         send(p, d, s, false);
     }
@@ -97,6 +97,12 @@ public final class CoreService {
         return true;
     }
 
+    /** 능력치 fantasyrpg:core_regen (순환의 룬석) */
+    private static double regenAttr(ServerPlayer p) {
+        var inst = p.getAttribute(com.fantasyrpg.core.gear.RpgAttributes.CORE_REGEN);
+        return inst == null ? 0 : Math.max(0, inst.getValue());
+    }
+
     public static void onPlayerTick(PlayerTickEvent.Post event) {
         if (!(event.getEntity() instanceof ServerPlayer p)) return;
         CoreDef d = def(p);
@@ -108,7 +114,7 @@ public final class CoreService {
         });
         double before = s.value;
         s.value = d.tick(s.value, p.level().getGameTime() - s.lastGainTick);
-        double setBonus = com.fantasyrpg.core.gear.armor.SetEffects.coreRegenBonus(p);              // 마도 2세트: 자연 회복 +%
+        double setBonus = com.fantasyrpg.core.gear.armor.SetEffects.coreRegenBonus(p) + regenAttr(p);   // 마도 2세트(자연 회복) + 순환의 룬석
         if (setBonus > 0 && s.value > before) s.value = d.clamp(s.value + (s.value - before) * setBonus);
         double regen = SkillPassives.sum(p, "core_regen"); // 대마법사·정화자 마스터리
         if (regen > 0) s.value = d.clamp(s.value + regen / 20.0);

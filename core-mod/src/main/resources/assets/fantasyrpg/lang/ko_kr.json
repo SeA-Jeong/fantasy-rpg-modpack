@@ -249,5 +249,10 @@
   "set.fantasyrpg.elf.two": "2부위 바람걸음: 이동 속도 +5%",
   "set.fantasyrpg.elf.four": "4부위 숲의 흐름: 질주 중 스킬 재사용 대기 1.5배 빨리, 질주 시작 1초 이동 속도 +20% (6초에 한 번)",
   "set.fantasyrpg.arcane.two": "2부위 마력 순환: 코어 자원 자연 회복 +10%",
-  "set.fantasyrpg.arcane.four": "4부위 주문 증폭: 스킬 마법 피해 +8%, 스킬 뒤 다음 기본 공격에 마법 피해 +W×0.3"
+  "set.fantasyrpg.arcane.four": "4부위 주문 증폭: 스킬 마법 피해 +8%, 스킬 뒤 다음 기본 공격에 마법 피해 +W×0.3",
+  "item.fantasyrpg.rune_cycle": "순환의 룬석",
+  "item.fantasyrpg.rune_haste": "가속의 룬석",
+  "attribute.fantasyrpg.core_regen": "코어 자원 회복",
+  "attribute.fantasyrpg.skill_haste": "스킬 가속",
+  "tooltip.fantasyrpg.rune_light_only": "엘프·마도 갑옷 전용"
 }

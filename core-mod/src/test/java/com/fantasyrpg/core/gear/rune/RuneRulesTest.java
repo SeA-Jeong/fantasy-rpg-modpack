@@ -39,7 +39,7 @@ class RuneRulesTest {
     }
 
     @Test
-    @DisplayName("데이터 6종: 문서 값·부위 (생명 투구·흉갑 +1~4, 질풍 신발 +2~5%·경갑 +1%p, 등반 +0.5)")
+    @DisplayName("데이터 8종: 문서 값·부위 (생명 투구·흉갑 +1~4, 질풍 신발 +2~5%·경갑 +1%p, 등반 +0.5)")
     void dataFiles() throws IOException {
         Map<RuneType, RuneDefinition> d = loadAll();
         assertEquals(4.0, d.get(RuneType.LIFE).value(4, false));
@@ -77,6 +77,27 @@ class RuneRulesTest {
         assertEquals(RuneRules.InsertResult.OK, RuneRules.canInsert(life, ArmorPart.HEAD, 0, 1));
         assertEquals(RuneRules.InsertResult.NO_FREE_SOCKET, RuneRules.canInsert(life, ArmorPart.HEAD, 1, 1));
         assertEquals(RuneRules.InsertResult.WRONG_PART, RuneRules.canInsert(life, ArmorPart.FEET, 0, 3));
+    }
+
+    @Test
+    @DisplayName("직업 룬석: 순환 투구·흉갑 +5/8/12/16%, 가속 투구·각반 +2/4/6/8, 경갑(엘프·마도)에만")
+    void classRunes() throws IOException {
+        Map<RuneType, RuneDefinition> d = loadAll();
+        RuneDefinition cycle = d.get(RuneType.CYCLE), haste = d.get(RuneType.HASTE);
+        assertEquals("fantasyrpg:core_regen", cycle.attribute());
+        assertEquals(0.16, cycle.value(4, true), 1e-12);
+        assertEquals(0.05, cycle.value(1, false), 1e-12);
+        assertEquals("fantasyrpg:skill_haste", haste.attribute());
+        assertEquals(8.0, haste.value(4, true));
+        assertTrue(cycle.fits(ArmorPart.CHEST));
+        assertTrue(haste.fits(ArmorPart.LEGS));
+        assertFalse(haste.fits(ArmorPart.CHEST));
+        assertTrue(cycle.lightOnly());
+        assertFalse(d.get(RuneType.LIFE).lightOnly());
+        assertEquals(RuneRules.InsertResult.LIGHT_ONLY, RuneRules.canInsert(haste, ArmorPart.HEAD, 0, 2, false));
+        assertEquals(RuneRules.InsertResult.OK, RuneRules.canInsert(haste, ArmorPart.HEAD, 0, 2, true));
+        assertEquals(RuneRules.InsertResult.WRONG_PART, RuneRules.canInsert(haste, ArmorPart.CHEST, 0, 2, true));
+        assertEquals(RuneRules.InsertResult.OK, RuneRules.canInsert(d.get(RuneType.LIFE), ArmorPart.HEAD, 0, 1, false));
     }
 
     @Test

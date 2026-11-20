@@ -333,6 +333,14 @@ public final class SkillPassives {
 
     // ── 흡수 체력 (최대 흡수 체력 속성에 임시 수정자를 붙이고 채움, 시간이 지나면 거둠) ──
 
+    /** 스킬 가속 합계: 스킬 트리 패시브(skill_haste) + 능력치 fantasyrpg:skill_haste (직업 룬석) */
+    public static double haste(ServerPlayer p) {
+        double a = 0;
+        var inst = p.getAttribute(com.fantasyrpg.core.gear.RpgAttributes.SKILL_HASTE);
+        if (inst != null) a = inst.getValue();
+        return sum(p, "skill_haste") + a;
+    }
+
     private static ResourceLocation absorptionId(String key) {
         return ResourceLocation.fromNamespaceAndPath(FantasyRpgCore.MOD_ID, "skill/absorption/" + key);
     }

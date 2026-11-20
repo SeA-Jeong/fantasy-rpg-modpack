@@ -25,12 +25,12 @@ class RuneDropRulesTest {
     }
 
     @Test
-    @DisplayName("배포 설정: 원석 5%, 하급 룬석 0.5%, 종류 6개 모두 실제 룬석")
+    @DisplayName("배포 설정: 원석 5%, 하급 룬석 0.5%, 종류 8개(직업 룬석 포함) 모두 실제 룬석")
     void shippedSettings() throws IOException {
         RuneDropRules.Settings s = shipped();
         assertEquals(0.05, s.oreChance(), 1e-9);
         assertEquals(0.005, s.runeChance(), 1e-9);
-        assertEquals(6, s.runeTypes().size());
+        assertEquals(8, s.runeTypes().size());
         for (String t : s.runeTypes()) assertNotNull(RuneType.byId(t), t);
     }
 
@@ -42,7 +42,7 @@ class RuneDropRulesTest {
         assertFalse(RuneDropRules.ore(s, 0.05));
         assertNull(RuneDropRules.rune(s, 0.006, 0.5));
         assertEquals("life", RuneDropRules.rune(s, 0.001, 0.0));
-        assertEquals("climb", RuneDropRules.rune(s, 0.001, 0.9999999));
+        assertEquals("haste", RuneDropRules.rune(s, 0.001, 0.9999999));
     }
 
     @Test

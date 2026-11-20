@@ -1,0 +1,23 @@
+{
+  "_comment": "[초안] 하급 직업 룬석 — 룬 원석 2 + 재료 2 (claude/직업룬석_초안.md 3절)",
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "fantasyrpg:rune_ore"
+    },
+    {
+      "item": "fantasyrpg:rune_ore"
+    },
+    {
+      "item": "minecraft:lapis_lazuli"
+    },
+    {
+      "item": "minecraft:lapis_lazuli"
+    }
+  ],
+  "result": {
+    "id": "fantasyrpg:rune_cycle",
+    "count": 1
+  }
+}

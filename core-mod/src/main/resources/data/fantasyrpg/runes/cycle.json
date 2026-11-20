@@ -1,0 +1,17 @@
+{
+  "_comment": "[초안] 경갑 직업 룬석 — 순환 (claude/직업룬석_초안.md). 엘프·마도 갑옷 전용. 코어 자원이 늘어나는 양 +5/8/12/16%",
+  "rune": "cycle",
+  "attribute": "fantasyrpg:core_regen",
+  "operation": "add_value",
+  "parts": [
+    "helmet",
+    "chestplate"
+  ],
+  "values": [
+    0.05,
+    0.08,
+    0.12,
+    0.16
+  ],
+  "light_only": true
+}

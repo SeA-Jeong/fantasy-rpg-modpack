@@ -116,9 +116,13 @@ public final class RuneCommands {
         }
         RuneSockets sockets = RuneRegistry.socketsOf(held);
         int count = RuneRegistry.socketCount(held);
-        switch (RuneRules.canInsert(def, armor.part(), sockets.runes().size(), count)) {
+        switch (RuneRules.canInsert(def, armor.part(), sockets.runes().size(), count, armor.family().light())) {
             case WRONG_PART -> {
                 ctx.getSource().sendFailure(Component.literal("이 룬석은 이 부위에 끼울 수 없습니다"));
+                return 0;
+            }
+            case LIGHT_ONLY -> {
+                ctx.getSource().sendFailure(Component.literal("이 룬석은 엘프·마도 갑옷에만 끼울 수 있습니다"));
                 return 0;
             }
             case NO_FREE_SOCKET -> {

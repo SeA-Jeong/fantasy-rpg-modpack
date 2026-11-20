@@ -349,15 +349,15 @@ public final class SkillService {
             bonus += chain == null ? 0 : chain.v("chain_bonus");
             st.chainBonusReady = false;
         }
-        // 쿨타임 비율 감소 (주문 숙련, 광폭화 5랭크: 코어 문턱은 쓰기 전 값으로)
-        double rate = Math.min(0.5, SkillPassives.sum(p, "cooldown_rate"));
+        // 스킬 가속 (2026-11-21): 재사용 대기 = 기본 × 100 ÷ (100 + 가속). 스킬 트리(주문 숙련·광폭화 등) + 직업 룬석
+        double haste = com.fantasyrpg.core.skills.SkillPassives.haste(p);
         Cast cast = new Cast(p, n, rank, bonus);
         if (!effect.run(cast)) {
             return; // 못 씀: 비용·쿨타임 없음 (연쇄 보너스는 이미 쓴 것으로 봄 — 단순화)
         }
         if (cost > 0 && !cast.free) CoreService.spend(p, cost);
         int cd = Math.max(0, cast.cooldownTicks() - SkillPassives.cooldownCut(p, n));
-        cd = (int) Math.round(cd * (1.0 - rate) * cast.cooldownMult);
+        cd = (int) Math.round(cd * com.fantasyrpg.core.skills.SkillMath.hasteMult(haste) * cast.cooldownMult);
         if (st.timeAccelEnd > now && n.kind() != SkillNode.Kind.ULTIMATE) cd = (int) Math.round(cd / 3.0); // 시간 가속
         if (chained) {
             cd = SkillMath.chainedCooldown(cd, chain.v("cooldown_cut"));
