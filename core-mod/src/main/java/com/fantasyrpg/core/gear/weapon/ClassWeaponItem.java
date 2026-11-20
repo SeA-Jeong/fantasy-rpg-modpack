@@ -122,6 +122,7 @@ public class ClassWeaponItem extends Item {
         if (target instanceof Player || living == null || living instanceof Player) return; // PvP 금지
         DamageInput in = RpgAttacks.basic(s, bolt.physical() + SkillPassives.boltPhysicalBonus(p), bolt.magic(), staff, 1.0, p,
                 SkillPassives.critBonus(p));
+        in = com.fantasyrpg.core.gear.armor.SetEffects.basicBonus(p, in);                  // 마도 4세트
         RpgDamage.apply(living, target, p, in);
         p.setLastHurtMob(living);
         if (in.critMultiplier() > 1.0) SkillPassives.onCrit(p);

@@ -233,5 +233,21 @@
   "item.fantasyrpg.dragonscale_plate": "용린판",
   "item.fantasyrpg.spirit_weave": "정령직물",
   "item.fantasyrpg.rune_frame": "룬 골조",
-  "item.fantasyrpg.rune_ore": "룬 원석"
+  "item.fantasyrpg.rune_ore": "룬 원석",
+  "tooltip.fantasyrpg.set": "세트: %s %s/4",
+  "set.fantasyrpg.knight": "기사",
+  "set.fantasyrpg.dwarf": "드워프",
+  "set.fantasyrpg.dragon": "고룡",
+  "set.fantasyrpg.elf": "엘프",
+  "set.fantasyrpg.arcane": "마도",
+  "set.fantasyrpg.knight.two": "2부위 반격: 근접 공격을 받으면 받은 피해의 20%를 되돌림 (2초에 한 번)",
+  "set.fantasyrpg.knight.four": "4부위 방패의 맹세: 5초 동안 맞지 않으면 흡수 체력 4",
+  "set.fantasyrpg.dwarf.two": "2부위 굳센 발: 넉백 저항 +0.10, 느려짐·채굴 피로 시간 절반",
+  "set.fantasyrpg.dwarf.four": "4부위 자세: 웅크려 1초 가만히 → 넉백 무시, 다음 근접 공격 +20%",
+  "set.fantasyrpg.dragon.two": "2부위 용의 비늘: 불타는 시간 −60%, 화염·용암 피해 −25%",
+  "set.fantasyrpg.dragon.four": "4부위 역린: 맞으면 공격자를 3초 불태우고 15%를 되돌림 (4초에 한 번)",
+  "set.fantasyrpg.elf.two": "2부위 바람걸음: 이동 속도 +5%",
+  "set.fantasyrpg.elf.four": "4부위 숲의 흐름: 질주 중 스킬 재사용 대기 1.5배 빨리, 질주 시작 1초 이동 속도 +20% (6초에 한 번)",
+  "set.fantasyrpg.arcane.two": "2부위 마력 순환: 코어 자원 자연 회복 +10%",
+  "set.fantasyrpg.arcane.four": "4부위 주문 증폭: 스킬 마법 피해 +8%, 스킬 뒤 다음 기본 공격에 마법 피해 +W×0.3"
 }

@@ -64,6 +64,11 @@ public final class FantasyRpgCore {
         RuneRegistry.register(modEventBus);
         NeoForge.EVENT_BUS.addListener(RuneEvents::onAnvil);
         NeoForge.EVENT_BUS.addListener(RuneEvents::onTooltip);
+        // 계열 방어구 세트 효과 (2026-11-21)
+        NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.armor.SetEffects::onAddReloadListeners);
+        NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.armor.SetEffects::onPlayerTick);
+        NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.armor.SetEffects::onIncomingDamage);
+        NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.armor.SetEffects::onEffectAdded);
         // 룬석 몬스터 드롭 (2026-11-21)
         NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.rune.RuneDrops::onAddReloadListeners);
         NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.rune.RuneDrops::onDrops);

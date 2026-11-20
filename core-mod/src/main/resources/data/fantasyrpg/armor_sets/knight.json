@@ -1,0 +1,11 @@
+{
+  "_comment": "[초안] 세트 효과 기사: 2부위 반격(받은 근접 피해 일부 되돌림) / 4부위 방패의 맹세(맞지 않으면 흡수 체력) — claude/세트효과_초안.md. 값은 1~3급 기준, 4~6급 ×1.5, 7~10급 ×2 (_ticks·_cooldown·_seconds 는 시간이라 그대로)",
+  "two": {
+    "reflect_ratio": 0.2,
+    "reflect_cooldown": 40
+  },
+  "four": {
+    "absorption": 4,
+    "absorb_delay_ticks": 100
+  }
+}

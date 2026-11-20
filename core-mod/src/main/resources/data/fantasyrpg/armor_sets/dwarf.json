@@ -1,0 +1,11 @@
+{
+  "_comment": "[초안] 세트 효과 드워프: 2부위 굳센 발(넉백 저항·느려짐 단축) / 4부위 자세(웅크려 가만히 → 넉백 무시·다음 근접 공격 강화) — claude/세트효과_초안.md. 값은 1~3급 기준, 4~6급 ×1.5, 7~10급 ×2 (_ticks·_cooldown·_seconds 는 시간이라 그대로)",
+  "two": {
+    "knockback_resistance": 0.1,
+    "slow_reduction": 0.5
+  },
+  "four": {
+    "stance_ticks": 20,
+    "stance_bonus": 0.2
+  }
+}

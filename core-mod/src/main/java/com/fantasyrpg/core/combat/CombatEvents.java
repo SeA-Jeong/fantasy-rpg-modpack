@@ -81,6 +81,7 @@ public final class CombatEvents {
                 in = RpgAttacks.basic(s, s.power(GearRegistry.tierOf(weapon)), mods.physical(), mods.magic(),
                         factor * mods.factor(), p, SkillPassives.critBonus(p), mods.forceCrit(), SkillPassives.critMultBonus(p));
             }
+            if (v != WeaponPermission.Verdict.UNARMED) in = com.fantasyrpg.core.gear.armor.SetEffects.basicBonus(p, in);   // 마도 4세트
             RpgDamage.apply(target, hit, p, in);
             p.setLastHurtMob(target);
             if (v != WeaponPermission.Verdict.UNARMED) {
@@ -143,6 +144,7 @@ public final class CombatEvents {
         SkillPassives.ArrowMods mods = SkillPassives.arrow(p, target, shot.getDouble("physical"), shot.getDouble("magic"), p.position());
         DamageInput in = RpgAttacks.basic(s, s.power(shot.getInt("tier")), mods.physical(), mods.magic(),
                 shot.getDouble("power") * mods.factor(), p, SkillPassives.critBonus(p), false, SkillPassives.critMultBonus(p));
+        in = com.fantasyrpg.core.gear.armor.SetEffects.basicBonus(p, in);                  // 마도 4세트
         RpgDamage.apply(target, hit.getEntity(), p, in);
         p.setLastHurtMob(target);
         SkillPassives.afterArrow(p, in);

@@ -1,0 +1,12 @@
+{
+  "_comment": "[초안] 세트 효과 고룡: 2부위 용의 비늘(불탐 단축·화염 피해 감소) / 4부위 역린(공격자 불태우고 화염 되돌림) — claude/세트효과_초안.md. 값은 1~3급 기준, 4~6급 ×1.5, 7~10급 ×2 (_ticks·_cooldown·_seconds 는 시간이라 그대로)",
+  "two": {
+    "burn_reduction": 0.6,
+    "fire_reduction": 0.25
+  },
+  "four": {
+    "ignite_seconds": 3,
+    "reflect_ratio": 0.15,
+    "reflect_cooldown": 80
+  }
+}

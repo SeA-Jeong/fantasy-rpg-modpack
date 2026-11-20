@@ -103,6 +103,8 @@ jobs:
           grep -E "\[보스 전장\] 보스 방 범위 12개 로드, 오류 0건" server/logs/latest.log
           grep -E "\[보스 전장\] 챕터 보스 소재 12개 로드, 오류 0건" server/logs/latest.log
           grep -E "\[제작\] 작업대 조합식 21개 로드, 오류 0건" server/logs/latest.log
+          # 계열 방어구 세트 효과 5계열 (2026-11-21)
+          grep -E "\[방어구\] 세트 효과 5개 계열 로드, 오류 0건" server/logs/latest.log
           # 룬석 몬스터 드롭 설정 (2026-11-21)
           grep -E "\[룬석\] 몬스터 드롭 로드: 원석 5\.0%, 하급 룬석 0\.5% \(6종\), 오류 0건" server/logs/latest.log
           grep -E "\[제작\] 방어구 제작표 로드: 계열 5개" server/logs/latest.log

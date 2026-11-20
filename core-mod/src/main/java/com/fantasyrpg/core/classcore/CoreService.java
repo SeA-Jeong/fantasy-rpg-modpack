@@ -106,7 +106,10 @@ public final class CoreService {
             n.value = d.start();
             return n;
         });
+        double before = s.value;
         s.value = d.tick(s.value, p.level().getGameTime() - s.lastGainTick);
+        double setBonus = com.fantasyrpg.core.gear.armor.SetEffects.coreRegenBonus(p);              // 마도 2세트: 자연 회복 +%
+        if (setBonus > 0 && s.value > before) s.value = d.clamp(s.value + (s.value - before) * setBonus);
         double regen = SkillPassives.sum(p, "core_regen"); // 대마법사·정화자 마스터리
         if (regen > 0) s.value = d.clamp(s.value + regen / 20.0);
         send(p, d, s, false, d.max());

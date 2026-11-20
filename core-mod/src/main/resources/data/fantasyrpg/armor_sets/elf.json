@@ -1,0 +1,12 @@
+{
+  "_comment": "[초안] 세트 효과 엘프: 2부위 바람걸음(이동 속도) / 4부위 숲의 흐름(질주 중 스킬 재사용 대기 가속·질주 시작 가속) — claude/세트효과_초안.md. 값은 1~3급 기준, 4~6급 ×1.5, 7~10급 ×2 (_ticks·_cooldown·_seconds 는 시간이라 그대로)",
+  "two": {
+    "movement_speed": 0.05
+  },
+  "four": {
+    "sprint_cooldown_extra": 0.5,
+    "dash_speed": 0.2,
+    "dash_ticks": 20,
+    "dash_cooldown": 120
+  }
+}

@@ -233,5 +233,21 @@
   "item.fantasyrpg.dragonscale_plate": "Dragonscale Plate",
   "item.fantasyrpg.spirit_weave": "Spirit Weave",
   "item.fantasyrpg.rune_frame": "Rune Frame",
-  "item.fantasyrpg.rune_ore": "Rune Ore"
+  "item.fantasyrpg.rune_ore": "Rune Ore",
+  "tooltip.fantasyrpg.set": "Set: %s %s/4",
+  "set.fantasyrpg.knight": "Knight",
+  "set.fantasyrpg.dwarf": "Dwarf",
+  "set.fantasyrpg.dragon": "Dragon",
+  "set.fantasyrpg.elf": "Elf",
+  "set.fantasyrpg.arcane": "Arcane",
+  "set.fantasyrpg.knight.two": "2-piece Riposte: reflect 20% of melee damage taken (once per 2s)",
+  "set.fantasyrpg.knight.four": "4-piece Shield Oath: 4 absorption after 5s without being hit",
+  "set.fantasyrpg.dwarf.two": "2-piece Sure Footing: +0.10 knockback resistance, half Slowness/Mining Fatigue",
+  "set.fantasyrpg.dwarf.four": "4-piece Stance: crouch still for 1s → ignore knockback, next melee +20%",
+  "set.fantasyrpg.dragon.two": "2-piece Dragon Scales: -60% burn time, -25% fire/lava damage",
+  "set.fantasyrpg.dragon.four": "4-piece Wrath: ignite attacker 3s and reflect 15% (once per 4s)",
+  "set.fantasyrpg.elf.two": "2-piece Windstep: +5% movement speed",
+  "set.fantasyrpg.elf.four": "4-piece Forest Flow: skill cooldowns tick 1.5x while sprinting, +20% speed for 1s on sprint start (6s)",
+  "set.fantasyrpg.arcane.two": "2-piece Mana Flow: +10% natural core regeneration",
+  "set.fantasyrpg.arcane.four": "4-piece Spell Amp: +8% skill magic damage, next basic attack after a skill +W×0.3 magic"
 }

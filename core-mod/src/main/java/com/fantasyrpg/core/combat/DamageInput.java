@@ -56,6 +56,12 @@ public record DamageInput(
                 physicalPen, magicPen, multiplier, finalModifier);
     }
 
+    /** 마법 계수 바꾸기 (마도 4세트: 다음 기본 공격에 W × 값 마법 피해, 2026-11-21) */
+    public DamageInput withMagicCoef(double coef) {
+        return new DamageInput(weaponPower, physicalCoef, coef, physicalBonus, magicBonus,
+                physicalPen, magicPen, critMultiplier, finalModifier);
+    }
+
     public DamageInput withFinalModifier(double modifier) {
         return new DamageInput(weaponPower, physicalCoef, magicCoef, physicalBonus, magicBonus,
                 physicalPen, magicPen, critMultiplier, modifier);

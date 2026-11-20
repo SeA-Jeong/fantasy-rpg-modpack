@@ -30,6 +30,7 @@ public final class RuneEvents {
     public static void onTooltip(ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
         List<Component> tip = event.getToolTip();
+        if (stack.getItem() instanceof FamilyArmorItem fa) com.fantasyrpg.core.gear.armor.SetTooltip.add(event, fa);   // 세트 효과 (2026-11-21)
         if (stack.getItem() instanceof FamilyArmorItem) {
             int count = RuneRegistry.socketCount(stack);
             List<RuneSockets.Entry> runes = RuneRegistry.socketsOf(stack).runes();
