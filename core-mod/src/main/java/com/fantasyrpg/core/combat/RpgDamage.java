@@ -24,12 +24,28 @@ public final class RpgDamage {
     private RpgDamage() {
     }
 
+    /** 맞은 엔티티의 몸체: 생물이면 그대로, 여러 부위 몹의 부위면 그 몸체, 아니면 null */
+    @Nullable
+    public static LivingEntity body(Entity hit) {
+        if (hit instanceof LivingEntity l) return l;
+        if (hit instanceof net.neoforged.neoforge.entity.PartEntity<?> part && part.getParent() instanceof LivingEntity l) return l;
+        return null;
+    }
+
     public static Resistances resistancesOf(Entity target) {
         return MobResistanceManager.INSTANCE.get(target.getType());
     }
 
     /** 대상 저항을 적용해 계산하고 피해를 입힌다. 계산 결과를 돌려준다. */
     public static DamageBreakdown apply(LivingEntity target, @Nullable Entity attacker, DamageInput input) {
+        return apply(target, target, attacker, input);
+    }
+
+    /**
+     * 여러 부위 몹(예: fantasybosses 라디키온 마디)의 부위를 맞혔을 때: 계산(저항·치명타)은 몸체 {@code target} 기준으로 한 번,
+     * 피해는 맞은 부위 {@code hit} 에 줌 → 부위·그로기 배율은 그 모드가 한 번만 곱함 (2026-11-20).
+     */
+    public static DamageBreakdown apply(LivingEntity target, Entity hit, @Nullable Entity attacker, DamageInput input) {
         if (attacker instanceof net.minecraft.server.level.ServerPlayer sp) {
             // 유산 무기 각성 특성: 물리·마법 피해 % (스킬 강화와 같은 단계에 더함)
             double pb = com.fantasyrpg.core.gear.heirloom.HeirloomService.bonus(sp, "physical_bonus");
@@ -41,7 +57,7 @@ public final class RpgDamage {
             DamageSource source = new DamageSource(
                     target.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(RPG),
                     attacker);
-            target.hurt(source, (float) result.total());
+            hit.hurt(source, (float) result.total());
         }
         return result;
     }

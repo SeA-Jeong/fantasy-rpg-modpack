@@ -50,7 +50,10 @@ public final class CombatEvents {
 
     // ── 근접 ──
     public static void onAttack(AttackEntityEvent event) {
-        if (!(event.getEntity() instanceof ServerPlayer p) || !(event.getTarget() instanceof LivingEntity target)) return;
+        if (!(event.getEntity() instanceof ServerPlayer p)) return;
+        Entity hit = event.getTarget();
+        LivingEntity target = RpgDamage.body(hit);                                          // 부위(PartEntity)면 그 몸체 (라디키온 마디)
+        if (target == null) return;
         RpgClass c = RpgProgress.get(p).classOrNull();
         CombatSettings s = CombatManager.INSTANCE.settings();
         if (c == null || s == null) return; // 무직·데이터 없음 → 바닐라
@@ -78,7 +81,7 @@ public final class CombatEvents {
                 in = RpgAttacks.basic(s, s.power(GearRegistry.tierOf(weapon)), mods.physical(), mods.magic(),
                         factor * mods.factor(), p, SkillPassives.critBonus(p), mods.forceCrit(), SkillPassives.critMultBonus(p));
             }
-            RpgDamage.apply(target, p, in);
+            RpgDamage.apply(target, hit, p, in);
             p.setLastHurtMob(target);
             if (v != WeaponPermission.Verdict.UNARMED) {
                 CoreService.onEvent(p, CoreService.BASIC_ATTACK_HIT);
@@ -125,7 +128,8 @@ public final class CombatEvents {
         if (proj.level().isClientSide()) return;
         if (!(proj instanceof AbstractArrow)) return; // 눈덩이·엔더진주 등은 그대로
         if (!(event.getRayTraceResult() instanceof EntityHitResult hit)) return;
-        if (!(hit.getEntity() instanceof LivingEntity target)) return;
+        LivingEntity target = RpgDamage.body(hit.getEntity());                             // 부위면 그 몸체
+        if (target == null) return;
         if (!(proj.getOwner() instanceof ServerPlayer p)) return;
         if (RpgProgress.get(p).classOrNull() == null) return; // 무직 → 바닐라
         CombatSettings s = CombatManager.INSTANCE.settings();
@@ -139,7 +143,7 @@ public final class CombatEvents {
         SkillPassives.ArrowMods mods = SkillPassives.arrow(p, target, shot.getDouble("physical"), shot.getDouble("magic"), p.position());
         DamageInput in = RpgAttacks.basic(s, s.power(shot.getInt("tier")), mods.physical(), mods.magic(),
                 shot.getDouble("power") * mods.factor(), p, SkillPassives.critBonus(p), false, SkillPassives.critMultBonus(p));
-        RpgDamage.apply(target, p, in);
+        RpgDamage.apply(target, hit.getEntity(), p, in);
         p.setLastHurtMob(target);
         SkillPassives.afterArrow(p, in);
         CoreService.onEvent(p, CoreService.BASIC_ATTACK_HIT);
