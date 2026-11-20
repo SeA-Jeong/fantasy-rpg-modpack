@@ -11,7 +11,7 @@
 | JEI 또는 EMI | 레시피 조회 | 예정 |
 | Jade | 대상 정보 표시 (저항 표시 애드온은 코어 모드에서) | 예정 |
 | 성능 최적화 모드 | 마지막 단계에서 추가 | 보류 |
-| fantasybosses 0.7.2.2 (파일 포함, `modpack/local-mods/`) | 3장 보스 "세계수 잠식자 라디키온"(임시, GeckoLib). magiccity `boss_entity/parasite.json` 으로 연결 | 사용 (2026-11-20) |
+| fantasybosses 0.7.5.1 (파일 포함, `modpack/local-mods/`) | 3장 보스 "세계수 잠식자 라디키온"(공격 6종·기관·알집·균열·BGM, GeckoLib). magiccity `boss_entity/parasite.json` 으로 연결 | 사용 (2026-11-20) |
 
 ## 피할 모드
 - 피해·속성 체계를 바꾸는 전투·마법·레벨·스킬 모드 (피해 공식과 SP가 두 벌이 됨)

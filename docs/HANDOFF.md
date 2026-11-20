@@ -14,8 +14,8 @@
 | 플랫폼 | Minecraft 1.21.1 / NeoForge **21.1.266** / Java 21 / ModDevGradle 2.0.141. **필수 의존 모드 magiccity** (JitPack `com.github.aswq0258:magic-city-mod:0dc385a` (2026-11-20 보스 수치 데이터·외부 보스 연결, 2026-11-20 크리퍼 없음, 2026-11-20 보스 방 복사 전장·보스 꾸러미 지역 소재, 하수도 납골당 물 샘 수정·`fix crypt`, 전장 종료 멈춤·좀벌레 사라짐 수정, 2026-11-19 인스턴스 전장·필드보스 꾸러미 포함, 2026-11-19 퀘스트 API·NPC 상시 선택지·2~12장 챕터 퀘스트·보스 고정 피해 `isBossFixed`·중간 단계 `QuestStepCompleteEvent`), `gradle.properties`의 `magiccity_commit`) |
 | CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄). 모드 구성이 바뀌면 `modpack smoke`가 외부 모드 18개 + 우리 모드 2개로 **NeoForge 전용 서버를 실제 기동** |
 | 1차 외부 모드 구성 | `modpack/mods.lock.json` (필수 13 + 권장 5, 버전 고정). 2026-11-17 전용 서버 기동 통과 (run 44061047052). 클라이언트 실행은 아직 확인 안 함 |
-| 우리 모드 3개 | `fantasyrpg`(이 저장소), `magiccity`(JitPack), `royalqol`(클라이언트 전용 편의 모드, `magic-city-mod` 저장소 `royalqol/`, `mods.lock.json`의 `royalqol.commit`으로 빌드 — `tools/build_royalqol.sh`). 테스트 팩과 서버 기동 검사에 셋 다 들어감. **파일로 넣는 외부 모드** `modpack/local-mods/`(2026-11-20 `fantasybosses-0.7.2.2.jar` — 3장 보스 라디키온, ARR, 사용자 결정으로 포함): 통합 팩 `overrides/mods/`, 서버 기동 검사는 2단계(전체 구성)에만 |
-| 최신 테스트 팩 | **v0.20.0-test.3** (외부 보스 연결(3장 라디키온)·보스 수치 데이터 + 크리퍼 없음 + 보스 방 복사 전장 + 확장 작업대·방어구 제작법 + 챕터 보스 인스턴스 전장 + 필드보스 꾸러미 + 장별 중간 단계 + 심층 광산·보라빛 숲 병합 + 스킬트리 156노드 + 서장 NPC 직업 선택 + 기사 가드·프리셋 + 유산 무기 + 2~12장 챕터 퀘스트 + 보스 고정 피해 패턴, 게임 확인 전 — Releases 탭). 통합 팩 `magic-kingdom-testpack-*.mrpack`(우리 모드 3개 + 파일 1개 + 외부 18개 = 22개, 견본 데이터팩 `magiccity_boss_stats_sample`, Prism 가져오기) + `fantasyrpg-testpack-*.zip`. 이전 판은 v0.2~v0.18 |
+| 우리 모드 3개 | `fantasyrpg`(이 저장소), `magiccity`(JitPack), `royalqol`(클라이언트 전용 편의 모드, `magic-city-mod` 저장소 `royalqol/`, `mods.lock.json`의 `royalqol.commit`으로 빌드 — `tools/build_royalqol.sh`). 테스트 팩과 서버 기동 검사에 셋 다 들어감. **파일로 넣는 외부 모드** `modpack/local-mods/`(2026-11-20 `fantasybosses-0.7.5.1.jar` — 3장 보스 라디키온, ARR, 사용자 결정으로 포함. 소스 인계 zip 은 저장소에 두지 않음): 통합 팩 `overrides/mods/`, 서버 기동 검사는 2단계(전체 구성)에만 |
+| 최신 테스트 팩 | **v0.20.0-test.4** (라디키온 0.7.5.1 + 외부 보스 연결(3장 라디키온)·보스 수치 데이터 + 크리퍼 없음 + 보스 방 복사 전장 + 확장 작업대·방어구 제작법 + 챕터 보스 인스턴스 전장 + 필드보스 꾸러미 + 장별 중간 단계 + 심층 광산·보라빛 숲 병합 + 스킬트리 156노드 + 서장 NPC 직업 선택 + 기사 가드·프리셋 + 유산 무기 + 2~12장 챕터 퀘스트 + 보스 고정 피해 패턴, 게임 확인 전 — Releases 탭). 통합 팩 `magic-kingdom-testpack-*.mrpack`(우리 모드 3개 + 파일 1개 + 외부 18개 = 22개, 견본 데이터팩 `magiccity_boss_stats_sample`, Prism 가져오기) + `fantasyrpg-testpack-*.zip`. 이전 판은 v0.2~v0.18 |
 | 게임 테스트 | `docs/TESTING.md`의 v0.1·v0.2 체크리스트 |
 
 ### 테스트 팩 Release 만드는 법
@@ -205,6 +205,12 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 ---
 
 ## 작업 기록
+
+### 2026-11-20 — 라디키온 0.7.5.1 등록 v0.20.0-test.4
+- 사용자: 인계 zip `FantasyBosses_v0.7.5.1_Claude_handoff.zip`(소스·인계서) + 빌드한 `fantasybosses-0.7.5.1.jar`. JAR 를 받은 소스와 대조(클래스 목록·녹화 경로·공격 포즈·모델·BGM 일치) → `modpack/local-mods/` 의 0.7.2.2 를 0.7.5.1 로 교체, 서버 기동 검사에 모드 이름 줄
+- 소스는 ARR 이고 두 저장소가 공개라 올리지 않음 → 위치 결정 대기(`claude/FantasyBosses_등록_v0.8_초안.md` 6절 A)
+- 소스 분석(초안 2절): 절대 좌표 9곳 → 우리 전장에서는 서 있음, 마디(`PartEntity`)는 fantasyrpg RPG 피해를 안 거침, 라디키온에 공격력 속성이 없어 등급 배율 1.0. v0.8(전장 원점 변환·부위 RPG 피해·`design_attack`)은 결정 뒤
+- 게임 확인: `docs/TESTING.md` X9~X11(원래 둥지에서 기준 동작)
 
 ### 2026-11-20 — 외부 보스 연결·보스 수치 데이터 v0.20.0-test.3 (magiccity `0dc385a`)
 - 사용자 결정: `claude/외부보스연결_초안.md` A~D 추천안(장마다 데이터로 연결 / 외부 모드가 기준점 NBT 를 받게 고침 / 외부 보스면 우리 기술·체력바 끄고 고정 피해만 / jar 팩 포함). `claude/보스수치데이터_초안.md` 는 그 4절로 합침

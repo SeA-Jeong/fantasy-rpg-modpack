@@ -83,7 +83,7 @@ jobs:
           # launcher 처럼 설치해 보고(주소·해시 확인) 모드 22개(우리 3 + 파일 1 + 주소 18)가 모이는지 확인
           python3 tools/install_mrpack.py magic-kingdom-testpack.mrpack packcheck
           test "$(ls packcheck/mods/*.jar | wc -l)" -eq 22
-          test -f packcheck/mods/fantasybosses-0.7.2.2.jar
+          test -f packcheck/mods/fantasybosses-0.7.5.1.jar
 
       - name: 통합 팩 업로드
         uses: actions/upload-artifact@v4
