@@ -151,7 +151,11 @@ public final class RpgProgress {
         if (dead instanceof ServerPlayer) return;
         String id = BuiltInRegistries.ENTITY_TYPE.getKey(dead.getType()).toString();
         int xp = settings().killXp(id, dead instanceof Enemy);
-        if (xp > 0) grantXp(p, xp, "kill");
+        if (xp <= 0) return;
+        // 파티 경험치 나누기 (2026-11-21): 근처 파티원 n명이 총량 xp × (1 + 보너스 × (n − 1)) 를 똑같이
+        java.util.List<ServerPlayer> got = com.fantasyrpg.core.party.PartyService.xpReceivers(p);
+        int each = com.fantasyrpg.core.party.PartyRules.xpShare(xp, got.size(), com.fantasyrpg.core.party.PartyService.settings().xpBonus());
+        for (ServerPlayer m : got) grantXp(m, each, got.size() > 1 ? "kill_party" : "kill");
     }
 
     public static void onChapterFirstClear(ChapterFirstClearEvent event) {

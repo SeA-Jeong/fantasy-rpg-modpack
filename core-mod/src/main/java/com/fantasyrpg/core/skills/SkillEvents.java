@@ -183,6 +183,8 @@ public final class SkillEvents {
                 amount = after;
             }
         }
+        // 파티원 신성 방벽 몫 (2026-11-21)
+        if (st.allyReduceEnd > now && st.allyReduce > 0) amount = (float) SkillMath.reduced(amount, st.allyReduce);
         // 전투사제 응징의 방패: 감소와 반격
         if (st.retribEnd > now) {
             SkillPassives.Learned l = SkillPassives.learned(p, SkillIds.C_RETRIBUTION);

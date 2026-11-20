@@ -474,7 +474,7 @@ public final class UltimateSkills {
             for (LivingEntity t : SkillTargets.around(p, at.add(0, 1, 0), r)) {
                 c.hit(t, 0, c.v("magic"), SkillPassives.undead(t) ? c.v("undead_mult") : 1.0, false);
             }
-            SkillPassives.heal(p, c.v("heal"));
+            com.fantasyrpg.core.party.PartyService.heal(p, c.v("heal"));                            // 파티원도 (2026-11-21)
             ServerLevel l = p.serverLevel();
             ring(l, at, r, ParticleTypes.END_ROD);
             l.sendParticles(ParticleTypes.GLOW, at.x, at.y + 0.5, at.z, 20, r / 2, 0.3, r / 2, 0.02);
@@ -494,7 +494,7 @@ public final class UltimateSkills {
     private static boolean radiance(Cast c) {
         ServerPlayer p = c.player;
         ClericSkills.purge(p, Integer.MAX_VALUE);
-        SkillPassives.heal(p, p.getMaxHealth() * c.v("heal_ratio"));
+        com.fantasyrpg.core.party.PartyService.heal(p, p.getMaxHealth() * c.v("heal_ratio"));
         double r = c.v("radius");
         for (LivingEntity t : SkillTargets.around(p, p.position().add(0, 1, 0), r)) {
             c.hit(t, 0, c.v("magic"), SkillPassives.undead(t) ? c.v("undead_mult") : 1.0, false);

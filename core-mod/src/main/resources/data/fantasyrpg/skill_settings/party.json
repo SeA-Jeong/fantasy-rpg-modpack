@@ -1,0 +1,11 @@
+{
+  "_comment": "[초안] 파티 (2026-11-21, magiccity API 파티 = FTB Teams 파티). 회복: 전투사제 성광·신성 폭발·신성 방벽 끝 회복·성역 궁극기·광휘 궁극기는 시전자 회복량의 heal_share 만큼 heal_radius 안 파티원도. 신성 방벽: 감소율 × buff_share 를 buff_radius 안 파티원에게 같은 시간. 경험치: 처치자 + xp_radius 안 파티원 n명이 총량 xp × (1 + xp_bonus × (n − 1)) 을 똑같이 (올림)",
+  "party": {
+    "heal_radius": 16,
+    "heal_share": 0.5,
+    "buff_radius": 16,
+    "buff_share": 0.5,
+    "xp_radius": 48,
+    "xp_bonus": 0.2
+  }
+}

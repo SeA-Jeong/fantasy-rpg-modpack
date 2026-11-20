@@ -29,6 +29,10 @@ public final class SkillSettings extends SimpleJsonResourceReloadListener {
     private volatile double immuneMinHealth = 100;
     /** 장착 프리셋 1·2·3번째를 여는 레벨 (skill_settings/presets.json, [초안] 기획 7.1 기존안) */
     private volatile List<Integer> presetUnlockLevels = List.of(1, 20, 40);
+    /** 마스터리 교체는 마을 안에서만 (skill_settings/presets.json mastery_swap.town_only, [초안] 2026-11-21) */
+    private volatile boolean masteryTownOnly = true;
+    /** 파티 대상 스킬·경험치 나누기 (skill_settings/party.json, [초안] 2026-11-21) */
+    private volatile com.fantasyrpg.core.party.PartyRules.Settings party = com.fantasyrpg.core.party.PartyRules.Settings.DEFAULT;
 
     private SkillSettings() {
         super(new Gson(), "skill_settings");
@@ -40,6 +44,8 @@ public final class SkillSettings extends SimpleJsonResourceReloadListener {
         Set<String> tags = new HashSet<>();
         double minHealth = 100;
         List<Integer> unlock = List.of(1, 20, 40);
+        boolean townOnly = true;
+        com.fantasyrpg.core.party.PartyRules.Settings partyS = com.fantasyrpg.core.party.PartyRules.Settings.DEFAULT;
         for (Map.Entry<ResourceLocation, JsonElement> e : files.entrySet()) {
             try {
                 JsonObject o = e.getValue().getAsJsonObject();
@@ -48,6 +54,11 @@ public final class SkillSettings extends SimpleJsonResourceReloadListener {
                     for (JsonElement t : o.getAsJsonObject("presets").getAsJsonArray("unlock_levels")) lv.add(t.getAsInt());
                     if (lv.size() != 3) throw new IllegalArgumentException("presets.unlock_levels 는 3개");
                     unlock = List.copyOf(lv);
+                }
+                if (o.has("party")) partyS = com.fantasyrpg.core.party.PartyRules.Settings.parse(o.getAsJsonObject("party"));
+                if (o.has("mastery_swap")) {
+                    JsonObject m = o.getAsJsonObject("mastery_swap");
+                    if (m.has("town_only")) townOnly = m.get("town_only").getAsBoolean();
                 }
                 if (!o.has("control_immune")) continue;
                 JsonObject c = o.getAsJsonObject("control_immune");
@@ -63,8 +74,20 @@ public final class SkillSettings extends SimpleJsonResourceReloadListener {
         immuneScoreboardTags = Set.copyOf(tags);
         immuneMinHealth = minHealth;
         presetUnlockLevels = unlock;
+        masteryTownOnly = townOnly;
+        party = partyS;
+        FantasyRpgCore.LOGGER.info("[파티] 회복 {}칸 ×{}, 방벽 {}칸 ×{}, 경험치 {}칸 +{}/명", partyS.healRadius(), partyS.healShare(),
+                partyS.buffRadius(), partyS.buffShare(), partyS.xpRadius(), partyS.xpBonus());
         FantasyRpgCore.LOGGER.info("[스킬] 제어 면역: 엔티티 태그 {}개, 스코어보드 태그 {}개, 최대 체력 {} 이상", types.size(), tags.size(), minHealth);
-        FantasyRpgCore.LOGGER.info("[스킬] 장착 프리셋 해금 레벨 {}", unlock);
+        FantasyRpgCore.LOGGER.info("[스킬] 장착 프리셋 해금 레벨 {}, 마스터리 교체 마을 안에서만 {}", unlock, townOnly);
+    }
+
+    public com.fantasyrpg.core.party.PartyRules.Settings party() {
+        return party;
+    }
+
+    public boolean masteryTownOnly() {
+        return masteryTownOnly;
     }
 
     public List<Integer> presetUnlockLevels() {

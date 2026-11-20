@@ -67,7 +67,7 @@ public final class ClericSkills {
         int hit = light(c, center, radius, 1.0);
         double heal = Math.min(c.v("heal_cap"), hit * c.v("heal_per_hit"));
         if (heal > 0) {
-            SkillPassives.heal(p, heal);
+            com.fantasyrpg.core.party.PartyService.heal(p, heal);                                       // 파티원도 (2026-11-21)
             p.serverLevel().sendParticles(ParticleTypes.HEART, p.getX(), p.getY(1.2), p.getZ(), 3, 0.3, 0.3, 0.3, 0);
         }
         double echo = c.v("echo_ratio");
@@ -97,6 +97,7 @@ public final class ClericSkills {
         SkillRuntime.State st = SkillRuntime.state(p);
         st.sanctEnd = SkillRuntime.now(p) + (long) c.v("duration_ticks");
         st.sanctReduced = 0;
+        com.fantasyrpg.core.party.PartyService.shareReduction(p, c.v("reduction"), (long) c.v("duration_ticks"));   // 근처 파티원 감소 (2026-11-21)
         ServerLevel l = p.serverLevel();
         l.sendParticles(ParticleTypes.ENCHANT, p.getX(), p.getY(1.0), p.getZ(), 40, 0.6, 0.8, 0.6, 0.5);
         l.playSound(null, p.blockPosition(), SoundEvents.BEACON_ACTIVATE, SoundSource.PLAYERS, 0.8F, 1.2F);
@@ -112,7 +113,7 @@ public final class ClericSkills {
         }
         double heal = reduced * l.v("end_heal_ratio");
         if (heal > 0) {
-            SkillPassives.heal(p, heal);
+            com.fantasyrpg.core.party.PartyService.heal(p, heal);
             p.serverLevel().sendParticles(ParticleTypes.HEART, p.getX(), p.getY(1.2), p.getZ(), 4, 0.3, 0.3, 0.3, 0);
         }
     }
@@ -170,7 +171,7 @@ public final class ClericSkills {
             n++;
         }
         double heal = c.v("heal") + Math.min(c.v("heal_cap"), n * c.v("heal_per_hit"));
-        SkillPassives.heal(p, heal);
+        com.fantasyrpg.core.party.PartyService.heal(p, heal);
         ServerLevel l = p.serverLevel();
         l.sendParticles(ParticleTypes.END_ROD, p.getX(), p.getY(1.0), p.getZ(), 40, radius / 2, 0.5, radius / 2, 0.05);
         l.sendParticles(ParticleTypes.HEART, p.getX(), p.getY(1.2), p.getZ(), 3, 0.3, 0.3, 0.3, 0);

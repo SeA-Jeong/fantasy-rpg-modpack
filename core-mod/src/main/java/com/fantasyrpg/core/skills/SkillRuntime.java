@@ -88,6 +88,9 @@ public final class SkillRuntime {
         public long veilEnd = -1, veilLast = -1000;
         public double nextSkillBonus;
         public long prayerEnd = -1;
+        /** 파티원 신성 방벽 몫: 끝 시각, 감소율 (2026-11-21) */
+        public long allyReduceEnd = -1;
+        public double allyReduce = 0;
         // 시간 제한 속성 수정자 (이동 속도 등): 키 → 끝나는 틱
         public final Map<String, Long> attrEnd = new HashMap<>();
     }
