@@ -30,7 +30,7 @@ def build(lock, resolved, ours_dir, datapacks_dir, guide, version, out):
         files.append({
             "path": f"mods/{r['file']}",
             "hashes": {"sha1": r["sha1"], "sha512": r["sha512"]},
-            "env": {"client": "required", "server": "required"},
+            "env": {"client": "required", "server": "unsupported" if r.get("side") == "client" else "required"},
             "downloads": [url],
             "fileSize": r["size"],
         })
@@ -41,7 +41,7 @@ def build(lock, resolved, ours_dir, datapacks_dir, guide, version, out):
         "game": "minecraft",
         "versionId": version,
         "name": f"마법 왕국 대륙 통합 테스트 팩 {version}",
-        "summary": "magiccity + fantasyrpg + royalqol + 외부 보스 모드(파일 포함) + 1차 외부 모드 18개 (테스트용)",
+        "summary": "magiccity + fantasyrpg + royalqol + 외부 보스 모드(파일 포함) + 외부 모드 20개 (1차 18 + 외형 2, 테스트용)",
         "files": sorted(files, key=lambda f: f["path"]),
         "dependencies": {"minecraft": lock["minecraft"], "neoforge": lock["neoforge"]},
     }

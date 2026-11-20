@@ -90,12 +90,16 @@ def main(argv):
     ap.add_argument("lock")
     ap.add_argument("out")
     ap.add_argument("--max-stage", type=int, default=99)
+    ap.add_argument("--side", choices=["client", "server"], help="server 면 side 가 client 인 모드(클라이언트 전용)는 받지 않음")
     a = ap.parse_args(argv)
     lock = json.load(open(a.lock, encoding="utf-8"))
     os.makedirs(a.out, exist_ok=True)
     resolved, failed = [], []
     for e in lock["mods"]:
         if e.get("stage", 0) > a.max_stage:
+            continue
+        if a.side == "server" and e.get("side") == "client":
+            print(f"건너뜀 {e['name']:<22} (클라이언트 전용)")
             continue
         try:
             r = fetch(e, lock["minecraft"], a.out)
@@ -112,6 +116,8 @@ def main(argv):
                 continue
         r["name"] = e["name"]
         r["stage"] = e.get("stage")
+        if e.get("side"):
+            r["side"] = e["side"]
         with open(os.path.join(a.out, r["file"]), "rb") as fh:
             data = fh.read()
         r["sha1"] = hashlib.sha1(data).hexdigest()

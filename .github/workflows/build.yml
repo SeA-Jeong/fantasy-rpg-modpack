@@ -80,9 +80,9 @@ jobs:
           python3 tools/build_mrpack.py --lock modpack/mods.lock.json --resolved external/resolved.json \
             --ours testpack/mods --datapacks modpack/datapacks --guide docs/TESTING.md --version "$VER" \
             --out magic-kingdom-testpack.mrpack
-          # launcher 처럼 설치해 보고(주소·해시 확인) 모드 22개(우리 3 + fantasybosses + 주소 18)가 모이는지 확인
+          # launcher 처럼 설치해 보고(주소·해시 확인) 모드 24개(우리 3 + fantasybosses + 주소 20)가 모이는지 확인
           python3 tools/install_mrpack.py magic-kingdom-testpack.mrpack packcheck
-          test "$(ls packcheck/mods/*.jar | wc -l)" -eq 22
+          test "$(ls packcheck/mods/*.jar | wc -l)" -eq 24
           test -f packcheck/mods/fantasybosses-0.8.0.jar
 
       - name: 통합 팩 업로드

@@ -216,6 +216,12 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 
 ## 작업 기록
 
+### 2026-11-21 — 외형 모드 추가 (Sol's Indicator, Effectual)
+- 사용자 결정: 외형 모드 추천 조합. `mods.lock.json` 에 Sol's Indicator `1.21.1-v1.2.0`(보스바·피해 숫자·체력바, 서버에도)·Effectual `1.3.0-1.21.1`(클라이언트 전용, `"side": "client"`)
+- 도구: `fetch_mods.py --side server` 면 클라이언트 전용을 받지 않음(서버 기동 검사), `build_mrpack.py` 는 그 모드의 서버 env 를 unsupported 로. 통합 팩 모드 수 22 → 24
+- Combat Traces(무기 궤적)는 Modrinth 에 없어 받을 주소가 없음 → jar 를 받으면 `modpack/local-mods/` 경로로 넣을 예정
+- 게임 확인: `docs/TESTING.md` VS1~VS8
+
 ### 2026-11-21 — 남은 프로그램 작업 일괄 v0.25.0 (magiccity `51ac66a`)
 - 사용자 지시: "2부 네더·전용 그림을 제외하고 생성형 없이 프로그램만으로 되는 것은 추천안으로 전부 진행"
 - **경갑 직업 룬석·스킬 가속:** 능력치 `fantasyrpg:core_regen`·`fantasyrpg:skill_haste`(`gear/RpgAttributes`, 플레이어에 추가). 룬석 `cycle`(투구·흉갑, 코어 증가량 +5/8/12/16%)·`haste`(투구·각반, +2/4/6/8), 데이터 `light_only` → `RuneRules.canInsert(..., lightArmor)` `LIGHT_ONLY`. 가속 = `SkillPassives.haste`(트리 `skill_haste` + 능력치), `SkillMath.hasteMult`, `SkillService` 쿨타임. 코어 `CoreService.gain/onEvent` 증가량 ×(1 + 순환), 자연 회복 보너스에도 더함. K 화면 쿨타임 표시에 가속(`ClientRpgState.haste`)

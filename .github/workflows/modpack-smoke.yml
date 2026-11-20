@@ -50,7 +50,7 @@ jobs:
       - name: 외부 모드 받기 (mods.lock.json)
         run: |
           mkdir -p external
-          python3 tools/fetch_mods.py modpack/mods.lock.json external
+          python3 tools/fetch_mods.py modpack/mods.lock.json external --side server
 
       - name: NeoForge 전용 서버 설치
         run: |
