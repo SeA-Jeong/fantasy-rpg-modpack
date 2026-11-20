@@ -109,6 +109,9 @@ jobs:
           grep -E "\[보스\] 필드보스 수치 10개 로드, 오류 0건" server/logs/latest.log
           grep -E "\[보스\] 외부 보스 연결 1개 로드 \(몹 있음 0, 몹 없음 → 기본 보스 1\), 오류 0건" server/logs/latest.log
           if grep -E "(Couldn't parse|Parsing error).*fantasyrpg:(family_armor_create|workbench_4x4)" server/logs/latest.log; then echo "작업대 조합식 오류"; exit 1; fi
+          # 바닐라 전투 인챈트 22종 효과 없음·보호 최대 레벨 3·2·2·2 (정책 P2, 2026-11-21)
+          grep -E "\[인챈트\] 전투 인챈트 22종 중 효과 없음 22종, 보호 최대 레벨 3·2·2·2, 오류 0건" server/logs/latest.log
+          if grep -E "(Failed to (load|parse)|Couldn't (load|parse)|Errors in registry).*enchantment" server/logs/latest.log; then echo "인챈트 데이터 오류"; exit 1; fi
           if grep -E "(Failed to (load|parse)|Couldn't (load|parse)).*(boss_arena|dimension_type)" server/logs/latest.log; then echo "전장 차원 데이터 오류"; exit 1; fi
           if grep -E "(Couldn't load tag|missing references).*damage_type" server/logs/latest.log; then echo "피해 유형 태그 읽기 오류"; exit 1; fi
 

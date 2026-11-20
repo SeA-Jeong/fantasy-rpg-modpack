@@ -1,0 +1,19 @@
+{
+  "replace": true,
+  "values": [
+    "minecraft:protection",
+    "minecraft:fire_protection",
+    "minecraft:feather_falling",
+    "minecraft:blast_protection",
+    "minecraft:projectile_protection",
+    "minecraft:respiration",
+    "minecraft:aqua_affinity",
+    "minecraft:depth_strider",
+    "minecraft:efficiency",
+    "minecraft:silk_touch",
+    "minecraft:unbreaking",
+    "minecraft:fortune",
+    "minecraft:luck_of_the_sea",
+    "minecraft:lure"
+  ]
+}

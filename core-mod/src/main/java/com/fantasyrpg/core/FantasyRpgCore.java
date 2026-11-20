@@ -64,6 +64,10 @@ public final class FantasyRpgCore {
         RuneRegistry.register(modEventBus);
         NeoForge.EVENT_BUS.addListener(RuneEvents::onAnvil);
         NeoForge.EVENT_BUS.addListener(RuneEvents::onTooltip);
+        // 바닐라 전투 인챈트 정리 (정책 P2, 2026-11-21)
+        NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.enchant.CombatEnchants::onLogin);
+        NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.enchant.CombatEnchants::onPlayerTick);
+        NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.enchant.CombatEnchants::onServerStarted);
 
         // 플레이어 성장: 데이터 첨부(직업·레벨·경험치·SP), 몬스터 처치·챕터 첫 완료 경험치, 접속 때 보너스 SP 맞추기
         RpgProgress.register(modEventBus);
