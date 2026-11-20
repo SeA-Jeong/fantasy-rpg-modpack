@@ -5,7 +5,7 @@
   "royalqol": {
     "_comment": "우리 편의 모드(클라이언트 전용). magic-city-mod 저장소 royalqol/ 폴더를 이 커밋으로 빌드한다 (tools/build_royalqol.sh)",
     "repo": "https://github.com/aswq0258/magic-city-mod.git",
-    "commit": "08251d205459c6f808010853f824d1652b7bd336"
+    "commit": "51ac66aec7672f4a413bb9cdba4cb03dcde46bd7"
   },
   "fantasybosses": {
     "_comment": "챕터 보스 모드(라디키온, 2026-11-20). magic-city-mod 저장소 fantasybosses/ 폴더를 이 커밋으로 빌드한다 (tools/build_fantasybosses.sh). 통합 팩에는 overrides/mods 로, 서버 기동 검사는 2단계(GeckoLib 필요)에만",

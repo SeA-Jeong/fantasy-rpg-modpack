@@ -100,6 +100,15 @@ public final class SkillService {
                 m -> m instanceof net.minecraft.world.entity.monster.Enemy && m.isAlive()).isEmpty();
     }
 
+    /**
+     * 마스터리 교체 가능 (기획 2.4 "비전투 안전 지역"): 안전(위) + 마을 안 (magiccity 마을: 왕성도시·요새·항구·국경·작은 마을·성역·쉼터).
+     * 마을 조건은 skill_settings/presets.json mastery_swap.town_only 로 끌 수 있음 [초안] (2026-11-21)
+     */
+    public static boolean masterySwapOk(ServerPlayer p) {
+        if (!isSafe(p)) return false;
+        return !com.fantasyrpg.core.skills.SkillSettings.INSTANCE.masteryTownOnly() || MagicCityApi.inTown(p);
+    }
+
     /** 활성 마스터리 바꾸기 (기획 2.4: 활성 1개, 안전할 때만) */
     public static boolean setMastery(ServerPlayer p, String nodeId) {
         RpgPlayerData d = RpgProgress.get(p);
@@ -111,7 +120,7 @@ public final class SkillService {
             return false;
         }
         if (nodeId.equals(d.activeMastery())) return true;
-        if (!isSafe(p)) {
+        if (!masterySwapOk(p)) {
             tell(p, "message.fantasyrpg.skill.mastery_unsafe", ChatFormatting.RED);
             return false;
         }
@@ -161,7 +170,7 @@ public final class SkillService {
         RpgPlayerData next = d.withNodeRanks(d.nodeRanks(), a.slots());
         boolean masteryKept = false;
         if (PresetRules.masteryChanges(preset.mastery(), d.activeMastery(), d.nodeRanks(), nodes)) {
-            if (isSafe(p)) next = next.withActiveMastery(preset.mastery());
+            if (masterySwapOk(p)) next = next.withActiveMastery(preset.mastery());
             else masteryKept = true;
         }
         RpgProgress.set(p, next);

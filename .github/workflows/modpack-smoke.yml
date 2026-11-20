@@ -79,7 +79,10 @@ jobs:
           # 성장 데이터(레벨 곡선·몬스터 경험치)가 읽혔는지
           grep -E "\[성장\] 레벨 곡선 need" server/logs/latest.log
           # 기본 공격 수치가 읽혔는지
-          grep -E "\[전투\] 기본 공격 로드" server/logs/latest.log
+          grep -E "\[전투\] 기본 공격 로드: .*\(합계 상한 50%\)" server/logs/latest.log
+          # 파티(회복·방벽·경험치)와 마스터리 교체 마을 조건 설정이 읽혔는지 (2026-11-21)
+          grep -E "\[파티\] 회복 16\.0칸 ×0\.5, 방벽 16\.0칸 ×0\.5, 경험치 48\.0칸 \+0\.2/명" server/logs/latest.log
+          grep -E "\[스킬\] 장착 프리셋 해금 레벨 \[1, 20, 40\], 마스터리 교체 마을 안에서만 true" server/logs/latest.log
           # 기사 기본 가드 수치와 장착 프리셋 해금 레벨이 읽혔는지
           grep -E "\[전투\] 기본 가드 로드" server/logs/latest.log
           grep -E "\[스킬\] 장착 프리셋 해금 레벨" server/logs/latest.log

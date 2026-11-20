@@ -125,7 +125,7 @@
   "message.fantasyrpg.skill.no_core": "%s: not enough core (%s needed)",
   "screen.fantasyrpg.node.cd_cost": "Rank %s: cooldown %ss, core %s",
   "screen.fantasyrpg.node.modified": "Enhanced by: %s",
-  "message.fantasyrpg.skill.mastery_unsafe": "You can only switch mastery when safe (no hostiles within 16 blocks, no damage for 10s)",
+  "message.fantasyrpg.skill.mastery_unsafe": "You can only switch mastery in a town while safe (no hostiles within 16 blocks, no damage for 10s)",
   "message.fantasyrpg.skill.mastery_set": "Active mastery: %s",
   "screen.fantasyrpg.mixed": "Mixed",
   "screen.fantasyrpg.node.mastery_active": "Active mastery",
