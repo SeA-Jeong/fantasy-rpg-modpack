@@ -70,7 +70,7 @@ public final class RpgAttacks {
     public static DamageInput basic(CombatSettings s, double physical, double magic, ItemStack weapon, double factor,
                                     ServerPlayer p, double critBonus) {
         DamageInput in = DamageInput.of(s.power(GearRegistry.tierOf(weapon)), physical * factor, magic * factor);
-        if (p.getRandom().nextDouble() < s.critChance() + critBonus) in = in.withCrit(s.critMultiplier());
+        if (s.critRoll(p.getRandom().nextDouble(), critBonus)) in = in.withCrit(s.critMultiplier());
         return in;
     }
 
@@ -78,7 +78,7 @@ public final class RpgAttacks {
     public static DamageInput basic(CombatSettings s, double weaponPower, double physical, double magic, double factor,
                                     ServerPlayer p, double critBonus, boolean forceCrit, double critMultBonus) {
         DamageInput in = DamageInput.of(weaponPower, physical * factor, magic * factor);
-        if (forceCrit || p.getRandom().nextDouble() < s.critChance() + critBonus) in = in.withCrit(s.critMultiplier() + critMultBonus);
+        if (forceCrit || s.critRoll(p.getRandom().nextDouble(), critBonus)) in = in.withCrit(s.critMultiplier() + critMultBonus);
         return in;
     }
 
@@ -86,7 +86,7 @@ public final class RpgAttacks {
     public static DamageInput basic(CombatSettings s, double weaponPower, double physical, double magic, double factor,
                                     ServerPlayer p) {
         DamageInput in = DamageInput.of(weaponPower, physical * factor, magic * factor);
-        if (p.getRandom().nextDouble() < s.critChance()) in = in.withCrit(s.critMultiplier());
+        if (s.critRoll(p.getRandom().nextDouble(), 0)) in = in.withCrit(s.critMultiplier());
         return in;
     }
 

@@ -77,7 +77,7 @@ public final class CombatEvents {
                 double combo = betterCombat() ? BetterCombatCompat.comboMultiplier(p) : 1.0;
                 double factor = BasicAttackMath.basicCoefficient(1.0, combo, charge);
                 // 직업 패시브(공격·주문·기교 2단)
-                mods = SkillPassives.melee(p, target, a.physical(), a.magic());
+                mods = SkillPassives.melee(p, target, a.meleePhysical(), a.magic());               // 궁수 활 근접은 약한 물리 (2026-11-21)
                 in = RpgAttacks.basic(s, s.power(GearRegistry.tierOf(weapon)), mods.physical(), mods.magic(),
                         factor * mods.factor(), p, SkillPassives.critBonus(p), mods.forceCrit(), SkillPassives.critMultBonus(p));
             }

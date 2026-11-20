@@ -47,8 +47,8 @@ public final class CombatManager extends SimpleJsonResourceReloadListener {
         try {
             CombatSettings s = CombatSettings.parse(json.getAsJsonObject());
             settings = s;
-            FantasyRpgCore.LOGGER.info("[전투] 기본 공격 로드: W 1급 {} ~ 10급 {}, 치명타 {}% ×{}, 직업 {}개",
-                    s.power(1), s.power(10), Math.round(s.critChance() * 100), s.critMultiplier(), s.classes().size());
+            FantasyRpgCore.LOGGER.info("[전투] 기본 공격 로드: W 1급 {} ~ 10급 {}, 치명타 {}% ×{} (합계 상한 {}%), 직업 {}개",
+                    s.power(1), s.power(10), Math.round(s.critChance() * 100), s.critMultiplier(), Math.round(s.critCap() * 100), s.classes().size());
         } catch (RuntimeException ex) {
             FantasyRpgCore.LOGGER.error("[전투] basic_attack.json 읽기 실패, 이전 값 유지: {}", ex.getMessage());
         }

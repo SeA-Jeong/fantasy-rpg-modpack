@@ -14,11 +14,26 @@ import java.util.Map;
  * @param weaponPower 등급 1~10의 무기 위력 W (모든 직업 공통)
  * @param critChance 기본 치명타 확률 (0~1)
  * @param critMultiplier 치명타 배율
+ * @param critCap 치명타 확률 합계 상한 (기본 + 스킬 트리 + 유산 + 장비·버프, 2026-11-21 [초안])
  * @param unarmedDamage 맨손 고정 피해
  * @param classes 직업 id → 기본 공격
  */
 public record CombatSettings(double[] weaponPower, double critChance, double critMultiplier, double unarmedDamage,
-                             Map<String, ClassAttack> classes) {
+                             Map<String, ClassAttack> classes, double critCap) {
+
+    public CombatSettings(double[] weaponPower, double critChance, double critMultiplier, double unarmedDamage, Map<String, ClassAttack> classes) {
+        this(weaponPower, critChance, critMultiplier, unarmedDamage, classes, 1.0);
+    }
+
+    /** 치명타 확률 = min(상한, 기본 + 보너스) */
+    public double critChanceWith(double bonus) {
+        return Math.max(0, Math.min(critCap, critChance + bonus));
+    }
+
+    /** roll(0~1)이 치명타인지 */
+    public boolean critRoll(double roll, double bonus) {
+        return roll < critChanceWith(bonus);
+    }
 
     /**
      * 직업 기본 공격.
@@ -28,8 +43,13 @@ public record CombatSettings(double[] weaponPower, double critChance, double cri
      * @param attackSpeed 초당 공격 횟수 (근접 무기 속성, 활은 0)
      * @param drawSeconds 활을 완전히 당기는 시간 (활만, 그 외 0)
      * @param bolt 지팡이 마법 탄 (마법사만, 없으면 null)
+     * @param meleePhysical 근접 물리 계수 (활 근접처럼 주력이 원거리인 직업, 없으면 physical, 2026-11-21)
      */
-    public record ClassAttack(double physical, double magic, double attackSpeed, double drawSeconds, Bolt bolt) {
+    public record ClassAttack(double physical, double magic, double attackSpeed, double drawSeconds, Bolt bolt, double meleePhysical) {
+        public ClassAttack(double physical, double magic, double attackSpeed, double drawSeconds, Bolt bolt) {
+            this(physical, magic, attackSpeed, drawSeconds, bolt, physical);
+        }
+
         /** 완충 기준 초당 피해 (W 1당) */
         public double dpsPerW() {
             if (bolt != null) return (bolt.physical() + bolt.magic()) * 20.0 / bolt.cooldownTicks();
@@ -70,6 +90,8 @@ public record CombatSettings(double[] weaponPower, double critChance, double cri
         double chance = crit.get("chance").getAsDouble();
         double mult = crit.get("multiplier").getAsDouble();
         if (chance < 0 || chance > 1 || mult < 1) throw new IllegalArgumentException("치명타 확률 0~1, 배율 1 이상");
+        double cap = crit.has("cap") ? crit.get("cap").getAsDouble() : 1.0;
+        if (cap < chance || cap > 1) throw new IllegalArgumentException("치명타 상한은 기본 확률 이상 1 이하");
         double unarmed = json.has("unarmed_damage") ? json.get("unarmed_damage").getAsDouble() : 1.0;
 
         Map<String, ClassAttack> classes = new HashMap<>();
@@ -81,11 +103,12 @@ public record CombatSettings(double[] weaponPower, double critChance, double cri
                 bolt = new Bolt(num(b, "physical"), num(b, "magic"), num(b, "range"), b.get("cooldown_ticks").getAsInt());
                 if (bolt.range() <= 0 || bolt.cooldownTicks() <= 0) throw new IllegalArgumentException(e.getKey() + " bolt 사거리·대기 > 0");
             }
-            ClassAttack a = new ClassAttack(num(c, "physical"), num(c, "magic"), num(c, "attack_speed"), num(c, "draw_seconds"), bolt);
+            ClassAttack a = new ClassAttack(num(c, "physical"), num(c, "magic"), num(c, "attack_speed"), num(c, "draw_seconds"), bolt,
+                    c.has("melee_physical") ? num(c, "melee_physical") : num(c, "physical"));
             if (a.physical() < 0 || a.magic() < 0) throw new IllegalArgumentException(e.getKey() + " 계수는 0 이상");
             classes.put(e.getKey(), a);
         }
-        return new CombatSettings(w, chance, mult, unarmed, classes);
+        return new CombatSettings(w, chance, mult, unarmed, classes, cap);
     }
 
     private static double num(JsonObject o, String key) {

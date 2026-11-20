@@ -39,6 +39,28 @@ class CombatSettingsTest {
     }
 
     @Test
+    @DisplayName("치명타 합계 상한 50% [초안]: 기본 5% + 보너스 60%p → 50%, 음수 보너스는 0 아래로 안 감")
+    void critCap() throws IOException {
+        CombatSettings s = load();
+        assertEquals(0.5, s.critCap(), 1e-12);
+        assertEquals(0.20, s.critChanceWith(0.15), 1e-12);
+        assertEquals(0.5, s.critChanceWith(0.60), 1e-12);
+        assertEquals(0.0, s.critChanceWith(-1), 1e-12);
+        assertTrue(s.critRoll(0.49, 0.9));
+        assertTrue(!s.critRoll(0.5, 0.9));
+    }
+
+    @Test
+    @DisplayName("궁수 활 근접: 물리 0.4·초당 1회 [초안] (활 사격 1.3은 그대로), 다른 직업 근접 계수 = 기본 계수")
+    void archerMelee() throws IOException {
+        CombatSettings s = load();
+        assertEquals(0.4, s.forClass("archer").meleePhysical(), 1e-12);
+        assertEquals(1.3, s.forClass("archer").physical(), 1e-12);
+        assertEquals(1.0, s.forClass("archer").attackSpeed(), 1e-12);
+        assertEquals(s.forClass("warrior").physical(), s.forClass("warrior").meleePhysical(), 1e-12);
+    }
+
+    @Test
     @DisplayName("직업 간 완충 초당 피해가 평균의 ±15% 안 (기획 v0.4 화력 격차 목표, 마법사 근접은 제외)")
     void dpsBalance() throws IOException {
         CombatSettings s = load();

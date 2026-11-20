@@ -100,7 +100,7 @@ public final class Cast {
             if (blades != null) fin *= 1.0 + blades.v("shadow_bonus");
         }
         if (fin != 1.0) in = in.withFinalModifier(fin);
-        boolean crit = forceCrit || player.getRandom().nextDouble() < s.critChance() + SkillPassives.critBonus(player);
+        boolean crit = forceCrit || s.critRoll(player.getRandom().nextDouble(), SkillPassives.critBonus(player));   // 합계 상한 (2026-11-21)
         if (crit) in = in.withCrit(s.critMultiplier() + SkillPassives.critMultBonus(player));
         RpgDamage.apply(target, player, in);
         player.setLastHurtMob(target);
