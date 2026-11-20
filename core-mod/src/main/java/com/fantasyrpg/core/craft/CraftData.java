@@ -39,8 +39,13 @@ public final class CraftData {
     }
 
     public static final SimpleJsonResourceReloadListener RECIPES = new SimpleJsonResourceReloadListener(new Gson(), "grid_recipes") {
+        {
+            com.fantasyrpg.core.network.DataSync.register("grid_recipes", f -> apply(f, null, null));   // JEI (전용 서버)
+        }
+
         @Override
         protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager rm, ProfilerFiller pf) {
+            com.fantasyrpg.core.network.DataSync.remember("grid_recipes", map);
             List<GridRecipe> out = new ArrayList<>();
             int bad = 0;
             for (var e : map.entrySet()) {
@@ -61,8 +66,13 @@ public final class CraftData {
     };
 
     public static final SimpleJsonResourceReloadListener ARMOR = new SimpleJsonResourceReloadListener(new Gson(), "armor_crafting") {
+        {
+            com.fantasyrpg.core.network.DataSync.register("armor_crafting", f -> apply(f, null, null));
+        }
+
         @Override
         protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager rm, ProfilerFiller pf) {
+            com.fantasyrpg.core.network.DataSync.remember("armor_crafting", map);
             JsonElement json = map.get(ResourceLocation.fromNamespaceAndPath(FantasyRpgCore.MOD_ID, "costs"));
             if (json == null) {
                 FantasyRpgCore.LOGGER.error("[제작] armor_crafting/costs.json 없음 — 계열 갑옷 만들기·승급이 꺼짐");

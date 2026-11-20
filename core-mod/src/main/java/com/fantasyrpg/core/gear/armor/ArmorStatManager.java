@@ -16,8 +16,8 @@ import java.util.Map;
  * 기본값은 모드 jar 안 {@code data/fantasyrpg/armor_stats/}에 있고, 데이터팩의 같은 경로 파일이 덮어쓴다.
  * 파일 이름이 '_'로 시작하면 무시한다. 검사에 걸린 파일은 거부하고 오류 로그를 남긴다.
  *
- * <p>서버에서 읽은 값이다. 혼자 하기(내장 서버)에서는 클라이언트 툴팁도 같은 값을 쓴다.
- * 전용 서버에 접속한 클라이언트에는 표가 없어서 툴팁에 수치가 안 보일 수 있다(실제 판정은 서버 값).
+ * <p>서버에서 읽은 값이다. 혼자 하기(내장 서버)에서는 클라이언트 툴팁도 같은 값을 쓰고,
+ * 전용 서버에 접속한 클라이언트는 접속·/reload 때 {@link com.fantasyrpg.core.network.DataSync}로 받는다 (2026-11-21).
  */
 public final class ArmorStatManager extends SimpleJsonResourceReloadListener {
     public static final String DIRECTORY = "armor_stats";
@@ -27,10 +27,12 @@ public final class ArmorStatManager extends SimpleJsonResourceReloadListener {
 
     private ArmorStatManager() {
         super(new Gson(), DIRECTORY);
+        com.fantasyrpg.core.network.DataSync.register(DIRECTORY, f -> apply(f, null, null));   // 전용 서버 클라이언트 툴팁
     }
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> files, ResourceManager manager, ProfilerFiller profiler) {
+        com.fantasyrpg.core.network.DataSync.remember(DIRECTORY, files);
         Map<String, ArmorStatTable> loaded = new HashMap<>();
         int errors = 0;
         for (Map.Entry<ResourceLocation, JsonElement> e : files.entrySet()) {

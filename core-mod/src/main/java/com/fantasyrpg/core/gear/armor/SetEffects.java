@@ -48,9 +48,18 @@ public final class SetEffects {
     private static volatile Map<ArmorFamily, SetRules.SetDef> defs = Map.of();
 
     public static void onAddReloadListeners(AddReloadListenerEvent event) {
-        event.addListener(new SimpleJsonResourceReloadListener(new Gson(), "armor_sets") {
+        event.addListener(LISTENER);
+    }
+
+    /** 정적 리스너: 전용 서버 클라이언트도 같은 읽기 코드로 받음 (2026-11-21) */
+    private static final SimpleJsonResourceReloadListener LISTENER = new SimpleJsonResourceReloadListener(new Gson(), "armor_sets") {
+            {
+                com.fantasyrpg.core.network.DataSync.register("armor_sets", f -> apply(f, null, null));
+            }
+
             @Override
             protected void apply(Map<ResourceLocation, JsonElement> files, ResourceManager rm, ProfilerFiller pf) {
+                com.fantasyrpg.core.network.DataSync.remember("armor_sets", files);
                 Map<ArmorFamily, SetRules.SetDef> out = new EnumMap<>(ArmorFamily.class);
                 int bad = 0;
                 for (var e : files.entrySet()) {
@@ -66,7 +75,10 @@ public final class SetEffects {
                 defs = Map.copyOf(out);
                 FantasyRpgCore.LOGGER.info("[방어구] 세트 효과 {}개 계열 로드, 오류 {}건", out.size(), bad);
             }
-        });
+        };
+
+    /** 클래스 로드만 (데이터 동기화 읽기 코드 등록) */
+    public static void bootstrap() {
     }
 
     // ── 입은 상태 ──

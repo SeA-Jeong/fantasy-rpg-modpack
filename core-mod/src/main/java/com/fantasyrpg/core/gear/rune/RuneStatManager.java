@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * {@code data/<ns>/runes/*.json}을 읽어 룬석 효과를 보관한다. /reload로 갱신된다.
  * 기본값은 모드 jar 안에 있고, 데이터팩의 같은 경로 파일이 덮어쓴다. '_'로 시작하는 파일은 무시.
- * 혼자 하기(내장 서버)에서는 클라이언트 툴팁도 같은 값을 쓴다. 전용 서버 클라이언트에는 없을 수 있다.
+ * 혼자 하기(내장 서버)에서는 클라이언트 툴팁도 같은 값을 쓰고, 전용 서버 클라이언트는 DataSync 로 받는다 (2026-11-21).
  */
 public final class RuneStatManager extends SimpleJsonResourceReloadListener {
     public static final String DIRECTORY = "runes";
@@ -24,10 +24,12 @@ public final class RuneStatManager extends SimpleJsonResourceReloadListener {
 
     private RuneStatManager() {
         super(new Gson(), DIRECTORY);
+        com.fantasyrpg.core.network.DataSync.register(DIRECTORY, f -> apply(f, null, null));   // 전용 서버 클라이언트 툴팁
     }
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> files, ResourceManager manager, ProfilerFiller profiler) {
+        com.fantasyrpg.core.network.DataSync.remember(DIRECTORY, files);
         Map<RuneType, RuneDefinition> loaded = new EnumMap<>(RuneType.class);
         int errors = 0;
         for (Map.Entry<ResourceLocation, JsonElement> e : files.entrySet()) {

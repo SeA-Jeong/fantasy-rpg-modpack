@@ -131,6 +131,8 @@ public final class RpgNetwork {
         r.playToClient(Defs.TYPE, Defs.CODEC, (p, ctx) -> ctx.enqueueWork(() -> ClientRpgState.acceptDefs(p.classId(), p.nodes(), p.passives())));
         r.playToClient(Core.TYPE, Core.CODEC, (p, ctx) -> ctx.enqueueWork(() -> ClientRpgState.acceptCore(p.coreId(), p.value(), p.max())));
         r.playToClient(Cooldown.TYPE, Cooldown.CODEC, (p, ctx) -> ctx.enqueueWork(() -> ClientRpgState.acceptCooldown(p.nodeId(), p.ticks())));
+        r.playToClient(DataSync.Payload.TYPE, DataSync.Payload.CODEC,
+                (p, ctx) -> ctx.enqueueWork(() -> com.fantasyrpg.core.client.ClientDataSync.accept(p.dir(), p.json())));   // 2026-11-21
         r.playToClient(OpenClassSelect.TYPE, OpenClassSelect.CODEC, (p, ctx) -> ctx.enqueueWork(() -> ClientRpgState.openClassSelect()));
         r.playToServer(ChooseClass.TYPE, ChooseClass.CODEC, (p, ctx) -> ctx.enqueueWork(() -> {
             if (ctx.player() instanceof ServerPlayer sp) com.fantasyrpg.core.playerdata.ClassSelection.handleChoose(sp, p.classId());

@@ -26,7 +26,8 @@ import java.util.List;
 
 /**
  * JEI: 4×4·5×5 작업대 조합식, 계열 갑옷 승급(2~6급), 1급 계열 갑옷 만들기를 "작업대 조합" 분류로 보여 줌.
- * JEI가 없으면 이 클래스는 로드되지 않는다. 알려진 한계: 전용 서버에 접속한 클라이언트는 조합식 데이터가 없어 비어 보임(혼자 하기는 보임).
+ * JEI가 없으면 이 클래스는 로드되지 않는다. 전용 서버에 접속한 클라이언트는 조합식이 서버 동기화(DataSync)로 늦게 오므로,
+ * JEI 가 먼저 떴으면 받은 뒤 {@link #refresh()} 로 다시 넣는다 (2026-11-21).
  */
 @JeiPlugin
 public class FantasyJeiPlugin implements IModPlugin {
@@ -54,8 +55,36 @@ public class FantasyJeiPlugin implements IModPlugin {
         }
     }
 
+    private static mezz.jei.api.runtime.IJeiRuntime runtime;
+    /** 지금 JEI 에 들어 있는 조합 (다시 넣을 때 숨김) */
+    private static List<GridCategory.Display> current = List.of();
+
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
+        current = displays();
+        registration.addRecipes(GridCategory.TYPE, current);
+    }
+
+    @Override
+    public void onRuntimeAvailable(mezz.jei.api.runtime.IJeiRuntime jeiRuntime) {
+        runtime = jeiRuntime;
+    }
+
+    @Override
+    public void onRuntimeUnavailable() {
+        runtime = null;
+    }
+
+    /** 서버 데이터를 받은 뒤 (전용 서버): JEI 가 이미 떠 있으면 예전 것을 숨기고 새로 넣음 */
+    public static void refresh() {
+        if (runtime == null) return;
+        var rm = runtime.getRecipeManager();
+        if (!current.isEmpty()) rm.hideRecipes(GridCategory.TYPE, current);
+        current = displays();
+        if (!current.isEmpty()) rm.addRecipes(GridCategory.TYPE, current);
+    }
+
+    private static List<GridCategory.Display> displays() {
         List<GridCategory.Display> list = new ArrayList<>();
         for (CraftRules.GridRecipe r : CraftData.recipes()) {
             List<List<ItemStack>> in = new ArrayList<>();
@@ -86,7 +115,7 @@ public class FantasyJeiPlugin implements IModPlugin {
                 }
             }
         }
-        registration.addRecipes(GridCategory.TYPE, list);
+        return list;
     }
 
     @Override

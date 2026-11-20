@@ -58,7 +58,8 @@ public final class FantasyRpgCore {
 
         // 계열 방어구: 등급 컴포넌트·재질·아이템·창작 탭 등록, 수치표로 능력치 붙이기
         GearRegistry.register(modEventBus);
-        com.fantasyrpg.core.gear.RpgAttributes.register(modEventBus);    // 코어 회복·스킬 가속 능력치 (2026-11-21)
+        com.fantasyrpg.core.gear.RpgAttributes.register(modEventBus);
+        com.fantasyrpg.core.network.DataSync.bootstrap();                                // 전용 서버 데이터 동기화 읽기 코드 (2026-11-21)    // 코어 회복·스킬 가속 능력치 (2026-11-21)
         com.fantasyrpg.core.craft.CraftRegistry.register(modEventBus);   // 확장 작업대·부품·소재 (2026-11-20)
         NeoForge.EVENT_BUS.addListener(FamilyArmorAttributes::onItemAttributes);
         // 룬석: 아이템·소켓 컴포넌트·제작대 조합 등록, 모루 보호, 툴팁(클라이언트에서만 불림)
@@ -149,6 +150,7 @@ public final class FantasyRpgCore {
 
     /** /reload 뒤(플레이어 null): 접속한 모두에게 정의·상태·패시브를 다시. 접속 때는 onLogin 이 처리 */
     private static void onDatapackSync(OnDatapackSyncEvent event) {
+        com.fantasyrpg.core.network.DataSync.onDatapackSync(event);                     // 툴팁·JEI 데이터 (전용 서버, 2026-11-21)
         if (event.getPlayer() == null) event.getPlayerList().getPlayers().forEach(SkillService::refreshAll);
     }
 

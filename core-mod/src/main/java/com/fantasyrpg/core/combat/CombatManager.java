@@ -22,10 +22,12 @@ public final class CombatManager extends SimpleJsonResourceReloadListener {
 
     private CombatManager() {
         super(new Gson(), "combat");
+        com.fantasyrpg.core.network.DataSync.register("combat", f -> apply(f, null, null));      // 무기 툴팁 (전용 서버)
     }
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> files, ResourceManager manager, ProfilerFiller profiler) {
+        com.fantasyrpg.core.network.DataSync.remember("combat", files);
         JsonElement g = files.get(ResourceLocation.fromNamespaceAndPath(FantasyRpgCore.MOD_ID, "guard"));
         if (g == null) {
             FantasyRpgCore.LOGGER.error("[전투] combat/guard.json 없음 — 기사 기본 가드가 꺼짐");
