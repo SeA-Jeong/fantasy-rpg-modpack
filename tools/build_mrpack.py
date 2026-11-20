@@ -7,7 +7,7 @@
       --version 0.2.0 --out 마법왕국대륙-테스트팩.mrpack
 
 - 외부 모드 18개는 jar 를 넣지 않고 내려받을 주소와 sha1·sha512·크기만 적는다 (launcher 가 직접 받음).
-- 우리 모드 3개(fantasyrpg·magiccity·royalqol)는 overrides/mods/ 에 jar 로 넣는다.
+- 우리 모드 3개(fantasyrpg·magiccity·royalqol)와 modpack/local-mods/ 의 외부 jar(주소가 없는 모드)는 overrides/mods/ 에 jar 로 넣는다.
 - 테스트 데이터팩은 overrides/datapacks/ 에 넣는다 (월드를 만들 때 직접 고름).
 - Prism Launcher 등에서 "가져오기"로 열면 Minecraft·NeoForge 버전까지 맞춘 인스턴스가 만들어진다.
 """
@@ -41,7 +41,7 @@ def build(lock, resolved, ours_dir, datapacks_dir, guide, version, out):
         "game": "minecraft",
         "versionId": version,
         "name": f"마법 왕국 대륙 통합 테스트 팩 {version}",
-        "summary": "magiccity + fantasyrpg + royalqol + 1차 외부 모드 18개 (테스트용)",
+        "summary": "magiccity + fantasyrpg + royalqol + 외부 보스 모드(파일 포함) + 1차 외부 모드 18개 (테스트용)",
         "files": sorted(files, key=lambda f: f["path"]),
         "dependencies": {"minecraft": lock["minecraft"], "neoforge": lock["neoforge"]},
     }
@@ -51,7 +51,7 @@ def build(lock, resolved, ours_dir, datapacks_dir, guide, version, out):
         for f in ours:
             z.write(os.path.join(ours_dir, f), f"overrides/mods/{f}")
         if datapacks_dir:
-            for name in ("fantasyrpg_content", "fantasyrpg_test"):
+            for name in ("fantasyrpg_content", "fantasyrpg_test", "magiccity_boss_stats_sample"):
                 base = os.path.join(datapacks_dir, name)
                 for root, _, names in os.walk(base):
                     for n in names:

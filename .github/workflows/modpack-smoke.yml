@@ -15,6 +15,7 @@ on:
       - 'tools/build_mrpack.py'
       - 'tools/check_mods.py'
       - '.github/workflows/modpack-smoke.yml'
+      - 'modpack/local-mods/**'
 
 concurrency:
   group: smoke-${{ github.ref }}
@@ -103,12 +104,18 @@ jobs:
           grep -E "\[보스 전장\] 챕터 보스 소재 7개 로드, 오류 0건" server/logs/latest.log
           grep -E "\[제작\] 작업대 조합식 13개 로드, 오류 0건" server/logs/latest.log
           grep -E "\[제작\] 방어구 제작표 로드: 계열 5개" server/logs/latest.log
+          # 보스 수치 데이터(챕터 12·등급표·필드 10)와 외부 보스 연결 (2026-11-20). 1단계는 fantasybosses 가 없으므로 기본 보스로 대신
+          grep -E "\[보스\] 챕터 보스 수치 12개·등급표 1개 로드, 오류 0건" server/logs/latest.log
+          grep -E "\[보스\] 필드보스 수치 10개 로드, 오류 0건" server/logs/latest.log
+          grep -E "\[보스\] 외부 보스 연결 1개 로드 \(몹 있음 0, 몹 없음 → 기본 보스 1\), 오류 0건" server/logs/latest.log
           if grep -E "(Couldn't parse|Parsing error).*fantasyrpg:(family_armor_create|workbench_4x4)" server/logs/latest.log; then echo "작업대 조합식 오류"; exit 1; fi
           if grep -E "(Failed to (load|parse)|Couldn't (load|parse)).*(boss_arena|dimension_type)" server/logs/latest.log; then echo "전장 차원 데이터 오류"; exit 1; fi
           if grep -E "(Couldn't load tag|missing references).*damage_type" server/logs/latest.log; then echo "피해 유형 태그 읽기 오류"; exit 1; fi
 
       - name: "통합 팩(.mrpack) 만들기·설치"
         run: |
+          # 파일로 넣는 외부 모드(fantasybosses, GeckoLib 필요)는 1단계 뒤에 더함
+          cp modpack/local-mods/*.jar ours/
           python3 tools/build_mrpack.py --lock modpack/mods.lock.json --resolved external/resolved.json \
             --ours ours --datapacks modpack/datapacks --guide docs/TESTING.md --version smoke --out smoke.mrpack
           python3 tools/install_mrpack.py smoke.mrpack packinst
@@ -130,6 +137,8 @@ jobs:
             --command "rpg simulate 100 2.0 0 0.25 0=>150"
           # royalqol 은 클라이언트 전용: 서버 모드 목록에 올라오고(로딩 오류 없이) 진입점은 만들어지지 않아야 한다
           grep -E "Royal QoL .*\(royalqol\)" server/logs/latest.log
+          # 외부 보스 모드가 서버에서 불러지고 3장 연결이 그 몹을 찾는지 (2026-11-20)
+          grep -E "\[보스\] 외부 보스 연결 1개 로드 \(몹 있음 1, 몹 없음 → 기본 보스 0\), 오류 0건" server/logs/latest.log
 
       - name: 로그 보관
         if: always()
