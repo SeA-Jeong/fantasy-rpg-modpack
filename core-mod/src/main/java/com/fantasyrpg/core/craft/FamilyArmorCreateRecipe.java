@@ -20,6 +20,7 @@ import java.util.List;
 /**
  * 일반 제작대(3×3, 모양 없음): 바닐라 갑옷 한 부위 + 계열 재료 → 그 계열 1급 갑옷.
  * 인챈트·장식·이름은 그대로 옮기고 내구도는 가득. 재료는 armor_crafting/costs.json 의 create.
+ * 성향 각인석 1개를 더 넣으면 그 성향으로 만든다(없으면 균형, 2026-11-21).
  */
 public class FamilyArmorCreateRecipe extends CustomRecipe {
     public FamilyArmorCreateRecipe(CraftingBookCategory category) {
@@ -29,6 +30,16 @@ public class FamilyArmorCreateRecipe extends CustomRecipe {
     public static ItemStack result(List<ItemStack> filled) {
         ArmorTable t = CraftData.armor();
         if (t == null || filled.size() < 2) return ItemStack.EMPTY;
+        com.fantasyrpg.core.gear.armor.AffinityRules.Affinity aff = null;
+        List<ItemStack> noStone = new ArrayList<>();
+        for (ItemStack s : filled) {
+            var a = CraftRegistry.stoneAffinity(s);
+            if (a != null) {
+                if (aff != null) return ItemStack.EMPTY;   // 각인석은 하나만
+                aff = a;
+            } else noStone.add(s);
+        }
+        filled = noStone;
         for (ArmorFamily f : ArmorFamily.values()) {
             ArmorTable.Create c = t.create().get(f.id());
             if (c == null) continue;
@@ -46,6 +57,7 @@ public class FamilyArmorCreateRecipe extends CustomRecipe {
                 out.applyComponents(base.getComponentsPatch());
                 out.set(GearRegistry.GEAR_TIER.get(), 1);
                 out.remove(DataComponents.DAMAGE);
+                if (aff != null) out.set(GearRegistry.AFFINITY.get(), aff.id());
                 return out;
             }
         }

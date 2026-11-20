@@ -88,7 +88,8 @@ public final class Cast {
         CombatSettings s = CombatManager.INSTANCE.settings();
         if (s == null) return false;
         double magicBonus = SkillPassives.sum(player, "skill_magic_bonus")
-                + com.fantasyrpg.core.gear.armor.SetEffects.skillMagicBonus(player);                // 마도 4세트 (2026-11-21)
+                + com.fantasyrpg.core.gear.armor.SetEffects.skillMagicBonus(player)                 // 마도 4세트 (2026-11-21)
+                + com.fantasyrpg.core.gear.armor.AffinityEffects.bonus(player, "skill_magic_bonus");   // 주문 성향
         double physicalBonus = SkillPassives.sum(player, "skill_physical_bonus");
         DamageInput in = DamageInput.of(weaponPower, physical, magic).withBonus(physicalBonus, magicBonus);
         double fin = (1.0 + bonus) * mult * (1.0 + SkillPassives.sum(player, "all_damage_bonus") + SkillPassives.afterParryBonus(player)

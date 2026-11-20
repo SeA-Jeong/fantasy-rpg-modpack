@@ -31,6 +31,7 @@ public final class RuneEvents {
         ItemStack stack = event.getItemStack();
         List<Component> tip = event.getToolTip();
         if (stack.getItem() instanceof FamilyArmorItem fa) com.fantasyrpg.core.gear.armor.SetTooltip.add(event, fa);   // 세트 효과 (2026-11-21)
+        if (stack.getItem() instanceof FamilyArmorItem) com.fantasyrpg.core.gear.armor.AffinityTooltip.add(tip, stack);   // 성향 (2026-11-21)
         if (stack.getItem() instanceof FamilyArmorItem && FamilyArmorItem.isBroken(stack)) {                     // 파손 (2026-11-21)
             tip.add(Math.min(1, tip.size()), Component.translatable("tooltip.fantasyrpg.armor_broken").withStyle(ChatFormatting.RED));
         }

@@ -56,6 +56,13 @@ public final class GearRegistry {
                     .networkSynchronized(com.fantasyrpg.core.gear.heirloom.HeirloomTag.STREAM_CODEC)
                     .build());
 
+    /** 방어구 성향 id (attack·spell·guard·finesse, 없으면 균형) — 2026-11-21 claude/방어구성향_초안.md */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> AFFINITY =
+            COMPONENTS.register("affinity", () -> DataComponentType.<String>builder()
+                    .persistent(Codec.STRING)
+                    .networkSynchronized(ByteBufCodecs.STRING_UTF8)
+                    .build());
+
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> GEAR_TIER =
             COMPONENTS.register("gear_tier", () -> DataComponentType.<Integer>builder()
                     .persistent(Codec.intRange(ArmorStatTable.MIN_TIER, ArmorStatTable.MAX_TIER))

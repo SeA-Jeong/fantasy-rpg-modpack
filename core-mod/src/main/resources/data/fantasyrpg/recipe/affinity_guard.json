@@ -1,0 +1,20 @@
+{
+  "_comment": "[초안] 성향 각인석 — 룬 원석 1 + 재료 2 (claude/방어구성향_초안.md 3절)",
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "fantasyrpg:rune_ore"
+    },
+    {
+      "item": "minecraft:gold_ingot"
+    },
+    {
+      "item": "minecraft:gold_ingot"
+    }
+  ],
+  "result": {
+    "id": "fantasyrpg:affinity_guard",
+    "count": 1
+  }
+}

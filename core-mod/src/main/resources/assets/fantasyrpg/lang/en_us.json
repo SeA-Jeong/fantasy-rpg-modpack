@@ -264,5 +264,22 @@
   "message.fantasyrpg.class_change.confirm": "§e[Growth] Change class to %s? Level kept, all SP refunded. Cost: %s. Confirm: /rpgclass change %s confirm",
   "screen.fantasyrpg.preset.build": "SP build saved (%s SP) — applying a different build costs materials in a town",
   "tooltip.fantasyrpg.armor_broken": "Broken — needs repair (armor, runes and set bonus off)",
-  "message.fantasyrpg.armor_broken": "%s is broken! Repair it at a crafting table"
+  "message.fantasyrpg.armor_broken": "%s is broken! Repair it at a crafting table",
+  "item.fantasyrpg.affinity_attack": "Attack Glyph",
+  "item.fantasyrpg.affinity_spell": "Spell Glyph",
+  "item.fantasyrpg.affinity_guard": "Guard Glyph",
+  "item.fantasyrpg.affinity_finesse": "Finesse Glyph",
+  "affinity.fantasyrpg.attack": "Attack",
+  "affinity.fantasyrpg.spell": "Spell",
+  "affinity.fantasyrpg.guard": "Guard",
+  "affinity.fantasyrpg.finesse": "Finesse",
+  "affinity.fantasyrpg.balance": "Balance",
+  "affinity.fantasyrpg.key.physical_bonus": "Physical damage +%s",
+  "affinity.fantasyrpg.key.magic_bonus": "Magic damage +%s",
+  "affinity.fantasyrpg.key.skill_magic_bonus": "Skill magic damage +%s",
+  "affinity.fantasyrpg.key.max_health": "Max health +%s",
+  "affinity.fantasyrpg.key.crit_chance": "Crit chance +%s",
+  "affinity.fantasyrpg.key.skill_haste": "Skill haste +%s",
+  "tooltip.fantasyrpg.affinity": "Affinity: %s",
+  "tooltip.fantasyrpg.affinity_resonance": "Resonance: %s pieces of this affinity + %s SP ≥ %s → ×%s"
 }

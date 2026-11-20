@@ -39,6 +39,7 @@ public final class DataSync {
         Object[] touch = {com.fantasyrpg.core.gear.armor.ArmorStatManager.INSTANCE, com.fantasyrpg.core.gear.rune.RuneStatManager.INSTANCE,
                 com.fantasyrpg.core.combat.CombatManager.INSTANCE, com.fantasyrpg.core.craft.CraftData.RECIPES, com.fantasyrpg.core.craft.CraftData.ARMOR};
         com.fantasyrpg.core.gear.armor.SetEffects.bootstrap();
+        com.fantasyrpg.core.gear.armor.AffinityEffects.bootstrap();
         FantasyRpgCore.LOGGER.debug("[동기화] 읽기 코드 {}개 등록 ({}개 리스너)", APPLIERS.size(), touch.length);
     }
 

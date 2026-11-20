@@ -143,7 +143,8 @@ public final class SkillPassives {
     public static double critBonus(ServerPlayer p) {
         Learned l = anyOf(p, SkillIds.FINESSE_SENSE);
         double heirloom = com.fantasyrpg.core.gear.heirloom.HeirloomService.bonus(p, "crit_chance");   // 유산 기교 특성 (트리 +15%p 상한과 따로)
-        return (l == null ? 0 : Math.min(0.15, l.v("crit_chance"))) + heirloom;
+        return (l == null ? 0 : Math.min(0.15, l.v("crit_chance"))) + heirloom
+                + com.fantasyrpg.core.gear.armor.AffinityEffects.bonus(p, "crit_chance");                // 기교 성향 (합계 상한 50% 안)
     }
 
     /** 치명타 배율에 더할 값 (도적 급소 감각 5랭크: 표식이 다 찼을 때) */

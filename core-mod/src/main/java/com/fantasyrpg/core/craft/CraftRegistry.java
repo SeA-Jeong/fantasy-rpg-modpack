@@ -55,6 +55,8 @@ public final class CraftRegistry {
     /** 계열 핵심 부품 */
     /** 룬석 공통 재료 (2026-11-21, claude/룬석_재료드롭_초안.md) */
     public static final List<String> RUNE_MATS = List.of("rune_ore");
+    /** 성향 각인석 (2026-11-21, claude/방어구성향_초안.md) — affinity_<성향> */
+    public static final List<String> AFFINITY_STONES = List.of("affinity_attack", "affinity_spell", "affinity_guard", "affinity_finesse");
     public static final List<String> CORES = List.of("sanctum_plate", "dwarf_steel_plate", "dragonscale_plate", "spirit_weave", "rune_frame");
 
     static {
@@ -62,6 +64,14 @@ public final class CraftRegistry {
         for (String id : REGIONAL) MATERIALS.put(id, ITEMS.registerSimpleItem(id));
         for (String id : CORES) MATERIALS.put(id, ITEMS.registerSimpleItem(id));
         for (String id : RUNE_MATS) MATERIALS.put(id, ITEMS.registerSimpleItem(id));
+        for (String id : AFFINITY_STONES) MATERIALS.put(id, ITEMS.registerSimpleItem(id));
+    }
+
+    /** 성향 각인석이면 그 성향, 아니면 null */
+    public static com.fantasyrpg.core.gear.armor.AffinityRules.Affinity stoneAffinity(ItemStack s) {
+        String key = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(s.getItem()).toString();
+        if (!key.startsWith(FantasyRpgCore.MOD_ID + ":affinity_")) return null;
+        return com.fantasyrpg.core.gear.armor.AffinityRules.Affinity.byId(key.substring((FantasyRpgCore.MOD_ID + ":affinity_").length()));
     }
 
     public static final DeferredHolder<MenuType<?>, MenuType<GridCraftMenu>> MENU_4 = MENUS.register("workbench_4x4",
@@ -72,6 +82,9 @@ public final class CraftRegistry {
     public static final DeferredHolder<RecipeSerializer<?>, SimpleCraftingRecipeSerializer<FamilyArmorCreateRecipe>> ARMOR_CREATE =
             SERIALIZERS.register("family_armor_create", () -> new SimpleCraftingRecipeSerializer<>(FamilyArmorCreateRecipe::new));
     /** 계열 갑옷 수리 (2026-11-21) */
+    /** 성향 재조율 (2026-11-21) */
+    public static final DeferredHolder<RecipeSerializer<?>, SimpleCraftingRecipeSerializer<FamilyArmorRetuneRecipe>> ARMOR_RETUNE =
+            SERIALIZERS.register("family_armor_retune", () -> new SimpleCraftingRecipeSerializer<>(FamilyArmorRetuneRecipe::new));
     public static final DeferredHolder<RecipeSerializer<?>, SimpleCraftingRecipeSerializer<FamilyArmorRepairRecipe>> ARMOR_REPAIR =
             SERIALIZERS.register("family_armor_repair", () -> new SimpleCraftingRecipeSerializer<>(FamilyArmorRepairRecipe::new));
 

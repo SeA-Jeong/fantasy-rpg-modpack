@@ -51,6 +51,10 @@ public final class FamilyArmorItem extends ArmorItem {
 
     @Override
     public Component getName(ItemStack stack) {
-        return Component.translatable("item.fantasyrpg.tiered", super.getName(stack), GearRegistry.tierOf(stack));
+        Component base = Component.translatable("item.fantasyrpg.tiered", super.getName(stack), GearRegistry.tierOf(stack));
+        String aff = stack.get(GearRegistry.AFFINITY.get());
+        if (aff == null) return base;                                                             // 균형은 표시 안 함
+        return Component.empty().append(base).append(Component.literal(" · "))
+                .append(Component.translatable("affinity.fantasyrpg." + aff).withStyle(AffinityTooltip.color(aff)));
     }
 }

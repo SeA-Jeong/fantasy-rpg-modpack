@@ -264,5 +264,22 @@
   "message.fantasyrpg.class_change.confirm": "§e[성장] %s(으)로 직업을 바꿉니다. 레벨은 그대로, 쓴 SP는 모두 돌려받습니다. 비용: %s. 확인: /rpgclass change %s confirm",
   "screen.fantasyrpg.preset.build": "SP 배분 저장됨 (%s SP) — 다르면 적용할 때 마을 안에서 재료를 내고 다시 찍음",
   "tooltip.fantasyrpg.armor_broken": "파손 — 수리 필요 (방어력·룬석·세트 효과 꺼짐)",
-  "message.fantasyrpg.armor_broken": "%s 파손! 제작대에서 수리 재료로 고치세요"
+  "message.fantasyrpg.armor_broken": "%s 파손! 제작대에서 수리 재료로 고치세요",
+  "item.fantasyrpg.affinity_attack": "공격의 각인석",
+  "item.fantasyrpg.affinity_spell": "주문의 각인석",
+  "item.fantasyrpg.affinity_guard": "수호의 각인석",
+  "item.fantasyrpg.affinity_finesse": "기교의 각인석",
+  "affinity.fantasyrpg.attack": "공격",
+  "affinity.fantasyrpg.spell": "주문",
+  "affinity.fantasyrpg.guard": "수호",
+  "affinity.fantasyrpg.finesse": "기교",
+  "affinity.fantasyrpg.balance": "균형",
+  "affinity.fantasyrpg.key.physical_bonus": "물리 피해 +%s",
+  "affinity.fantasyrpg.key.magic_bonus": "마법 피해 +%s",
+  "affinity.fantasyrpg.key.skill_magic_bonus": "스킬 마법 피해 +%s",
+  "affinity.fantasyrpg.key.max_health": "최대 체력 +%s",
+  "affinity.fantasyrpg.key.crit_chance": "치명타 확률 +%s",
+  "affinity.fantasyrpg.key.skill_haste": "스킬 가속 +%s",
+  "tooltip.fantasyrpg.affinity": "성향: %s",
+  "tooltip.fantasyrpg.affinity_resonance": "공명: 같은 성향 %s부위 + %s 방향 SP %s 이상이면 ×%s"
 }

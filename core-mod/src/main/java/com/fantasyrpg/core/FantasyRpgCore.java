@@ -69,6 +69,8 @@ public final class FantasyRpgCore {
         // 계열 방어구 세트 효과 (2026-11-21)
         NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.armor.SetEffects::onAddReloadListeners);
         NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.armor.SetEffects::onPlayerTick);
+        NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.armor.AffinityEffects::onAddReloadListeners);   // 방어구 성향 (2026-11-21)
+        NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.armor.AffinityEffects::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.armor.SetEffects::onIncomingDamage);
         NeoForge.EVENT_BUS.addListener(com.fantasyrpg.core.gear.armor.SetEffects::onEffectAdded);
         // 룬석 몬스터 드롭 (2026-11-21)
@@ -144,6 +146,7 @@ public final class FantasyRpgCore {
         if (event.getEntity() instanceof ServerPlayer p) {
             com.fantasyrpg.core.playerdata.ClassSelection.forget(p);
             CoreService.forget(p);
+            com.fantasyrpg.core.gear.armor.AffinityEffects.forget(p);
             SkillRuntime.forget(p);
         }
     }

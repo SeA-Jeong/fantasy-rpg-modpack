@@ -1,0 +1,37 @@
+{
+  "_comment": "[초안] 방어구 성향 (claude/방어구성향_초안.md, 기획 v0.4 6.3, 2026-11-21). options = 부위 하나당 옵션, band = 등급 구간 배율(1~3급·4~6급·7~10급), resonance = 같은 성향 pieces부위 + 그 트리 방향 SP ≥ direction_sp → ×mult (균형 제외), retune_stones = 재조율에 드는 같은 성향 각인석 수(등급 구간별). 키: physical_bonus·magic_bonus(모든 피해), skill_magic_bonus(스킬 마법), max_health(체력, 상한 32 밖), crit_chance(합계 상한 50% 안), skill_haste",
+  "options": {
+    "attack": {
+      "physical_bonus": 0.02
+    },
+    "spell": {
+      "skill_magic_bonus": 0.02
+    },
+    "guard": {
+      "max_health": 1
+    },
+    "finesse": {
+      "crit_chance": 0.01,
+      "skill_haste": 1
+    },
+    "balance": {
+      "physical_bonus": 0.01,
+      "magic_bonus": 0.01
+    }
+  },
+  "band": [
+    1,
+    1.5,
+    2
+  ],
+  "resonance": {
+    "pieces": 4,
+    "direction_sp": 10,
+    "mult": 1.25
+  },
+  "retune_stones": [
+    1,
+    2,
+    3
+  ]
+}
