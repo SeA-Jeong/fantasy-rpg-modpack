@@ -236,14 +236,20 @@ public final class SkillTreeScreen extends Screen {
         y += 16;
         List<Component> tip = null;
         // 강화 버튼
-        String item = h.getString("next_item");
-        boolean canTry = h.getBoolean("awakened") && h.getInt("tier") < h.getInt("cap") && !item.isEmpty();
+        net.minecraft.nbt.ListTag next = h.getList("next_cost", net.minecraft.nbt.Tag.TAG_COMPOUND);
+        boolean canTry = h.getBoolean("awakened") && h.getInt("tier") < h.getInt("cap") && !next.isEmpty();
         int bw = 220;
         g.fill(left, y, left + bw, y + 18, canTry ? 0xC0203040 : 0xC0201010);
         g.renderOutline(left, y, bw, 18, canTry ? 0xFF6FD0FF : 0xFF505050);
-        Component costName = item.isEmpty() ? Component.literal("-")
-                : Component.translatable(net.minecraft.core.registries.BuiltInRegistries.ITEM.get(net.minecraft.resources.ResourceLocation.parse(item)).getDescriptionId());
-        g.drawString(font, Component.translatable("screen.fantasyrpg.heirloom.enhance", h.getInt("tier") + 1, costName, h.getInt("next_count")),
+        net.minecraft.network.chat.MutableComponent costName = Component.empty();
+        if (next.isEmpty()) costName.append("-");
+        for (int i = 0; i < next.size(); i++) {
+            net.minecraft.nbt.CompoundTag c = next.getCompound(i);
+            if (i > 0) costName.append(", ");
+            costName.append(Component.translatable(net.minecraft.core.registries.BuiltInRegistries.ITEM.get(net.minecraft.resources.ResourceLocation.parse(c.getString("item"))).getDescriptionId()))
+                    .append(" ×" + c.getInt("count"));
+        }
+        g.drawString(font, Component.translatable("screen.fantasyrpg.heirloom.enhance", h.getInt("tier") + 1, costName),
                 left + 4, y + 5, canTry ? 0xFFFFFFFF : 0xFF808080, false);
         Hit eh = new Hit(left, y, bw, 18, "heirloom_enhance", "", 0);
         hits.add(eh);

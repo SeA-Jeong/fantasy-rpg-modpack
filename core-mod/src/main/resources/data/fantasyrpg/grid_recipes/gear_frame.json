@@ -1,0 +1,19 @@
+{
+  "_comment": "[초안] 장비 골조 — 모양 없음, 4×4 작업대, 진행 2급 이상",
+  "grid": 4,
+  "grade": 2,
+  "ingredients": [
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 8
+    },
+    {
+      "item": "fantasyrpg:reinforced_alloy",
+      "count": 4
+    }
+  ],
+  "result": {
+    "item": "fantasyrpg:gear_frame",
+    "count": 2
+  }
+}

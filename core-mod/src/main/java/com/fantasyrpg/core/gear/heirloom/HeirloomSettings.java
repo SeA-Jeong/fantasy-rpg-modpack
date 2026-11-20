@@ -19,8 +19,16 @@ import java.util.Map;
 public record HeirloomSettings(Map<String, Map<String, Double>> traits, Map<Integer, Cost> enhance, boolean stageUpMaterials) {
     public static final List<String> DIRECTIONS = List.of("attack", "spell", "guard", "finesse");
 
-    /** 한 단계 강화 비용 */
-    public record Cost(String item, int count) {}
+    /** 한 단계 강화 비용: 재료 여러 종류 (2026-11-20 장비 부품으로 교체하면서 여러 종류로) */
+    public record Cost(List<Part> parts) {
+        public Cost {
+            parts = List.copyOf(parts);
+            if (parts.isEmpty()) throw new IllegalArgumentException("강화 재료 없음");
+        }
+    }
+
+    /** 재료 한 종류 */
+    public record Part(String item, int count) {}
 
     public HeirloomSettings {
         traits = Map.copyOf(traits);
@@ -35,7 +43,7 @@ public record HeirloomSettings(Map<String, Map<String, Double>> traits, Map<Inte
         }
         for (var e : enhance.entrySet()) {
             if (e.getKey() < 2 || e.getKey() > 10) throw new IllegalArgumentException("강화 목표 등급은 2~10: " + e.getKey());
-            if (e.getValue().count() <= 0) throw new IllegalArgumentException(e.getKey() + "급 재료 개수는 1 이상");
+            for (Part pt : e.getValue().parts()) if (pt.count() <= 0) throw new IllegalArgumentException(e.getKey() + "급 재료 개수는 1 이상");
         }
     }
 
@@ -53,7 +61,16 @@ public record HeirloomSettings(Map<String, Map<String, Double>> traits, Map<Inte
         o.getAsJsonArray("enhance").forEach(list::add);
         for (JsonElement e : list) {
             JsonObject c = e.getAsJsonObject();
-            enhance.put(c.get("to").getAsInt(), new Cost(c.get("item").getAsString(), c.get("count").getAsInt()));
+            List<Part> parts = new ArrayList<>();
+            if (c.has("items")) {
+                for (JsonElement it : c.getAsJsonArray("items")) {
+                    JsonObject io = it.getAsJsonObject();
+                    parts.add(new Part(io.get("item").getAsString(), io.get("count").getAsInt()));
+                }
+            } else {
+                parts.add(new Part(c.get("item").getAsString(), c.get("count").getAsInt()));
+            }
+            enhance.put(c.get("to").getAsInt(), new Cost(parts));
         }
         return new HeirloomSettings(traits, enhance, !o.has("stage_up_materials") || o.get("stage_up_materials").getAsBoolean());
     }

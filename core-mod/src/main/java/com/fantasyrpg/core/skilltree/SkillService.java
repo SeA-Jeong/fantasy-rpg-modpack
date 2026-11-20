@@ -428,8 +428,14 @@ public final class SkillService {
         ht.put("traits", tr);
         com.fantasyrpg.core.gear.heirloom.HeirloomSettings hs = com.fantasyrpg.core.gear.heirloom.HeirloomService.settings();
         com.fantasyrpg.core.gear.heirloom.HeirloomSettings.Cost cost = hs == null ? null : hs.enhance().get(h.tier() + 1);
-        ht.putString("next_item", cost == null ? "" : cost.item());
-        ht.putInt("next_count", cost == null ? 0 : cost.count());
+        ListTag next = new ListTag();
+        if (cost != null) for (var pt : cost.parts()) {
+            CompoundTag c = new CompoundTag();
+            c.putString("item", pt.item());
+            c.putInt("count", pt.count());
+            next.add(c);
+        }
+        ht.put("next_cost", next);
         t.put("heirloom", ht);
         CompoundTag ranks = new CompoundTag();
         d.nodeRanks().forEach(ranks::putInt);

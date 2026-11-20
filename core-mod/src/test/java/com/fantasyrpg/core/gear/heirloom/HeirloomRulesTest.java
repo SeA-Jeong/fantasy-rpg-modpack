@@ -46,11 +46,14 @@ class HeirloomRulesTest {
     @DisplayName("강화 판정: 잠듦·한계·최고 등급·재료 부족")
     void enhance() throws Exception {
         HeirloomSettings s = shipped();
-        assertEquals(HeirloomRules.EnhanceResult.NOT_AWAKENED, HeirloomRules.canEnhance(1, 3, false, s, 99));
-        assertEquals(HeirloomRules.EnhanceResult.AT_CAP, HeirloomRules.canEnhance(3, 3, true, s, 99));
-        assertEquals(HeirloomRules.EnhanceResult.NOT_ENOUGH, HeirloomRules.canEnhance(1, 3, true, s, 7));
-        assertEquals(HeirloomRules.EnhanceResult.OK, HeirloomRules.canEnhance(1, 3, true, s, 8));
-        assertEquals(HeirloomRules.EnhanceResult.MAX, HeirloomRules.canEnhance(10, 10, true, s, 99));
+        assertEquals(HeirloomRules.EnhanceResult.NOT_AWAKENED, HeirloomRules.canEnhance(1, 3, false, s, id -> 99));
+        assertEquals(HeirloomRules.EnhanceResult.AT_CAP, HeirloomRules.canEnhance(3, 3, true, s, id -> 99));
+        assertEquals(HeirloomRules.EnhanceResult.NOT_ENOUGH, HeirloomRules.canEnhance(1, 3, true, s, id -> 5));
+        assertEquals(HeirloomRules.EnhanceResult.OK, HeirloomRules.canEnhance(1, 3, true, s, id -> 6));
+        // 3급: 정밀 부품 4 + 강화합금 4 — 하나라도 모자라면 부족
+        assertEquals(HeirloomRules.EnhanceResult.NOT_ENOUGH, HeirloomRules.canEnhance(2, 3, true, s, id -> id.endsWith("precision_part") ? 3 : 9));
+        assertEquals(HeirloomRules.EnhanceResult.OK, HeirloomRules.canEnhance(2, 3, true, s, id -> 4));
+        assertEquals(HeirloomRules.EnhanceResult.MAX, HeirloomRules.canEnhance(10, 10, true, s, id -> 99));
     }
 
     @Test
@@ -59,26 +62,22 @@ class HeirloomRulesTest {
         HeirloomSettings s = shipped();
         assertEquals(4, s.traits().size());
         assertEquals(9, s.enhance().size());
-        assertEquals(8, s.enhance().get(2).count());
+        assertEquals(6, s.enhance().get(2).parts().get(0).count());
+        assertEquals(3, s.enhance().get(6).parts().size());
         assertEquals(0.12, s.bonus(Map.of("attack", 3), "physical_bonus"), 1e-9);
         assertEquals(0.04, s.bonus(Map.of("finesse", 2, "attack", 1), "crit_chance"), 1e-9);
         assertEquals(0.0, s.bonus(Map.of("attack", 3), "magic_bonus"), 1e-9);
     }
 
     @Test
-    @DisplayName("각성 선물: 진행 등급이 오르면 새로 열린 등급 강화 재료 — 2~6급 합계가 오버월드 강화에 딱 맞음")
+    @DisplayName("각성 선물: 진행 등급이 오르면 새로 열린 등급 강화 재료 — 2~6급 선물이 강화 비용과 똑같음 (메인 진행만으로 막히지 않음)")
     void stageUpGift() throws Exception {
         HeirloomSettings s = shipped();
         assertEquals(null, HeirloomRules.stageUpGift(1, s));
-        assertEquals("minecraft:iron_ingot", HeirloomRules.stageUpGift(2, s).item());
-        int iron = 0, diamond = 0;
-        for (int g = 2; g <= 6; g++) {
-            HeirloomSettings.Cost c = HeirloomRules.stageUpGift(g, s);
-            if (c.item().equals("minecraft:iron_ingot")) iron += c.count();
-            else diamond += c.count();
-        }
-        assertEquals(24, iron);
-        assertEquals(24, diamond);
+        assertEquals("fantasyrpg:reinforced_alloy", HeirloomRules.stageUpGift(2, s).parts().get(0).item());
+        for (int g = 2; g <= 6; g++) assertEquals(s.enhance().get(g), HeirloomRules.stageUpGift(g, s));
+        // 7급부터는 시험용 네더라이트 조각 그대로
+        assertEquals("minecraft:netherite_scrap", s.enhance().get(7).parts().get(0).item());
     }
 
     @Test

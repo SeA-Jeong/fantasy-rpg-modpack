@@ -1,0 +1,19 @@
+{
+  "_comment": "[초안] 정령직물 (엘프) — 모양 없음, 5×5 작업대, 진행 4급 이상",
+  "grid": 5,
+  "grade": 4,
+  "ingredients": [
+    {
+      "item": "fantasyrpg:reinforced_lining",
+      "count": 1
+    },
+    {
+      "item": "fantasyrpg:moonsilver_thread",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "fantasyrpg:spirit_weave",
+    "count": 2
+  }
+}

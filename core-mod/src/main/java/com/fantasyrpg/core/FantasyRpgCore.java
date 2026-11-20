@@ -58,6 +58,7 @@ public final class FantasyRpgCore {
 
         // 계열 방어구: 등급 컴포넌트·재질·아이템·창작 탭 등록, 수치표로 능력치 붙이기
         GearRegistry.register(modEventBus);
+        com.fantasyrpg.core.craft.CraftRegistry.register(modEventBus);   // 확장 작업대·부품·소재 (2026-11-20)
         NeoForge.EVENT_BUS.addListener(FamilyArmorAttributes::onItemAttributes);
         // 룬석: 아이템·소켓 컴포넌트·제작대 조합 등록, 모루 보호, 툴팁(클라이언트에서만 불림)
         RuneRegistry.register(modEventBus);
@@ -121,6 +122,8 @@ public final class FantasyRpgCore {
         event.addListener(SkillData.PASSIVES);
         event.addListener(SkillData.CORES);
         event.addListener(SkillSettings.INSTANCE);
+        event.addListener(com.fantasyrpg.core.craft.CraftData.RECIPES);
+        event.addListener(com.fantasyrpg.core.craft.CraftData.ARMOR);
     }
 
     private static void onLogout(PlayerEvent.PlayerLoggedOutEvent event) {

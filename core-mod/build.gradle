@@ -59,6 +59,11 @@ repositories {
         url = 'https://api.modrinth.com/maven'
         content { includeGroup 'maven.modrinth' }
     }
+    // JEI API: 작업대 조합식을 JEI에 보여 주는 플러그인 컴파일용 (2026-11-20)
+    maven {
+        url = 'https://maven.blamejared.com/'
+        content { includeGroup 'mezz.jei' }
+    }
 }
 
 dependencies {
@@ -69,6 +74,9 @@ dependencies {
     // Better Combat 연동 실험 준비 (설계: 프로젝트 문서 claude/혼합개발_연동설계_v1.md C-4).
     // 컴파일 참조만 하고 배포 jar·테스트 팩에는 넣지 않는다. 연동 코드는 compat/bettercombat 에서 ModList 확인 후에만 로드
     compileOnly "maven.modrinth:better-combat:${bettercombat_version}"
+    // JEI 플러그인(compat/jei): 컴파일 참조만. JEI가 없으면 플러그인 클래스가 로드되지 않음
+    compileOnly "mezz.jei:jei-1.21.1-common-api:${jei_version}"
+    compileOnly "mezz.jei:jei-1.21.1-neoforge-api:${jei_version}"
 
     testImplementation platform('org.junit:junit-bom:5.11.4')
     testImplementation 'org.junit.jupiter:junit-jupiter'

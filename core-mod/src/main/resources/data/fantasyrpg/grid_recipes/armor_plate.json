@@ -1,0 +1,23 @@
+{
+  "_comment": "[초안] 고강도 장갑판 — 모양 없음, 4×4 작업대, 진행 3급 이상",
+  "grid": 4,
+  "grade": 3,
+  "ingredients": [
+    {
+      "item": "fantasyrpg:reinforced_alloy",
+      "count": 4
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 8
+    },
+    {
+      "item": "minecraft:diamond",
+      "count": 4
+    }
+  ],
+  "result": {
+    "item": "fantasyrpg:armor_plate",
+    "count": 2
+  }
+}

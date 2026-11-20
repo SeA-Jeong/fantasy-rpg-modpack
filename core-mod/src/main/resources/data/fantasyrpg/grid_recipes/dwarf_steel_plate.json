@@ -1,0 +1,19 @@
+{
+  "_comment": "[초안] 드워프 강철판 (드워프) — 모양 없음, 5×5 작업대, 진행 4급 이상",
+  "grid": 5,
+  "grade": 4,
+  "ingredients": [
+    {
+      "item": "fantasyrpg:armor_plate",
+      "count": 1
+    },
+    {
+      "item": "fantasyrpg:dwarf_steel",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "fantasyrpg:dwarf_steel_plate",
+    "count": 2
+  }
+}

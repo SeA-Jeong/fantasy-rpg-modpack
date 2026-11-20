@@ -147,17 +147,22 @@ public final class HeirloomService {
         HeirloomData h = data(p);
         if (s == null || !h.owned()) return fail(p, "message.fantasyrpg.heirloom.none");
         HeirloomSettings.Cost cost = s.enhance().get(h.tier() + 1);
-        Item item = cost == null ? null : BuiltInRegistries.ITEM.get(ResourceLocation.parse(cost.item()));
-        int have = item == null ? 0 : p.getInventory().countItem(item);
+        java.util.function.ToIntFunction<String> have = id -> p.getInventory().countItem(BuiltInRegistries.ITEM.get(ResourceLocation.parse(id)));
         HeirloomRules.EnhanceResult r = HeirloomRules.canEnhance(h.tier(), grade(p), h.awakened(), s, have);
         if (r != HeirloomRules.EnhanceResult.OK) {
             if (r == HeirloomRules.EnhanceResult.NOT_ENOUGH) {
-                return fail(p, "message.fantasyrpg.heirloom.not_enough", Component.translatable(item.getDescriptionId()), cost.count(), have);
+                for (HeirloomSettings.Part pt : cost.parts()) {
+                    int n = have.applyAsInt(pt.item());
+                    if (n < pt.count()) return fail(p, "message.fantasyrpg.heirloom.not_enough",
+                            Component.translatable(BuiltInRegistries.ITEM.get(ResourceLocation.parse(pt.item())).getDescriptionId()), pt.count(), n);
+                }
             }
             return fail(p, "message.fantasyrpg.heirloom." + r.name().toLowerCase(java.util.Locale.ROOT), HeirloomRules.cap(grade(p), h.awakened()));
         }
-        final Item use = item;
-        p.getInventory().clearOrCountMatchingItems(st -> st.is(use), cost.count(), p.inventoryMenu.getCraftSlots());
+        for (HeirloomSettings.Part pt : cost.parts()) {
+            final Item use = BuiltInRegistries.ITEM.get(ResourceLocation.parse(pt.item()));
+            p.getInventory().clearOrCountMatchingItems(st -> st.is(use), pt.count(), p.inventoryMenu.getCraftSlots());
+        }
         HeirloomData next = h.withTier(h.tier() + 1);
         save(p, next);
         refreshStacks(p);
@@ -206,11 +211,12 @@ public final class HeirloomService {
             // 새로 열린 등급의 강화 재료 (메인 진행만으로 재료 확보, 기획 6.2)
             HeirloomSettings s = settings();
             HeirloomSettings.Cost gift = s == null ? null : HeirloomRules.stageUpGift(e.getGrade(), s);
-            Item item = gift == null ? null : BuiltInRegistries.ITEM.get(ResourceLocation.parse(gift.item()));
-            if (item != null && item != net.minecraft.world.item.Items.AIR) {
-                p.getInventory().placeItemBackInInventory(new ItemStack(item, gift.count()));
+            if (gift != null) for (HeirloomSettings.Part pt : gift.parts()) {
+                Item item = BuiltInRegistries.ITEM.get(ResourceLocation.parse(pt.item()));
+                if (item == net.minecraft.world.item.Items.AIR) continue;
+                p.getInventory().placeItemBackInInventory(new ItemStack(item, pt.count()));
                 p.sendSystemMessage(Component.translatable("message.fantasyrpg.heirloom.gift",
-                        Component.translatable(item.getDescriptionId()), gift.count()).withStyle(ChatFormatting.GOLD));
+                        Component.translatable(item.getDescriptionId()), pt.count()).withStyle(ChatFormatting.GOLD));
             }
         } else if (SEAL_CHAPTERS.contains(e.getChapter())) {
             narrate(p, "message.fantasyrpg.heirloom.seal");

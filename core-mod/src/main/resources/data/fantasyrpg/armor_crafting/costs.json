@@ -1,0 +1,230 @@
+{
+  "_comment": "[초안] 계열 방어구 1급 만들기·2~6급 승급 재료 (claude/작업대_방어구제작_초안.md 5절). upgrade 는 흉갑 기준, 다른 부위는 각반 7/8·투구 5/8·장화 4/8 올림(최소 1). core = 그 계열 핵심 부품. 2·3급 4×4, 4~6급 5×5 작업대. 조합하는 사람의 진행 등급 ≥ 목표 등급",
+  "weight": {
+    "knight": "heavy",
+    "dwarf": "heavy",
+    "dragon": "heavy",
+    "elf": "light",
+    "arcane": "light"
+  },
+  "core": {
+    "knight": "fantasyrpg:sanctum_plate",
+    "dwarf": "fantasyrpg:dwarf_steel_plate",
+    "dragon": "fantasyrpg:dragonscale_plate",
+    "elf": "fantasyrpg:spirit_weave",
+    "arcane": "fantasyrpg:rune_frame"
+  },
+  "upgrade": {
+    "heavy": {
+      "2": [
+        {
+          "item": "fantasyrpg:reinforced_alloy",
+          "count": 4
+        },
+        {
+          "item": "fantasyrpg:gear_frame",
+          "count": 1
+        }
+      ],
+      "3": [
+        {
+          "item": "fantasyrpg:armor_plate",
+          "count": 2
+        },
+        {
+          "item": "fantasyrpg:precision_part",
+          "count": 1
+        },
+        {
+          "item": "fantasyrpg:reinforced_lining",
+          "count": 1
+        }
+      ],
+      "4": [
+        {
+          "item": "core",
+          "count": 2
+        },
+        {
+          "item": "fantasyrpg:armor_plate",
+          "count": 2
+        },
+        {
+          "item": "fantasyrpg:precision_part",
+          "count": 1
+        }
+      ],
+      "5": [
+        {
+          "item": "core",
+          "count": 3
+        },
+        {
+          "item": "fantasyrpg:armor_plate",
+          "count": 3
+        },
+        {
+          "item": "fantasyrpg:precision_part",
+          "count": 2
+        }
+      ],
+      "6": [
+        {
+          "item": "core",
+          "count": 4
+        },
+        {
+          "item": "fantasyrpg:armor_plate",
+          "count": 4
+        },
+        {
+          "item": "fantasyrpg:precision_part",
+          "count": 2
+        },
+        {
+          "item": "fantasyrpg:gear_frame",
+          "count": 1
+        }
+      ]
+    },
+    "light": {
+      "2": [
+        {
+          "item": "fantasyrpg:reinforced_lining",
+          "count": 2
+        },
+        {
+          "item": "fantasyrpg:reinforced_alloy",
+          "count": 2
+        }
+      ],
+      "3": [
+        {
+          "item": "fantasyrpg:reinforced_lining",
+          "count": 2
+        },
+        {
+          "item": "fantasyrpg:mana_conductor",
+          "count": 1
+        },
+        {
+          "item": "fantasyrpg:precision_part",
+          "count": 1
+        }
+      ],
+      "4": [
+        {
+          "item": "core",
+          "count": 2
+        },
+        {
+          "item": "fantasyrpg:mana_conductor",
+          "count": 2
+        },
+        {
+          "item": "fantasyrpg:precision_part",
+          "count": 1
+        }
+      ],
+      "5": [
+        {
+          "item": "core",
+          "count": 3
+        },
+        {
+          "item": "fantasyrpg:mana_conductor",
+          "count": 3
+        },
+        {
+          "item": "fantasyrpg:precision_part",
+          "count": 2
+        }
+      ],
+      "6": [
+        {
+          "item": "core",
+          "count": 4
+        },
+        {
+          "item": "fantasyrpg:mana_conductor",
+          "count": 4
+        },
+        {
+          "item": "fantasyrpg:precision_part",
+          "count": 2
+        },
+        {
+          "item": "fantasyrpg:reinforced_lining",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "create": {
+    "knight": {
+      "base": "iron",
+      "items": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 2
+        },
+        {
+          "item": "minecraft:gold_ingot",
+          "count": 1
+        }
+      ]
+    },
+    "dwarf": {
+      "base": "iron",
+      "items": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 2
+        },
+        {
+          "item": "minecraft:copper_ingot",
+          "count": 2
+        }
+      ]
+    },
+    "dragon": {
+      "base": "iron",
+      "items": [
+        {
+          "item": "minecraft:iron_ingot",
+          "count": 2
+        },
+        {
+          "item": "minecraft:fire_charge",
+          "count": 1
+        }
+      ]
+    },
+    "elf": {
+      "base": "leather",
+      "items": [
+        {
+          "item": "minecraft:string",
+          "count": 2
+        },
+        {
+          "item": "minecraft:oak_leaves",
+          "count": 2
+        }
+      ]
+    },
+    "arcane": {
+      "base": "leather",
+      "items": [
+        {
+          "item": "minecraft:gold_ingot",
+          "count": 1
+        },
+        {
+          "item": "minecraft:lapis_lazuli",
+          "count": 2
+        }
+      ]
+    }
+  }
+}

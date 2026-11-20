@@ -1,0 +1,23 @@
+{
+  "_comment": "[초안] 룬 골조 (마도) — 모양 없음, 5×5 작업대, 진행 4급 이상",
+  "grid": 5,
+  "grade": 4,
+  "ingredients": [
+    {
+      "item": "fantasyrpg:gear_frame",
+      "count": 1
+    },
+    {
+      "item": "fantasyrpg:mana_conductor",
+      "count": 1
+    },
+    {
+      "item": "fantasyrpg:ancient_glyphstone",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "fantasyrpg:rune_frame",
+    "count": 2
+  }
+}

@@ -98,6 +98,12 @@ jobs:
           grep -E "\[보스 패턴\] 고정 피해 패턴 12개 로드, 오류 0건" server/logs/latest.log
           # 필드보스 꾸러미 10개, 전장 차원 데이터가 오류 없이 읽혔는지
           grep -E "\[필드보스\] 꾸러미 10개 로드, 오류 0건" server/logs/latest.log
+          # 보스 방 복사 범위 12개·챕터 보스 소재 7개, 작업대 조합식 13개·방어구 제작표 (2026-11-20)
+          grep -E "\[보스 전장\] 보스 방 범위 12개 로드, 오류 0건" server/logs/latest.log
+          grep -E "\[보스 전장\] 챕터 보스 소재 7개 로드, 오류 0건" server/logs/latest.log
+          grep -E "\[제작\] 작업대 조합식 13개 로드, 오류 0건" server/logs/latest.log
+          grep -E "\[제작\] 방어구 제작표 로드: 계열 5개" server/logs/latest.log
+          if grep -E "(Couldn't parse|Parsing error).*fantasyrpg:(family_armor_create|workbench_4x4)" server/logs/latest.log; then echo "작업대 조합식 오류"; exit 1; fi
           if grep -E "(Failed to (load|parse)|Couldn't (load|parse)).*(boss_arena|dimension_type)" server/logs/latest.log; then echo "전장 차원 데이터 오류"; exit 1; fi
           if grep -E "(Couldn't load tag|missing references).*damage_type" server/logs/latest.log; then echo "피해 유형 태그 읽기 오류"; exit 1; fi
 

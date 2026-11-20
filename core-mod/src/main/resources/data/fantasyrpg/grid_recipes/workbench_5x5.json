@@ -1,0 +1,27 @@
+{
+  "_comment": "[초안] 장인 작업대 — 모양 없음, 4×4 작업대, 진행 4급 이상",
+  "grid": 4,
+  "grade": 4,
+  "ingredients": [
+    {
+      "item": "fantasyrpg:workbench_4x4",
+      "count": 1
+    },
+    {
+      "item": "fantasyrpg:reinforced_alloy",
+      "count": 4
+    },
+    {
+      "item": "minecraft:diamond",
+      "count": 2
+    },
+    {
+      "item": "fantasyrpg:gear_frame",
+      "count": 2
+    }
+  ],
+  "result": {
+    "item": "fantasyrpg:workbench_5x5",
+    "count": 1
+  }
+}

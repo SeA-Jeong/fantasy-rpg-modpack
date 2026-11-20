@@ -45,6 +45,10 @@ public final class FantasyRpgClient {
         });
         modBus.addListener(RegisterGuiLayersEvent.class, e ->
                 e.registerAboveAll(ResourceLocation.fromNamespaceAndPath(FantasyRpgCore.MOD_ID, "rpg_hud"), RpgHud::render));
+        modBus.addListener(net.neoforged.neoforge.client.event.RegisterMenuScreensEvent.class, e -> {
+            e.register(com.fantasyrpg.core.craft.CraftRegistry.MENU_4.get(), GridCraftScreen::new);
+            e.register(com.fantasyrpg.core.craft.CraftRegistry.MENU_5.get(), GridCraftScreen::new);
+        });
         NeoForge.EVENT_BUS.addListener(ClientTickEvent.Post.class, FantasyRpgClient::onClientTick);
     }
 

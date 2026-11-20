@@ -39,15 +39,16 @@ public final class HeirloomRules {
 
     /**
      * 한 단계 강화 판정.
-     * @param have 가진 재료 개수
+     * @param have 재료 아이템 id → 가진 개수
      */
-    public static EnhanceResult canEnhance(int tier, int grade, boolean awakened, HeirloomSettings s, int have) {
+    public static EnhanceResult canEnhance(int tier, int grade, boolean awakened, HeirloomSettings s, java.util.function.ToIntFunction<String> have) {
         if (!awakened) return EnhanceResult.NOT_AWAKENED;
         if (tier >= MAX_TIER) return EnhanceResult.MAX;
         if (tier >= cap(grade, true)) return EnhanceResult.AT_CAP;
         HeirloomSettings.Cost c = s.enhance().get(tier + 1);
         if (c == null) return EnhanceResult.NO_COST;
-        return have >= c.count() ? EnhanceResult.OK : EnhanceResult.NOT_ENOUGH;
+        for (HeirloomSettings.Part p : c.parts()) if (have.applyAsInt(p.item()) < p.count()) return EnhanceResult.NOT_ENOUGH;
+        return EnhanceResult.OK;
     }
 
     /** 각성 단계가 오를 때 줄 재료: 새로 열린 한계 등급의 강화 비용 (1급·비용 없음이면 null) */

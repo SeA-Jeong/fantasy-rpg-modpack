@@ -1,0 +1,19 @@
+{
+  "_comment": "[초안] 강화 내피 — 모양 없음, 4×4 작업대, 진행 2급 이상",
+  "grid": 4,
+  "grade": 2,
+  "ingredients": [
+    {
+      "item": "minecraft:leather",
+      "count": 8
+    },
+    {
+      "item": "minecraft:string",
+      "count": 8
+    }
+  ],
+  "result": {
+    "item": "fantasyrpg:reinforced_lining",
+    "count": 2
+  }
+}

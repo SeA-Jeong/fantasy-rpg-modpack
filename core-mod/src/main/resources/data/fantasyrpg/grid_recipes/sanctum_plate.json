@@ -1,0 +1,19 @@
+{
+  "_comment": "[초안] 성역 장갑판 (기사) — 모양 없음, 5×5 작업대, 진행 4급 이상",
+  "grid": 5,
+  "grade": 4,
+  "ingredients": [
+    {
+      "item": "fantasyrpg:armor_plate",
+      "count": 1
+    },
+    {
+      "item": "fantasyrpg:sanctum_crystal",
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "fantasyrpg:sanctum_plate",
+    "count": 2
+  }
+}

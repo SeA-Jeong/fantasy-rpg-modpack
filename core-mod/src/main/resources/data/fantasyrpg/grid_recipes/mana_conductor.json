@@ -1,0 +1,23 @@
+{
+  "_comment": "[초안] 마력 전도체 — 모양 없음, 4×4 작업대, 진행 3급 이상",
+  "grid": 4,
+  "grade": 3,
+  "ingredients": [
+    {
+      "item": "fantasyrpg:arcane_circuit",
+      "count": 4
+    },
+    {
+      "item": "minecraft:gold_ingot",
+      "count": 4
+    },
+    {
+      "item": "minecraft:lapis_lazuli",
+      "count": 8
+    }
+  ],
+  "result": {
+    "item": "fantasyrpg:mana_conductor",
+    "count": 2
+  }
+}

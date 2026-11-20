@@ -1,0 +1,23 @@
+{
+  "_comment": "[초안] 정밀 부품 — 모양 없음, 4×4 작업대, 진행 3급 이상",
+  "grid": 4,
+  "grade": 3,
+  "ingredients": [
+    {
+      "item": "minecraft:gold_ingot",
+      "count": 4
+    },
+    {
+      "item": "fantasyrpg:reinforced_alloy",
+      "count": 2
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "count": 4
+    }
+  ],
+  "result": {
+    "item": "fantasyrpg:precision_part",
+    "count": 2
+  }
+}

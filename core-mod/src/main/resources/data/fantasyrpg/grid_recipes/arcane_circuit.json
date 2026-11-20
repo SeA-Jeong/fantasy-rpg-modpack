@@ -1,0 +1,23 @@
+{
+  "_comment": "[초안] 마도 회로 — 모양 없음, 4×4 작업대, 진행 2급 이상",
+  "grid": 4,
+  "grade": 2,
+  "ingredients": [
+    {
+      "item": "minecraft:gold_ingot",
+      "count": 4
+    },
+    {
+      "item": "minecraft:copper_ingot",
+      "count": 4
+    },
+    {
+      "item": "minecraft:redstone",
+      "count": 4
+    }
+  ],
+  "result": {
+    "item": "fantasyrpg:arcane_circuit",
+    "count": 2
+  }
+}
