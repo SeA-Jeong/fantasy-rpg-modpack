@@ -38,7 +38,7 @@ public final class RpgDamage {
 
     /** 대상 저항을 적용해 계산하고 피해를 입힌다. 계산 결과를 돌려준다. */
     public static DamageBreakdown apply(LivingEntity target, @Nullable Entity attacker, DamageInput input) {
-        return apply(target, target, attacker, input);
+        return apply(target, PartHits.redirect(attacker, target), attacker, input);                  // 스킬이 부위를 맞혔으면 그 부위로
     }
 
     /**

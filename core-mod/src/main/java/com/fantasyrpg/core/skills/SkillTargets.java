@@ -1,5 +1,7 @@
 package com.fantasyrpg.core.skills;
 
+import com.fantasyrpg.core.combat.PartHits;
+import com.fantasyrpg.core.combat.RpgDamage;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -35,8 +37,31 @@ public final class SkillTargets {
                 && !l.isSpectator();
     }
 
+    /** 범위 스킬 대상: 적대 몬스터 + 보스(여러 부위 몹·제어 면역, 예: 라디키온은 적대 분류가 아님) */
     public static boolean area(Entity e, ServerPlayer p) {
-        return single(e, p) && e instanceof Enemy;
+        return single(e, p) && (e instanceof Enemy || e.isMultipartEntity() || SkillSettings.INSTANCE.controlImmune((LivingEntity) e));
+    }
+
+    // ── 여러 부위 몹 (2026-11-20 라디키온): 부위를 찾으면 몸체로 바꾸고, 피해는 맞은 부위로 (PartHits) ──
+    private static boolean singleOrPart(Entity e, ServerPlayer p) {
+        LivingEntity b = RpgDamage.body(e);
+        return b != null && single(b, p);
+    }
+
+    private static boolean areaOrPart(Entity e, ServerPlayer p) {
+        LivingEntity b = RpgDamage.body(e);
+        return b != null && area(b, p);
+    }
+
+    /** 조준: 부위는 조준할 수 있고 몸체는 못 할 수 있음(경로 이동 중) */
+    private static boolean aimable(Entity e, ServerPlayer p) {
+        return singleOrPart(e, p) && e.isPickable();
+    }
+
+    /** 같은 몸체는 한 번만 (부위가 여럿 걸려도) */
+    private static void addBody(List<LivingEntity> out, ServerPlayer p, Entity hit) {
+        LivingEntity b = PartHits.resolve(p, hit);
+        if (b != null && !out.contains(b)) out.add(b);
     }
 
     /** 시선 끝이 닿는 지점 (블록에 막히면 그 앞) */
@@ -52,8 +77,8 @@ public final class SkillTargets {
         Vec3 eye = p.getEyePosition();
         Vec3 end = rayEnd(p, range);
         AABB box = p.getBoundingBox().expandTowards(p.getViewVector(1.0F).scale(range)).inflate(1.0);
-        EntityHitResult hit = ProjectileUtil.getEntityHitResult(p.level(), p, eye, end, box, e -> single(e, p) && e.isPickable());
-        return hit == null ? null : (LivingEntity) hit.getEntity();
+        EntityHitResult hit = ProjectileUtil.getEntityHitResult(p.level(), p, eye, end, box, e -> aimable(e, p));
+        return hit == null ? null : PartHits.resolve(p, hit.getEntity());
     }
 
     /** 임의 방향으로 쏜 첫 대상 (그림자 칼날의 부채꼴 단검) */
@@ -63,8 +88,8 @@ public final class SkillTargets {
         BlockHitResult block = p.level().clip(new ClipContext(eye, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, p));
         if (block.getType() != HitResult.Type.MISS) end = block.getLocation();
         AABB box = new AABB(eye, end).inflate(1.0);
-        EntityHitResult hit = ProjectileUtil.getEntityHitResult(p.level(), p, eye, end, box, e -> single(e, p) && e.isPickable());
-        return hit == null ? null : (LivingEntity) hit.getEntity();
+        EntityHitResult hit = ProjectileUtil.getEntityHitResult(p.level(), p, eye, end, box, e -> aimable(e, p));
+        return hit == null ? null : PartHits.resolve(p, hit.getEntity());
     }
 
     /** 수평 시선을 yaw 도만큼 돌린 방향 */
@@ -96,8 +121,8 @@ public final class SkillTargets {
         AABB box = new AABB(from, to).inflate(width, 1.0, width);
         List<LivingEntity> out = new ArrayList<>();
         Vec3 a = from.add(0, 1, 0), b = to.add(0, 1, 0);
-        for (Entity e : p.level().getEntities(p, box, e -> area(e, p))) {
-            if (e.getBoundingBox().inflate(width).clip(a, b).isPresent() || e.getBoundingBox().inflate(width).contains(a)) out.add((LivingEntity) e);
+        for (Entity e : p.level().getEntities(p, box, e -> areaOrPart(e, p))) {
+            if (e.getBoundingBox().inflate(width).clip(a, b).isPresent() || e.getBoundingBox().inflate(width).contains(a)) addBody(out, p, e);
         }
         out.sort(Comparator.comparingDouble(e -> e.distanceToSqr(from)));
         return out;
@@ -118,8 +143,8 @@ public final class SkillTargets {
         Vec3 end = rayEnd(p, range);
         AABB box = new AABB(eye, end).inflate(1.0);
         List<LivingEntity> out = new ArrayList<>();
-        for (Entity e : p.level().getEntities(p, box, e -> single(e, p) && e.isPickable())) {
-            if (e.getBoundingBox().inflate(0.3).clip(eye, end).isPresent()) out.add((LivingEntity) e);
+        for (Entity e : p.level().getEntities(p, box, e -> aimable(e, p))) {
+            if (e.getBoundingBox().inflate(0.3).clip(eye, end).isPresent()) addBody(out, p, e);
         }
         out.sort(Comparator.comparingDouble(e -> e.distanceToSqr(eye)));
         return out;
@@ -129,11 +154,11 @@ public final class SkillTargets {
     public static List<LivingEntity> cone(ServerPlayer p, double range, double angle) {
         Vec3 look = p.getViewVector(1.0F);
         List<LivingEntity> out = new ArrayList<>();
-        for (Entity e : p.level().getEntities(p, p.getBoundingBox().inflate(range), e -> area(e, p))) {
+        for (Entity e : p.level().getEntities(p, p.getBoundingBox().inflate(range), e -> areaOrPart(e, p))) {
             if (e.distanceTo(p) > range + e.getBbWidth() / 2) continue;
             double dx = e.getX() - p.getX();
             double dz = e.getZ() - p.getZ();
-            if (SkillMath.inCone(dx, dz, look.x, look.z, angle)) out.add((LivingEntity) e);
+            if (SkillMath.inCone(dx, dz, look.x, look.z, angle)) addBody(out, p, e);
         }
         return out;
     }
@@ -142,8 +167,8 @@ public final class SkillTargets {
     public static List<LivingEntity> around(ServerPlayer p, Vec3 center, double radius) {
         List<LivingEntity> out = new ArrayList<>();
         AABB box = new AABB(center, center).inflate(radius);
-        for (Entity e : p.level().getEntities(p, box, e -> area(e, p))) {
-            if (e.getBoundingBox().getCenter().distanceTo(center) <= radius + e.getBbWidth() / 2) out.add((LivingEntity) e);
+        for (Entity e : p.level().getEntities(p, box, e -> areaOrPart(e, p))) {
+            if (e.getBoundingBox().getCenter().distanceTo(center) <= radius + e.getBbWidth() / 2) addBody(out, p, e);
         }
         return out;
     }

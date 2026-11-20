@@ -106,7 +106,7 @@ public class ClassWeaponItem extends Item {
         if (block.getType() != HitResult.Type.MISS) end = block.getLocation();
         AABB box = p.getBoundingBox().expandTowards(look.scale(bolt.range())).inflate(1.0);
         EntityHitResult hit = ProjectileUtil.getEntityHitResult(level, p, eye, end, box,
-                e -> e instanceof LivingEntity && e.isAlive() && !e.isSpectator() && e.isPickable() && e != p);
+                e -> RpgDamage.body(e) != null && e.isAlive() && !e.isSpectator() && e.isPickable() && e != p);   // 부위(라디키온 마디)도
         Vec3 stop = hit != null ? hit.getLocation() : end;
 
         double len = stop.subtract(eye).length();
@@ -118,10 +118,11 @@ public class ClassWeaponItem extends Item {
 
         if (hit == null) return;
         Entity target = hit.getEntity();
-        if (target instanceof Player || !(target instanceof LivingEntity living)) return; // PvP 금지
+        LivingEntity living = RpgDamage.body(target);                                          // 부위면 그 몸체
+        if (target instanceof Player || living == null || living instanceof Player) return; // PvP 금지
         DamageInput in = RpgAttacks.basic(s, bolt.physical() + SkillPassives.boltPhysicalBonus(p), bolt.magic(), staff, 1.0, p,
                 SkillPassives.critBonus(p));
-        RpgDamage.apply(living, p, in);
+        RpgDamage.apply(living, target, p, in);
         p.setLastHurtMob(living);
         if (in.critMultiplier() > 1.0) SkillPassives.onCrit(p);
     }
