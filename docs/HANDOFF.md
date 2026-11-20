@@ -216,6 +216,11 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 
 ## 작업 기록
 
+### 2026-11-21 — 갑옷 파손·수리, 방어구 성향
+- 파손: `FamilyArmorItem.damageItem` 이 내구도 1에서 멈춤, `isBroken` 이면 `FamilyArmorAttributes`·`SetEffects.worn`·`AffinityEffects` 가 건너뜀. 수리 `craft/FamilyArmorRepairRecipe`(일반 제작대), 재료 `ReworkRules.repairCost`
+- 성향: 컴포넌트 `fantasyrpg:affinity`, 순수 `gear/armor/AffinityRules`(JUnit 3), `AffinityEffects`(10틱마다 합계 → 체력·가속 속성, `bonus()` 를 `RpgDamage`·`Cast.hit`·`SkillPassives.critBonus` 가 읽음), `AffinityTooltip`, 각인석 4종(`CraftRegistry.AFFINITY_STONES`), 1급 만들기에 각인석 선택, `FamilyArmorRetuneRecipe`. 데이터 `armor_affinity/settings.json`(전용 서버 동기화 포함)
+- 게임 확인: `docs/TESTING.md` DR1~DR5, AF1~AF9
+
 ### 2026-11-21 — 외형 모드 추가 (Sol's Indicator, Effectual)
 - 사용자 결정: 외형 모드 추천 조합. `mods.lock.json` 에 Sol's Indicator `1.21.1-v1.2.0`(보스바·피해 숫자·체력바, 서버에도)·Effectual `1.3.0-1.21.1`(클라이언트 전용, `"side": "client"`)
 - 도구: `fetch_mods.py --side server` 면 클라이언트 전용을 받지 않음(서버 기동 검사), `build_mrpack.py` 는 그 모드의 서버 env 를 unsupported 로. 통합 팩 모드 수 22 → 24
