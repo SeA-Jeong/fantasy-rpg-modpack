@@ -11,6 +11,7 @@
 | JEI 또는 EMI | 레시피 조회 | 예정 |
 | Jade | 대상 정보 표시 (저항 표시 애드온은 코어 모드에서) | 예정 |
 | 성능 최적화 모드 | 마지막 단계에서 추가 | 보류 |
+| Combat Traces 1.1.0 (CappleApple, CC BY-NC-SA 4.0 + 모드팩 허가, `modpack/local-mods/`) | Better Combat 무기 궤적·타격 효과(외형만, 수치 변화 없음). 클라이언트·서버 둘 다 | 사용 (2026-11-21) |
 | fantasybosses 0.8.0 (우리가 빌드: magic-city-mod `fantasybosses/`, `mods.lock.json` 고정 커밋) | 3장 보스 "세계수 잠식자 라디키온"(공격 6종·기관·알집·균열·BGM, GeckoLib, 보스 전장으로 옮겨 싸움). magiccity `boss_entity/parasite.json` 으로 연결 | 사용 (2026-11-20) |
 
 ## 피할 모드

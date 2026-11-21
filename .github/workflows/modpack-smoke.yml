@@ -16,6 +16,7 @@ on:
       - 'tools/check_mods.py'
       - '.github/workflows/modpack-smoke.yml'
       - 'tools/build_fantasybosses.sh'
+      - 'modpack/local-mods/**'
 
 concurrency:
   group: smoke-${{ github.ref }}
@@ -130,6 +131,8 @@ jobs:
         run: |
           # 챕터 보스 모드 fantasybosses(GeckoLib 필요)는 1단계 뒤에 더함 (magic-city-mod 고정 커밋 빌드)
           bash tools/build_fantasybosses.sh modpack/mods.lock.json ours
+          # 주소가 없는 외부 모드 jar (Combat Traces 등, 클라이언트·서버 둘 다)
+          cp modpack/local-mods/*.jar ours/
           python3 tools/build_mrpack.py --lock modpack/mods.lock.json --resolved external/resolved.json \
             --ours ours --datapacks modpack/datapacks --guide docs/TESTING.md --version smoke --out smoke.mrpack
           python3 tools/install_mrpack.py smoke.mrpack packinst
@@ -154,6 +157,8 @@ jobs:
           # 외부 보스 모드가 서버에서 불러지고 3장 연결이 그 몹을 찾는지 (2026-11-20)
           grep -E "\[보스\] 외부 보스 연결 1개 로드 \(몹 있음 1, 몹 없음 → 기본 보스 0\), 오류 0건" server/logs/latest.log
           grep -E "FantasyBosses 0\.8\.0 \(fantasybosses\)" server/logs/latest.log
+          # Combat Traces(무기 궤적·타격 효과, 2026-11-21)가 서버에서 오류 없이 불러지는지
+          grep -E "Combat Traces 1\.1\.0 \(combattraces\)" server/logs/latest.log
 
       - name: 로그 보관
         if: always()

@@ -216,6 +216,11 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 
 ## 작업 기록
 
+### 2026-11-21 — Combat Traces 1.1.0 추가
+- 사용자가 CurseForge 에서 받은 `combattraces-1.1.0.jar` 를 `modpack/local-mods/` 에 넣음(압축만 풀어 mods.toml·믹스인·라이선스 확인, 실행하지 않음). NeoForge [21.1.248,)·MC 1.21.1·Better Combat [2.4.0,2.5) 선택 → 팩(21.1.266, BC 2.4.0)과 맞음. 믹스인은 `client` 목록뿐이라 서버에서 안전. 라이선스 CC BY-NC-SA 4.0 + 모드팩·서버 배포 허가.
+- CI: 테스트 팩·서버 기동 검사에 `modpack/local-mods/*.jar` 복사, 통합 팩 모드 수 24 → 25, 서버 로그에서 `Combat Traces 1.1.0 (combattraces)` 확인. 게임 확인 TESTING CT1~CT8.
+- 앞서 "클라이언트 전용"으로 적었던 것은 틀림 — 모드 설명대로 서버에도 넣음.
+
 ### 2026-11-21 — 오버월드 최대 7급, 직업 무기 그림 v0.1 (fantasyrpg 0.26.0, magiccity `4da6f55`)
 - 사용자 결정(`claude/등급재배치_7급오버월드_초안.md` A~E 추천안): 12장까지 모두 완료 → 7급, 12장 보스 7급 고정, 레벨 Lv.60 그대로, 네더 13~15장 첫 완료 수 → 8·9·10급(설계만), 16장 최종 각성(방향만)
 - magiccity `ProgressionRules`(MAX_GRADE 7, LEVEL_GRADE 6), 등급표 7칸(예전 6칸 데이터도 읽음). fantasyrpg `CraftRules.MAX_UPGRADE` 7, 7급 승급·유산 7급 재료

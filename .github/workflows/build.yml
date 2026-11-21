@@ -58,6 +58,8 @@ jobs:
           bash tools/build_royalqol.sh modpack/mods.lock.json testpack/mods
           # 챕터 보스 모드 fantasybosses (magic-city-mod 고정 커밋 빌드, 2026-11-20)
           bash tools/build_fantasybosses.sh modpack/mods.lock.json testpack/mods
+          # 주소가 없는 외부 모드 jar (modpack/local-mods/, 2026-11-21 Combat Traces)
+          cp modpack/local-mods/*.jar testpack/mods/
           ls testpack/mods
           # magiccity jar가 게임에 넣을 수 있는 모드 jar인지 확인
           unzip -l testpack/mods/magic-city-mod-*.jar | grep -q 'META-INF/neoforge.mods.toml' && echo 'magiccity mods.toml 확인' || { echo 'magiccity jar에 neoforge.mods.toml 없음'; exit 1; }
@@ -80,10 +82,11 @@ jobs:
           python3 tools/build_mrpack.py --lock modpack/mods.lock.json --resolved external/resolved.json \
             --ours testpack/mods --datapacks modpack/datapacks --guide docs/TESTING.md --version "$VER" \
             --out magic-kingdom-testpack.mrpack
-          # launcher 처럼 설치해 보고(주소·해시 확인) 모드 24개(우리 3 + fantasybosses + 주소 20)가 모이는지 확인
+          # launcher 처럼 설치해 보고(주소·해시 확인) 모드 25개(우리 3 + fantasybosses + Combat Traces + 주소 20)가 모이는지 확인
           python3 tools/install_mrpack.py magic-kingdom-testpack.mrpack packcheck
-          test "$(ls packcheck/mods/*.jar | wc -l)" -eq 24
+          test "$(ls packcheck/mods/*.jar | wc -l)" -eq 25
           test -f packcheck/mods/fantasybosses-0.8.0.jar
+          test -f packcheck/mods/combattraces-1.1.0.jar
 
       - name: 통합 팩 업로드
         uses: actions/upload-artifact@v4
