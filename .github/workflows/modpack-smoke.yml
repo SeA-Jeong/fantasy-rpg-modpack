@@ -156,7 +156,7 @@ jobs:
           grep -E "Royal QoL .*\(royalqol\)" server/logs/latest.log
           # 외부 보스 모드가 서버에서 불러지고 3장 연결이 그 몹을 찾는지 (2026-11-20)
           grep -E "\[보스\] 외부 보스 연결 1개 로드 \(몹 있음 1, 몹 없음 → 기본 보스 0\), 오류 0건" server/logs/latest.log
-          grep -E "FantasyBosses 0\.8\.0 \(fantasybosses\)" server/logs/latest.log
+          grep -E "FantasyBosses 0\.9\.0 \(fantasybosses\)" server/logs/latest.log
           # Combat Traces(무기 궤적·타격 효과, 2026-11-21)가 서버에서 오류 없이 불러지는지
           grep -E "Combat Traces 1\.1\.0 \(combattraces\)" server/logs/latest.log
 

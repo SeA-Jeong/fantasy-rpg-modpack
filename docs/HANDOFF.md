@@ -216,6 +216,13 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 
 ## 작업 기록
 
+### 2026-11-21 — 오버월드 필드 몬스터 30종 모델 v1.2 (fantasybosses 0.9.0, magic-city-mod `4da5507`)
+- 사용자 제공 모델 패키지 v1.1(30종)·v1.2(정예 10종 교체)를 검수: v1.2 는 면별 UV 겹침 0, 발광 픽셀이 모두 쓰이는 면 위, 마스크 색 = 텍스처 색. 프로젝트 문서 `claude/오버월드몬스터모델_v1.1_검수.md`.
+- magic-city-mod `fantasybosses/`: 리소스 `geo|animations|textures/entity/field/`, 테스트용 엔티티 30종(`field/FieldMonsters`·`FieldMonster`, 자연 스폰 없음, 근접 AI, 수치 [실험]), 렌더러(정예 `AutoGlowingGeoLayer`, 바닐라 사망 회전 끔), 몸통 기준 히트박스, `/fantasybosses field gallery|anim`. 0.8.0 → 0.9.0, main 빨리 감기(복구 지점 `backup/main-before-field-monsters-2026-11-21`).
+- 이 저장소: `mods.lock.json` fantasybosses 고정 커밋 → `4da5507`, CI 의 jar 이름·서버 로그 검사 0.9.0. 사전 릴리스 `v0.27.0-test.2`. 게임 확인 TESTING FM1~FM8, 빠른 확인 22회차.
+- 남은 것: 원거리·비행·스킬 AI, 지역별 자연 스폰(지역 고정 등급), 드롭·수치, 균열 포식자 부위 판정 여부.
+
+
 ### 2026-11-21 — 장비 그림 v0.7 적용 (fantasyrpg 0.27.0)
 - 사용자 제공 `fantasyrpg_equipment_assets_v0.7.zip`(파일 1,720개, JSON 607개 오류·빠진 참조 0)을 대조해 1+2 범위만 넣음(사용자 "진행하자"). 자료 안 스크립트 5개는 실행하지 않았고, 복사·모델 생성은 작업용 스크립트(저장소 밖)로 함.
 - 넣은 것: 재료 17(`materials/` 입체 + `material_icons/`, 최상위 `separate_transforms`), 갑옷 아이콘 200(`armor/`, 최상위 overrides `fantasyrpg:tier`), 갑옷 층 100(`textures/models/armor/<계열>_tNN_layer_1|2.png`, `FamilyArmorItem.getArmorTexture` 로 계열·등급별), 무기 8~10급 수정, 활 당기기(`weapon_sel/archer_bow_tNN_pulling_k`, 최상위 overrides = 등급 + `pulling`/`pull`; 자료는 overrides 를 하위 모델에 넣어 두었는데 게임이 무시하므로 옮김; 우리 활에 `pull`·`pulling` 속성 등록), 룬석 8종×4·연마재×3(`fantasyrpg:grade` = 등급÷10, `rune_sel/`), 룬 원석·추출 도구, 작업대 블록·아이템 모델(블록에 `facing` 속성 추가, 이전 월드 작업대는 북쪽).

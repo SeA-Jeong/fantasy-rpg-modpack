@@ -8,9 +8,9 @@
     "commit": "51ac66aec7672f4a413bb9cdba4cb03dcde46bd7"
   },
   "fantasybosses": {
-    "_comment": "챕터 보스 모드(라디키온, 2026-11-20). magic-city-mod 저장소 fantasybosses/ 폴더를 이 커밋으로 빌드한다 (tools/build_fantasybosses.sh). 통합 팩에는 overrides/mods 로, 서버 기동 검사는 2단계(GeckoLib 필요)에만",
+    "_comment": "챕터 보스 모드(라디키온 2026-11-20, 오버월드 필드 몬스터 30종 2026-11-21 — 0.9.0). magic-city-mod 저장소 fantasybosses/ 폴더를 이 커밋으로 빌드한다 (tools/build_fantasybosses.sh). 통합 팩에는 overrides/mods 로, 서버 기동 검사는 2단계(GeckoLib 필요)에만",
     "repo": "https://github.com/aswq0258/magic-city-mod.git",
-    "commit": "b5c57281d2715a05d1f796b0eae2a5349b79eff6"
+    "commit": "4da5507c6aec42e53496746be0ef99fe199c71d9"
   },
   "mods": [
     {
