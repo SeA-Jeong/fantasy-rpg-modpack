@@ -1,1 +1,11 @@
-{"parent": "minecraft:item/generated", "textures": {"layer0": "minecraft:item/iron_ingot"}}
+{
+  "loader": "neoforge:separate_transforms",
+  "base": {
+    "parent": "fantasyrpg:item/materials/reinforced_alloy"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "fantasyrpg:item/material_icons/reinforced_alloy"
+    }
+  }
+}

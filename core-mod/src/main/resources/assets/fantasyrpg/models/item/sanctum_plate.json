@@ -1,1 +1,11 @@
-{"parent": "minecraft:item/generated", "textures": {"layer0": "minecraft:item/prismarine_shard"}}
+{
+  "loader": "neoforge:separate_transforms",
+  "base": {
+    "parent": "fantasyrpg:item/materials/sanctum_plate"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "fantasyrpg:item/material_icons/sanctum_plate"
+    }
+  }
+}

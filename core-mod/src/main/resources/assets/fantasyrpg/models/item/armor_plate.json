@@ -1,1 +1,11 @@
-{"parent": "minecraft:item/generated", "textures": {"layer0": "minecraft:item/netherite_scrap"}}
+{
+  "loader": "neoforge:separate_transforms",
+  "base": {
+    "parent": "fantasyrpg:item/materials/armor_plate"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "fantasyrpg:item/material_icons/armor_plate"
+    }
+  }
+}

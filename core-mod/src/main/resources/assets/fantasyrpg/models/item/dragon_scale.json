@@ -1,1 +1,11 @@
-{"parent": "minecraft:item/generated", "textures": {"layer0": "minecraft:item/turtle_scute"}}
+{
+  "loader": "neoforge:separate_transforms",
+  "base": {
+    "parent": "fantasyrpg:item/materials/dragon_scale"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "fantasyrpg:item/material_icons/dragon_scale"
+    }
+  }
+}

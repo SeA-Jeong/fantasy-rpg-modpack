@@ -1,1 +1,31 @@
-{"parent": "minecraft:item/generated", "textures": {"layer0": "minecraft:item/feather"}}
+{
+  "loader": "neoforge:separate_transforms",
+  "base": {
+    "parent": "fantasyrpg:item/runes/rune_gale_low"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "fantasyrpg:item/rune_icons/rune_gale_low"
+    }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "fantasyrpg:grade": 0.15
+      },
+      "model": "fantasyrpg:item/rune_sel/rune_gale_mid"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:grade": 0.25
+      },
+      "model": "fantasyrpg:item/rune_sel/rune_gale_high"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:grade": 0.35
+      },
+      "model": "fantasyrpg:item/rune_sel/rune_gale_supreme"
+    }
+  ]
+}

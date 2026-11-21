@@ -57,6 +57,29 @@ public final class FantasyRpgClient {
                         net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(FantasyRpgCore.MOD_ID, "tier"),
                         (stack, level, entity, seed) -> com.fantasyrpg.core.gear.armor.GearRegistry.tierOf(stack) / 10f);
             }
+            // 장비 그림 v0.7: 계열 갑옷 등급별 아이콘, 룬석·연마재 등급별 그림, 활 당기기
+            net.minecraft.resources.ResourceLocation tierKey = net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(FantasyRpgCore.MOD_ID, "tier");
+            for (com.fantasyrpg.core.gear.armor.ArmorFamily f : com.fantasyrpg.core.gear.armor.ArmorFamily.values()) {
+                for (com.fantasyrpg.core.gear.armor.ArmorPart p : com.fantasyrpg.core.gear.armor.ArmorPart.values()) {
+                    net.minecraft.client.renderer.item.ItemProperties.register(com.fantasyrpg.core.gear.armor.GearRegistry.item(f, p), tierKey,
+                            (stack, level, entity, seed) -> com.fantasyrpg.core.gear.armor.GearRegistry.tierOf(stack) / 10f);
+                }
+            }
+            net.minecraft.resources.ResourceLocation gradeKey = net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(FantasyRpgCore.MOD_ID, "grade");
+            java.util.List<net.minecraft.world.item.Item> graded = new java.util.ArrayList<>();
+            for (com.fantasyrpg.core.gear.rune.RuneType rt : com.fantasyrpg.core.gear.rune.RuneType.values()) graded.add(com.fantasyrpg.core.gear.rune.RuneRegistry.item(rt));
+            graded.add(com.fantasyrpg.core.gear.rune.RuneRegistry.ABRASIVE.get());
+            for (net.minecraft.world.item.Item it : graded) {
+                net.minecraft.client.renderer.item.ItemProperties.register(it, gradeKey,
+                        (stack, level, entity, seed) -> com.fantasyrpg.core.gear.rune.RuneRegistry.gradeOf(stack) / 10f);
+            }
+            // 우리 활은 바닐라 활과 다른 아이템이라 당기기 속성(pull·pulling)을 따로 등록 (바닐라와 같은 계산)
+            net.minecraft.world.item.Item bow = com.fantasyrpg.core.gear.weapon.WeaponRegistry.item(com.fantasyrpg.core.gear.weapon.WeaponType.BOW);
+            net.minecraft.client.renderer.item.ItemProperties.register(bow, net.minecraft.resources.ResourceLocation.withDefaultNamespace("pull"),
+                    (stack, level, entity, seed) -> entity == null || entity.getUseItem() != stack ? 0f
+                            : (stack.getUseDuration(entity) - entity.getUseItemRemainingTicks()) / 20f);
+            net.minecraft.client.renderer.item.ItemProperties.register(bow, net.minecraft.resources.ResourceLocation.withDefaultNamespace("pulling"),
+                    (stack, level, entity, seed) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1f : 0f);
         }));
     }
 

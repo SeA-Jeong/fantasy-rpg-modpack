@@ -1,1 +1,31 @@
-{"parent": "minecraft:item/generated", "textures": {"layer0": "minecraft:item/redstone"}}
+{
+  "loader": "neoforge:separate_transforms",
+  "base": {
+    "parent": "fantasyrpg:item/runes/rune_haste_low"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "fantasyrpg:item/rune_icons/rune_haste_low"
+    }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "fantasyrpg:grade": 0.15
+      },
+      "model": "fantasyrpg:item/rune_sel/rune_haste_mid"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:grade": 0.25
+      },
+      "model": "fantasyrpg:item/rune_sel/rune_haste_high"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:grade": 0.35
+      },
+      "model": "fantasyrpg:item/rune_sel/rune_haste_supreme"
+    }
+  ]
+}

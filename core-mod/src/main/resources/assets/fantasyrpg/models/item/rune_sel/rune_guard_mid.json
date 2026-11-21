@@ -1,0 +1,11 @@
+{
+  "loader": "neoforge:separate_transforms",
+  "base": {
+    "parent": "fantasyrpg:item/runes/rune_guard_mid"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "fantasyrpg:item/rune_icons/rune_guard_mid"
+    }
+  }
+}

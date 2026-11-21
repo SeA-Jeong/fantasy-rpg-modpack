@@ -1,1 +1,11 @@
-{"parent": "minecraft:item/generated", "textures": {"layer0": "minecraft:item/iron_nugget"}}
+{
+  "loader": "neoforge:separate_transforms",
+  "base": {
+    "parent": "fantasyrpg:item/materials/dwarf_steel"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "fantasyrpg:item/material_icons/dwarf_steel"
+    }
+  }
+}

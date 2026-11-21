@@ -216,6 +216,12 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 
 ## 작업 기록
 
+### 2026-11-21 — 장비 그림 v0.7 적용 (fantasyrpg 0.27.0)
+- 사용자 제공 `fantasyrpg_equipment_assets_v0.7.zip`(파일 1,720개, JSON 607개 오류·빠진 참조 0)을 대조해 1+2 범위만 넣음(사용자 "진행하자"). 자료 안 스크립트 5개는 실행하지 않았고, 복사·모델 생성은 작업용 스크립트(저장소 밖)로 함.
+- 넣은 것: 재료 17(`materials/` 입체 + `material_icons/`, 최상위 `separate_transforms`), 갑옷 아이콘 200(`armor/`, 최상위 overrides `fantasyrpg:tier`), 갑옷 층 100(`textures/models/armor/<계열>_tNN_layer_1|2.png`, `FamilyArmorItem.getArmorTexture` 로 계열·등급별), 무기 8~10급 수정, 활 당기기(`weapon_sel/archer_bow_tNN_pulling_k`, 최상위 overrides = 등급 + `pulling`/`pull`; 자료는 overrides 를 하위 모델에 넣어 두었는데 게임이 무시하므로 옮김; 우리 활에 `pull`·`pulling` 속성 등록), 룬석 8종×4·연마재×3(`fantasyrpg:grade` = 등급÷10, `rune_sel/`), 룬 원석·추출 도구, 작업대 블록·아이템 모델(블록에 `facing` 속성 추가, 이전 월드 작업대는 북쪽).
+- 넣지 않은 것: 기사 방패 20(아이템 없음), 네더 15종(구현 금지, 7급 촉매는 폐지된 결정), GeckoLib 입체 갑옷·애니메이션, `_emissive` 마스크, 입자, 작업대 작동 상태(`_active` 블록 상태). 성향석 4종은 자료에 그림이 없음.
+- 게임 확인 TESTING v0.27 EQ1~EQ11, 빠른 확인 21회차.
+
 ### 2026-11-21 — Combat Traces 1.1.0 추가
 - 사용자가 CurseForge 에서 받은 `combattraces-1.1.0.jar` 를 `modpack/local-mods/` 에 넣음(압축만 풀어 mods.toml·믹스인·라이선스 확인, 실행하지 않음). NeoForge [21.1.248,)·MC 1.21.1·Better Combat [2.4.0,2.5) 선택 → 팩(21.1.266, BC 2.4.0)과 맞음. 믹스인은 `client` 목록뿐이라 서버에서 안전. 라이선스 CC BY-NC-SA 4.0 + 모드팩·서버 배포 허가.
 - CI: 테스트 팩·서버 기동 검사에 `modpack/local-mods/*.jar` 복사, 통합 팩 모드 수 24 → 25, 서버 로그에서 `Combat Traces 1.1.0 (combattraces)` 확인. 게임 확인 TESTING CT1~CT8.

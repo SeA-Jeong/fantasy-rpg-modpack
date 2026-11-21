@@ -11,9 +11,52 @@
   "overrides": [
     {
       "predicate": {
+        "pulling": 1
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t01_pulling_0"
+    },
+    {
+      "predicate": {
+        "pulling": 1,
+        "pull": 0.65
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t01_pulling_1"
+    },
+    {
+      "predicate": {
+        "pulling": 1,
+        "pull": 0.9
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t01_pulling_2"
+    },
+    {
+      "predicate": {
         "fantasyrpg:tier": 0.15
       },
       "model": "fantasyrpg:item/weapon_sel/archer_bow_t02"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.15,
+        "pulling": 1
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t02_pulling_0"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.15,
+        "pulling": 1,
+        "pull": 0.65
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t02_pulling_1"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.15,
+        "pulling": 1,
+        "pull": 0.9
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t02_pulling_2"
     },
     {
       "predicate": {
@@ -23,9 +66,55 @@
     },
     {
       "predicate": {
+        "fantasyrpg:tier": 0.25,
+        "pulling": 1
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t03_pulling_0"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.25,
+        "pulling": 1,
+        "pull": 0.65
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t03_pulling_1"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.25,
+        "pulling": 1,
+        "pull": 0.9
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t03_pulling_2"
+    },
+    {
+      "predicate": {
         "fantasyrpg:tier": 0.35
       },
       "model": "fantasyrpg:item/weapon_sel/archer_bow_t04"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.35,
+        "pulling": 1
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t04_pulling_0"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.35,
+        "pulling": 1,
+        "pull": 0.65
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t04_pulling_1"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.35,
+        "pulling": 1,
+        "pull": 0.9
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t04_pulling_2"
     },
     {
       "predicate": {
@@ -35,9 +124,55 @@
     },
     {
       "predicate": {
+        "fantasyrpg:tier": 0.45,
+        "pulling": 1
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t05_pulling_0"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.45,
+        "pulling": 1,
+        "pull": 0.65
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t05_pulling_1"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.45,
+        "pulling": 1,
+        "pull": 0.9
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t05_pulling_2"
+    },
+    {
+      "predicate": {
         "fantasyrpg:tier": 0.55
       },
       "model": "fantasyrpg:item/weapon_sel/archer_bow_t06"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.55,
+        "pulling": 1
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t06_pulling_0"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.55,
+        "pulling": 1,
+        "pull": 0.65
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t06_pulling_1"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.55,
+        "pulling": 1,
+        "pull": 0.9
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t06_pulling_2"
     },
     {
       "predicate": {
@@ -47,9 +182,55 @@
     },
     {
       "predicate": {
+        "fantasyrpg:tier": 0.65,
+        "pulling": 1
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t07_pulling_0"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.65,
+        "pulling": 1,
+        "pull": 0.65
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t07_pulling_1"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.65,
+        "pulling": 1,
+        "pull": 0.9
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t07_pulling_2"
+    },
+    {
+      "predicate": {
         "fantasyrpg:tier": 0.75
       },
       "model": "fantasyrpg:item/weapon_sel/archer_bow_t08"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.75,
+        "pulling": 1
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t08_pulling_0"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.75,
+        "pulling": 1,
+        "pull": 0.65
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t08_pulling_1"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.75,
+        "pulling": 1,
+        "pull": 0.9
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t08_pulling_2"
     },
     {
       "predicate": {
@@ -59,9 +240,55 @@
     },
     {
       "predicate": {
+        "fantasyrpg:tier": 0.85,
+        "pulling": 1
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t09_pulling_0"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.85,
+        "pulling": 1,
+        "pull": 0.65
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t09_pulling_1"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.85,
+        "pulling": 1,
+        "pull": 0.9
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t09_pulling_2"
+    },
+    {
+      "predicate": {
         "fantasyrpg:tier": 0.95
       },
       "model": "fantasyrpg:item/weapon_sel/archer_bow_t10"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.95,
+        "pulling": 1
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t10_pulling_0"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.95,
+        "pulling": 1,
+        "pull": 0.65
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t10_pulling_1"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.95,
+        "pulling": 1,
+        "pull": 0.9
+      },
+      "model": "fantasyrpg:item/weapon_sel/archer_bow_t10_pulling_2"
     }
   ]
 }

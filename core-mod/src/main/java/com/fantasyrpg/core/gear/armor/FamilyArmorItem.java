@@ -49,6 +49,19 @@ public final class FamilyArmorItem extends ArmorItem {
         return applied;
     }
 
+    /**
+     * 입은 모습 (2026-11-21, 장비 그림 v0.7): 계열·등급마다 갑옷 층 그림
+     * textures/models/armor/<계열>_tNN_layer_1|2.png. 각반은 안쪽 층(layer_2).
+     */
+    @Override
+    public net.minecraft.resources.ResourceLocation getArmorTexture(ItemStack stack, net.minecraft.world.entity.Entity entity,
+                                                                    net.minecraft.world.entity.EquipmentSlot slot,
+                                                                    ArmorMaterial.Layer layer, boolean innerModel) {
+        int tier = Math.max(1, Math.min(10, GearRegistry.tierOf(stack)));
+        return net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(com.fantasyrpg.core.FantasyRpgCore.MOD_ID,
+                String.format(java.util.Locale.ROOT, "textures/models/armor/%s_t%02d_layer_%d.png", family.id(), tier, innerModel ? 2 : 1));
+    }
+
     @Override
     public Component getName(ItemStack stack) {
         Component base = Component.translatable("item.fantasyrpg.tiered", super.getName(stack), GearRegistry.tierOf(stack));

@@ -1,1 +1,25 @@
-{"parent": "minecraft:item/generated", "textures": {"layer0": "minecraft:item/glowstone_dust"}}
+{
+  "loader": "neoforge:separate_transforms",
+  "base": {
+    "parent": "fantasyrpg:item/runes/rune_abrasive_low"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "fantasyrpg:item/rune_icons/rune_abrasive_low"
+    }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "fantasyrpg:grade": 0.15
+      },
+      "model": "fantasyrpg:item/rune_sel/rune_abrasive_mid"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:grade": 0.25
+      },
+      "model": "fantasyrpg:item/rune_sel/rune_abrasive_high"
+    }
+  ]
+}

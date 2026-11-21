@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "fantasyrpg:item/armor/dragon_chestplate_t09"
+  }
+}

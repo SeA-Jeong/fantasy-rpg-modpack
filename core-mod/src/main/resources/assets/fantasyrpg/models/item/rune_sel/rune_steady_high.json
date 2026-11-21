@@ -1,0 +1,11 @@
+{
+  "loader": "neoforge:separate_transforms",
+  "base": {
+    "parent": "fantasyrpg:item/runes/rune_steady_high"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "fantasyrpg:item/rune_icons/rune_steady_high"
+    }
+  }
+}

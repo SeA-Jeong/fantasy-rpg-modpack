@@ -1,1 +1,19 @@
-{"variants": {"": {"model": "minecraft:block/crafting_table"}}}
+{
+  "variants": {
+    "facing=north": {
+      "model": "fantasyrpg:block/workbench_5x5"
+    },
+    "facing=east": {
+      "model": "fantasyrpg:block/workbench_5x5",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "fantasyrpg:block/workbench_5x5",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "fantasyrpg:block/workbench_5x5",
+      "y": 270
+    }
+  }
+}

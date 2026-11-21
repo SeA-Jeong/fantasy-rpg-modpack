@@ -1,1 +1,59 @@
-{"parent": "minecraft:item/netherite_leggings"}
+{
+  "parent": "fantasyrpg:item/armor/dragon_leggings_t01",
+  "overrides": [
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.15
+      },
+      "model": "fantasyrpg:item/armor/dragon_leggings_t02"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.25
+      },
+      "model": "fantasyrpg:item/armor/dragon_leggings_t03"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.35
+      },
+      "model": "fantasyrpg:item/armor/dragon_leggings_t04"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.45
+      },
+      "model": "fantasyrpg:item/armor/dragon_leggings_t05"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.55
+      },
+      "model": "fantasyrpg:item/armor/dragon_leggings_t06"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.65
+      },
+      "model": "fantasyrpg:item/armor/dragon_leggings_t07"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.75
+      },
+      "model": "fantasyrpg:item/armor/dragon_leggings_t08"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.85
+      },
+      "model": "fantasyrpg:item/armor/dragon_leggings_t09"
+    },
+    {
+      "predicate": {
+        "fantasyrpg:tier": 0.95
+      },
+      "model": "fantasyrpg:item/armor/dragon_leggings_t10"
+    }
+  ]
+}

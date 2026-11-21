@@ -1,1 +1,3 @@
-{"parent": "minecraft:block/crafting_table"}
+{
+  "parent": "fantasyrpg:block/workbench_5x5"
+}
