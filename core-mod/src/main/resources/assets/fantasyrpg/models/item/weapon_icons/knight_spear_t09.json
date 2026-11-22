@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "fantasyrpg:item/weapons/knight_spear_t09"
+    "layer0": "fantasyrpg:item/weapons_16/knight_spear_t09"
   }
 }

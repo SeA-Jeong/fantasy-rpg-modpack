@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "fantasyrpg:item/armor/arcane_boots_t02"
+    "layer0": "fantasyrpg:item/armor_16/arcane_boots_t02"
   }
 }

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "fantasyrpg:item/weapons/archer_bow_t03"
+    "layer0": "fantasyrpg:item/weapons_16/archer_bow_t03"
   }
 }

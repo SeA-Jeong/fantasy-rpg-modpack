@@ -5,7 +5,7 @@
   },
   "perspectives": {
     "gui": {
-      "parent": "fantasyrpg:item/weapon_icons/archer_bow_t06"
+      "parent": "fantasyrpg:item/weapon_icons/archer_bow_t06_pulling_0"
     }
   }
 }

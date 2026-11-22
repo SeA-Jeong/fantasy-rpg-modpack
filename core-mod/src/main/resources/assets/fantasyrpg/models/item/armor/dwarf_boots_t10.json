@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "fantasyrpg:item/armor/dwarf_boots_t10"
+    "layer0": "fantasyrpg:item/armor_16/dwarf_boots_t10"
   }
 }

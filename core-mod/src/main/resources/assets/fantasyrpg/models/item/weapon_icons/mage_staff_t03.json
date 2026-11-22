@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "fantasyrpg:item/weapons/mage_staff_t03"
+    "layer0": "fantasyrpg:item/weapons_16/mage_staff_t03"
   }
 }

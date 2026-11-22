@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "fantasyrpg:item/armor/elf_helmet_t05"
+    "layer0": "fantasyrpg:item/armor_16/elf_helmet_t05"
   }
 }

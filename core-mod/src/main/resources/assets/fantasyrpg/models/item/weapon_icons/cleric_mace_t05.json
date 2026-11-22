@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "fantasyrpg:item/weapons/cleric_mace_t05"
+    "layer0": "fantasyrpg:item/weapons_16/cleric_mace_t05"
   }
 }
