@@ -173,7 +173,7 @@
       "required": false,
       "source": "modrinth",
       "slug": "spark",
-      "version": "1.10.124-neoforge-1.21.1"
+      "version": "1.10.124-neoforge"
     },
     {
       "_comment": "2026-11-21 외형 모드: 보스바(초상화·처치 연출)·피해 숫자·몹 체력바. 수치는 건드리지 않음. 서버에도 넣으면 투사체·스킬 피해까지 정확히 셈",
