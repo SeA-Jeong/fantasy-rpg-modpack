@@ -15,7 +15,7 @@
 | CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄). 모드 구성이 바뀌면 `modpack smoke`가 외부 모드 18개 + 우리 모드 2개로 **NeoForge 전용 서버를 실제 기동** |
 | 1차 외부 모드 구성 | `modpack/mods.lock.json` (필수 13 + 권장 5, 버전 고정). 2026-11-17 전용 서버 기동 통과 (run 44061047052). 클라이언트 실행은 아직 확인 안 함 |
 | 우리 모드 3개 | `fantasyrpg`(이 저장소), `magiccity`(JitPack), `royalqol`(클라이언트 전용 편의 모드, `magic-city-mod` 저장소 `royalqol/`, `mods.lock.json`의 `royalqol.commit`으로 빌드 — `tools/build_royalqol.sh`). 테스트 팩과 서버 기동 검사에 셋 다 들어감. **챕터 보스 모드 `fantasybosses`**(3장 라디키온, ARR — 사용자 허락으로 공개 저장소): `magic-city-mod` 저장소 `fantasybosses/`, `mods.lock.json` 의 `fantasybosses.commit` 으로 빌드(`tools/build_fantasybosses.sh`) → 테스트 팩·통합 팩, 서버 기동 검사는 2단계(GeckoLib 필요)에만. `modpack/local-mods/` 는 지금 비어 있음 |
-| 최신 테스트 팩 | **v0.27.0-test.2** (fantasyrpg 0.27.0: 장비 그림 v0.7 + Combat Traces + 오버월드 7급·무기 그림·갑옷 수리·방어구 성향; 다른 세션의 fantasybosses 0.9.0 필드 몬스터 30종 포함). 모두 게임 확인 전 — `docs/TESTING.md` 빠른 확인 20~22회차 |
+| 최신 테스트 팩 | **v0.27.1-test.1** (지하 동굴 + 장비 그림 v0.7 + Combat Traces + 오버월드 7급·무기 그림·갑옷 수리·방어구 성향 + fantasybosses 0.9.0 필드 몬스터 30종). 모두 게임 확인 전 — `docs/TESTING.md` 빠른 확인 20~23회차 |
 | 게임 테스트 | `docs/TESTING.md`의 v0.1·v0.2 체크리스트 |
 
 ### 테스트 팩 Release 만드는 법
@@ -238,6 +238,7 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - 지형 계산식 표본(±5000, 8칸 간격): 지면 가운데값 Y 66, 바다 바닥 최저 29, 봉우리 최고 248. 땅 밑 건축: 하수도 47, 심층 광산 21, 뿌리 던전 8, 심연 균열 −30, 드래곤 레어 보물 동굴 −40 → 동굴 높이와 겹치는 것은 균열·레어뿐이고 여백으로 제외.
 - magiccity: `CaveRules`(굴 = 노이즈 둘의 0 근처 교차, 방 = 느린 노이즈, 끝으로 갈수록 좁게, 동굴 약 8.5%·가장 큰 연결 덩어리 약 79%), `UndergroundZones`(Restore 영역 지연 초기화), `KingdomChunkGenerator.blockAt`·`sealZones`, `site/CaveFix` + `/magiccity fix caves`, README.
 - 이 저장소: `magiccity_commit` → `92f7ee8`, 0.27.1, 서버 기동 검사에 왕국 대륙 청크 강제 로드 2곳(심연 균열·들판)과 동굴 생성 오류 검사. 게임 확인 TESTING CV1~CV7, 빠른 확인 23회차.
+- 첫 CI: JitPack 첫 빌드 시간 초과 → 다시 실행. 그 사이 Modrinth 에서 spark 버전 이름이 `1.10.124-neoforge-1.21.1` → `1.10.124-neoforge` 로 바뀌어 받기 실패 → `mods.lock.json` 고침. 서버 기동 검사에서 왕국 대륙 청크 2곳 생성·동굴 오류 없음 확인, 사전 릴리스 `v0.27.1-test.1`.
 - 남은 것(별도 결정): 지역 채굴 금지·자동 수복(던전 벽을 뚫는 것을 막기), 동굴 입구, 동굴 몬스터 등급.
 
 ### 2026-11-21 — 장비 그림 v0.7 적용 (fantasyrpg 0.27.0)
