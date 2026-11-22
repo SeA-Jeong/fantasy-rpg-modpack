@@ -70,6 +70,8 @@ jobs:
           python3 tools/smoke_server.py server ours \
             --command "magiccity status" \
             --command "magiccity quest list" \
+            --command "execute in magiccity:kingdom run forceload add -3340 2520=>force loaded" \
+            --command "execute in magiccity:kingdom run forceload add 1500 -500=>force loaded" \
             --command "rpg simulate 100 2.0 0 0.25 0=>150"
           mkdir -p smoke-logs/stage1 && cp -r server/logs smoke-logs/stage1/ 2>/dev/null || true
           cp -r server/crash-reports smoke-logs/stage1/ 2>/dev/null || true
@@ -126,6 +128,8 @@ jobs:
           if grep -E "(Failed to (load|parse)|Couldn't (load|parse)|Errors in registry).*enchantment" server/logs/latest.log; then echo "인챈트 데이터 오류"; exit 1; fi
           if grep -E "(Failed to (load|parse)|Couldn't (load|parse)).*(boss_arena|dimension_type)" server/logs/latest.log; then echo "전장 차원 데이터 오류"; exit 1; fi
           if grep -E "(Couldn't load tag|missing references).*damage_type" server/logs/latest.log; then echo "피해 유형 태그 읽기 오류"; exit 1; fi
+          # 지하 동굴(2026-11-22): 왕국 대륙 청크 생성(심연 균열 영역·들판)에서 오류가 없어야 함
+          if grep -E "(CaveRules|UndergroundZones|KingdomChunkGenerator).*(Exception|Error)|Exception.*(CaveRules|UndergroundZones)" server/logs/latest.log; then echo "동굴 생성 오류"; exit 1; fi
 
       - name: "통합 팩(.mrpack) 만들기·설치"
         run: |

@@ -50,6 +50,7 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - **(v0.26, 게임 확인 전) 방어구 성향:** 컴포넌트 `fantasyrpg:affinity`, 성향석 4종, `FamilyArmorRetuneRecipe`, 공명·방향 일치 ×1.25(`AffinityRules`·`AffinityEffects`, `armor_affinity/settings.json`)
 - **(v0.26, 게임 확인 전) 오버월드 7급:** `CraftRules.MAX_UPGRADE` 7, 7급 승급·유산 7급 재료(오버월드 부품), magiccity `4da6f55`(12장 완료 → 7급, 레벨 상한 Lv.60 유지)
 - **(v0.26~0.27, 게임 확인 전) 장비 그림:** 무기 6종 × 10등급(인벤토리 2D·손 3D, `separate_transforms`, 속성 `fantasyrpg:tier`), 활 당기기 3단계(우리 활에 `pull`·`pulling` 속성 등록), 재료 17종 입체·아이콘, 계열 갑옷 아이콘 200(속성 `fantasyrpg:tier`), **입은 갑옷 계열·등급별 모습**(`FamilyArmorItem.getArmorTexture` → `textures/models/armor/<계열>_tNN_layer_1|2.png`), 룬석·연마재 등급 그림(속성 `fantasyrpg:grade`, `rune_sel/`), 작업대 블록 그림(`GridBenchBlock.FACING`, 놓을 때 플레이어 쪽, 이전 월드는 북쪽)
+- **(v0.27.1, magiccity `92f7ee8`, 게임 확인 전) 지하 동굴:** 왕국 대륙 Y 0 미만에만 동굴(`world/CaveRules` 순수 노이즈·JUnit 4, Y −55 이하 용암), 지어 둔 던전 영역(`Restore` 영역 상자 = `world/UndergroundZones`) + 8칸 제외, 그 영역 땅속 바닐라 액체는 생성 때 돌로, 기존 월드 `/magiccity fix caves [반지름]`. 지표 입구 없음
 - **(팩) Combat Traces 1.1.0:** `modpack/local-mods/` jar, 클라이언트·서버 둘 다
 
 ### 아직 없는 것 (다음 작업 후보)
@@ -231,6 +232,13 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - 이 저장소: `mods.lock.json` fantasybosses 고정 커밋 → `4da5507`, CI 의 jar 이름·서버 로그 검사 0.9.0. 사전 릴리스 `v0.27.0-test.2`. 게임 확인 TESTING FM1~FM8, 빠른 확인 22회차.
 - 남은 것: 원거리·비행·스킬 AI, 지역별 자연 스폰(지역 고정 등급), 드롭·수치, 균열 포식자 부위 판정 여부.
 
+
+### 2026-11-22 — 지하 동굴 (fantasyrpg 0.27.1, magiccity `92f7ee8`)
+- 사용자 요청: 특정 높이 아래로 동굴, 던전과 겹치지 않게(지어 둔 지형 기준 여백), 용암·지하수가 던전을 망가뜨리지 않게. 결정: Y 0 미만, 여백 8칸(사용자 5칸 제안 → 상자 오차 여유로 8 추천), 물 없음·바닥 용암, 기존 월드 명령.
+- 지형 계산식 표본(±5000, 8칸 간격): 지면 가운데값 Y 66, 바다 바닥 최저 29, 봉우리 최고 248. 땅 밑 건축: 하수도 47, 심층 광산 21, 뿌리 던전 8, 심연 균열 −30, 드래곤 레어 보물 동굴 −40 → 동굴 높이와 겹치는 것은 균열·레어뿐이고 여백으로 제외.
+- magiccity: `CaveRules`(굴 = 노이즈 둘의 0 근처 교차, 방 = 느린 노이즈, 끝으로 갈수록 좁게, 동굴 약 8.5%·가장 큰 연결 덩어리 약 79%), `UndergroundZones`(Restore 영역 지연 초기화), `KingdomChunkGenerator.blockAt`·`sealZones`, `site/CaveFix` + `/magiccity fix caves`, README.
+- 이 저장소: `magiccity_commit` → `92f7ee8`, 0.27.1, 서버 기동 검사에 왕국 대륙 청크 강제 로드 2곳(심연 균열·들판)과 동굴 생성 오류 검사. 게임 확인 TESTING CV1~CV7, 빠른 확인 23회차.
+- 남은 것(별도 결정): 지역 채굴 금지·자동 수복(던전 벽을 뚫는 것을 막기), 동굴 입구, 동굴 몬스터 등급.
 
 ### 2026-11-21 — 장비 그림 v0.7 적용 (fantasyrpg 0.27.0)
 - 사용자 제공 `fantasyrpg_equipment_assets_v0.7.zip`(파일 1,720개, JSON 607개 오류·빠진 참조 0)을 대조해 1+2 범위만 넣음(사용자 "진행하자"). 자료 안 스크립트 5개는 실행하지 않았고, 복사·모델 생성은 작업용 스크립트(저장소 밖)로 함.
