@@ -21,7 +21,7 @@ import zipfile
 WHITELIST = ("https://cdn.modrinth.com/", "https://github.com/", "https://raw.githubusercontent.com/", "https://gitlab.com/")
 
 
-def build(lock, resolved, ours_dir, datapacks_dir, guide, version, out):
+def build(lock, resolved, ours_dir, datapacks_dir, guide, version, out, extra=None):
     files, others = [], []
     for r in resolved["resolved"]:
         url = r["from"]
@@ -59,6 +59,11 @@ def build(lock, resolved, ours_dir, datapacks_dir, guide, version, out):
                         z.write(full, "overrides/datapacks/" + os.path.relpath(full, datapacks_dir).replace(os.sep, "/"))
         if guide:
             z.write(guide, "overrides/테스트방법.md")
+        if extra:  # 그대로 overrides/ 아래로 (개발 테스트 장비 도구·설정·리소스팩, 2026-11-23)
+            for root, _, names in os.walk(extra):
+                for n in names:
+                    full = os.path.join(root, n)
+                    z.write(full, "overrides/" + os.path.relpath(full, extra).replace(os.sep, "/"))
     print(f"만듦: {out}")
     print(f"  외부 모드 {len(files)}개 (주소만), 우리 모드 {len(ours)}개 (파일 포함): {', '.join(ours)}")
     for o in others:
@@ -72,13 +77,14 @@ def main(argv):
     ap.add_argument("--resolved", required=True)
     ap.add_argument("--ours", required=True)
     ap.add_argument("--datapacks")
+    ap.add_argument("--extra-overrides", help="이 폴더 내용을 overrides/ 에 그대로")
     ap.add_argument("--guide")
     ap.add_argument("--version", required=True)
     ap.add_argument("--out", required=True)
     a = ap.parse_args(argv)
     lock = json.load(open(a.lock, encoding="utf-8"))
     resolved = json.load(open(a.resolved, encoding="utf-8"))
-    build(lock, resolved, a.ours, a.datapacks, a.guide, a.version, a.out)
+    build(lock, resolved, a.ours, a.datapacks, a.guide, a.version, a.out, a.extra_overrides)
     return 0
 
 

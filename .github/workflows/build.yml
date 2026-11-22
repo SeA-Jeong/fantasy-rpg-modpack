@@ -66,6 +66,9 @@ jobs:
           cp -r modpack/datapacks/fantasyrpg_content modpack/datapacks/fantasyrpg_test testpack/datapacks/
           cp -r modpack/kubejs testpack/kubejs
           cp docs/TESTING.md testpack/TESTING.md
+          # 개발자 전용 테스트 장비 도구(켜기 파일·작업용 리소스팩·리비전 스크립트·원본) — 2026-11-23
+          bash tools/devtest/make_kit.sh devkit
+          cp -r devkit/. testpack/
           (cd testpack && zip -qr ../fantasyrpg-testpack.zip .)
 
       - name: 테스트 팩 업로드
@@ -80,13 +83,16 @@ jobs:
           VER="$(grep '^mod_version=' core-mod/gradle.properties | cut -d= -f2)-$(git rev-parse --short HEAD)"
           python3 tools/fetch_mods.py modpack/mods.lock.json external
           python3 tools/build_mrpack.py --lock modpack/mods.lock.json --resolved external/resolved.json \
-            --ours testpack/mods --datapacks modpack/datapacks --guide docs/TESTING.md --version "$VER" \
+            --ours testpack/mods --datapacks modpack/datapacks --guide docs/TESTING.md --version "$VER" --extra-overrides devkit \
             --out magic-kingdom-testpack.mrpack
           # launcher 처럼 설치해 보고(주소·해시 확인) 모드 25개(우리 3 + fantasybosses + Combat Traces + 주소 20)가 모이는지 확인
           python3 tools/install_mrpack.py magic-kingdom-testpack.mrpack packcheck
           test "$(ls packcheck/mods/*.jar | wc -l)" -eq 26
           test -f packcheck/mods/fantasybosses-0.9.0.jar
           test -f packcheck/mods/combattraces-1.1.0.jar
+          test -f packcheck/config/fantasyrpg-devtest/ENABLE
+          test -f packcheck/resourcepacks/fantasyrpg_devtest/pack.mcmeta
+          test -f packcheck/devtest/test_armor.py
 
       - name: 통합 팩 업로드
         uses: actions/upload-artifact@v4

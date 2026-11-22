@@ -61,6 +61,10 @@ repositories {
     }
     // JEI API: 작업대 조합식을 JEI에 보여 주는 플러그인 컴파일용 (2026-11-20)
     maven {
+        url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+        content { includeGroup 'software.bernie.geckolib' }
+    }
+    maven {
         url = 'https://maven.blamejared.com/'
         content { includeGroup 'mezz.jei' }
     }
@@ -75,6 +79,8 @@ dependencies {
     // 컴파일 참조만 하고 배포 jar·테스트 팩에는 넣지 않는다. 연동 코드는 compat/bettercombat 에서 ModList 확인 후에만 로드
     compileOnly "maven.modrinth:better-combat:${bettercombat_version}"
     // JEI 플러그인(compat/jei): 컴파일 참조만. JEI가 없으면 플러그인 클래스가 로드되지 않음
+    // GeckoLib: 개발자 전용 테스트 장비(devtest)만 씀. 팩에는 따로 들어 있고(mods.lock), mods.toml 에서는 선택 의존
+    compileOnly "software.bernie.geckolib:geckolib-neoforge-1.21.1:${geckolib_version}"
     compileOnly "mezz.jei:jei-1.21.1-common-api:${jei_version}"
     compileOnly "mezz.jei:jei-1.21.1-neoforge-api:${jei_version}"
 

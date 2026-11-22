@@ -58,6 +58,8 @@ public final class FantasyRpgCore {
 
         // 계열 방어구: 등급 컴포넌트·재질·아이템·창작 탭 등록, 수치표로 능력치 붙이기
         GearRegistry.register(modEventBus);
+        // 개발자 전용 테스트 장비 (2026-11-23): 꺼져 있으면 아무것도 등록하지 않음 — devtest/DevTest
+        com.fantasyrpg.core.devtest.DevTest.bootstrap(modEventBus);
         com.fantasyrpg.core.gear.RpgAttributes.register(modEventBus);
         com.fantasyrpg.core.network.DataSync.bootstrap();                                // 전용 서버 데이터 동기화 읽기 코드 (2026-11-21)    // 코어 회복·스킬 가속 능력치 (2026-11-21)
         com.fantasyrpg.core.craft.CraftRegistry.register(modEventBus);

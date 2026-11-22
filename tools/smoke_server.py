@@ -45,6 +45,7 @@ def main(argv):
     ap.add_argument("mods_dir")
     ap.add_argument("--timeout", type=int, default=900)
     ap.add_argument("--command", action="append", default=[], help="콘솔 명령=>출력에 있어야 할 문자열(선택)")
+    ap.add_argument("--jvm-arg", action="append", default=[], help="user_jvm_args.txt 에 더할 JVM 인자 (예: -Dfantasyrpg.devtest=true)")
     a = ap.parse_args(argv)
 
     sd = os.path.abspath(a.server_dir)
@@ -60,7 +61,7 @@ def main(argv):
     write(os.path.join(sd, "server.properties"),
           "online-mode=false\npvp=false\nlevel-seed=20261117\nspawn-protection=0\nview-distance=4\nsimulation-distance=4\nmax-tick-time=-1\n")
     jvm = os.path.join(sd, "user_jvm_args.txt")
-    write(jvm, "-Xmx3G\n")
+    write(jvm, "-Xmx3G\n" + "".join(x + "\n" for x in a.jvm_arg))
 
     print(f"서버 시작: 모드 {len(os.listdir(mods))}개")
     proc = subprocess.Popen(["bash", "run.sh", "nogui"], cwd=sd, stdin=subprocess.PIPE, stdout=subprocess.PIPE,

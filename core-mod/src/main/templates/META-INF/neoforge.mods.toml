@@ -30,3 +30,11 @@ type = "required"
 versionRange = "[1.0.0,)"
 ordering = "AFTER"
 side = "BOTH"
+
+# GeckoLib: 개발자 전용 테스트 장비(devtest)의 입체 갑옷 렌더러만 쓴다. 없으면 테스트 장비를 켜지 않을 뿐 (선택 의존)
+[[dependencies.${mod_id}]]
+modId = "geckolib"
+type = "optional"
+versionRange = "[4.7,5)"
+ordering = "AFTER"
+side = "BOTH"

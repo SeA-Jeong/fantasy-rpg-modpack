@@ -121,6 +121,17 @@ public final class RpgNetwork {
         }
     }
 
+    /** 서버 → 클라: 개발 테스트 장비 리소스 다시 읽기 ({@code /fantasyrpgtest armor reload}, 2026-11-23). 테스트 장비가 꺼져 있어도 등록만 해 둠 */
+    public record DevReload() implements CustomPacketPayload {
+        public static final Type<DevReload> TYPE = new Type<>(id("devtest_reload"));
+        public static final StreamCodec<ByteBuf, DevReload> CODEC = StreamCodec.unit(new DevReload());
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
     public static void register(IEventBus modBus) {
         modBus.addListener(RegisterPayloadHandlersEvent.class, RpgNetwork::onRegister);
     }
@@ -133,6 +144,7 @@ public final class RpgNetwork {
         r.playToClient(Cooldown.TYPE, Cooldown.CODEC, (p, ctx) -> ctx.enqueueWork(() -> ClientRpgState.acceptCooldown(p.nodeId(), p.ticks())));
         r.playToClient(DataSync.Payload.TYPE, DataSync.Payload.CODEC,
                 (p, ctx) -> ctx.enqueueWork(() -> com.fantasyrpg.core.client.ClientDataSync.accept(p.dir(), p.json())));   // 2026-11-21
+        r.playToClient(DevReload.TYPE, DevReload.CODEC, (p, ctx) -> ctx.enqueueWork(() -> com.fantasyrpg.core.client.DevTestClient.reloadResources()));
         r.playToClient(OpenClassSelect.TYPE, OpenClassSelect.CODEC, (p, ctx) -> ctx.enqueueWork(() -> ClientRpgState.openClassSelect()));
         r.playToServer(ChooseClass.TYPE, ChooseClass.CODEC, (p, ctx) -> ctx.enqueueWork(() -> {
             if (ctx.player() instanceof ServerPlayer sp) com.fantasyrpg.core.playerdata.ClassSelection.handleChoose(sp, p.classId());
