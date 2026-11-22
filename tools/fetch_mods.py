@@ -6,6 +6,8 @@
 - source "modrinth": Modrinth API 에서 slug·버전 번호·NeoForge·MC 버전이 맞는 파일을 찾고 sha512 를 검사한다.
 - source "maven": version 이 있으면 그 버전, 없으면 maven-metadata.xml 에서 latest_prefix 로 시작하는 가장 높은 버전. 실패하면 fallback 을 쓴다.
 - source "url": 주소 그대로 받는다.
+- Modrinth 모드가 "필수"로 적어 둔 다른 Modrinth 모드가 목록에 없으면 실패로 보고하고, 그 모드의 이름·최신 맞는 버전을 알려 준다
+  (2026-11-22: Effectual 이 TLib 없이 들어가 게임이 켜지지 않던 문제. --side server 일 때는 클라이언트 전용 모드를 받지 않으므로 검사하지 않음).
 - 결과 목록은 <출력 폴더>/resolved.json 에 남긴다 (CI 보고용, 받은 주소·sha1·sha512·크기 포함 → tools/build_mrpack.py).
 """
 import hashlib
@@ -45,7 +47,20 @@ def fetch_modrinth(entry, mc, out):
     path = os.path.join(out, f["filename"])
     with open(path, "wb") as fh:
         fh.write(data)
-    return {"file": f["filename"], "version": entry["version"], "from": f["url"]}
+    deps = [d["project_id"] for d in match[0].get("dependencies", []) if d.get("dependency_type") == "required" and d.get("project_id")]
+    return {"file": f["filename"], "version": entry["version"], "from": f["url"], "project_id": match[0]["project_id"], "requires": deps}
+
+
+def describe_missing(pid, mc):
+    """목록에 없는 필수 모드: 이름·slug 와 NeoForge·MC 에 맞는 최신 버전 번호"""
+    try:
+        proj = json.loads(get(f"https://api.modrinth.com/v2/project/{pid}"))
+        q = urllib.parse.urlencode({"loaders": json.dumps(["neoforge"]), "game_versions": json.dumps([mc])})
+        vs = json.loads(get(f"https://api.modrinth.com/v2/project/{pid}/version?{q}"))
+        latest = vs[0]["version_number"] if vs else "(맞는 버전 없음)"
+        return f"{proj.get('title')} (slug {proj.get('slug')}, 최신 맞는 버전 {latest})"
+    except Exception as ex:  # noqa: BLE001
+        return f"{pid} (이름 조회 실패: {ex})"
 
 
 def fetch_maven(entry, out):
@@ -125,6 +140,13 @@ def main(argv):
         r["size"] = len(data)
         resolved.append(r)
         print(f"받음  {e['name']:<22} {r['version']:<26} {r['file']}" + (f"  ({r['note']})" if "note" in r else ""))
+    have = {r.get("project_id") for r in resolved if r.get("project_id")}
+    if a.side != "server":
+        for r in resolved:
+            for pid in r.get("requires", []):
+                if pid not in have:
+                    failed.append(f"{r['name']}: 필수 모드가 목록에 없음 → {describe_missing(pid, lock['minecraft'])}")
+                    have.add(pid)
     with open(os.path.join(a.out, "resolved.json"), "w", encoding="utf-8") as fh:
         json.dump({"resolved": resolved, "failed": failed}, fh, ensure_ascii=False, indent=2)
     for f in failed:
