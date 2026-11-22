@@ -15,7 +15,7 @@
 | CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄). 모드 구성이 바뀌면 `modpack smoke`가 외부 모드 18개 + 우리 모드 2개로 **NeoForge 전용 서버를 실제 기동** |
 | 1차 외부 모드 구성 | `modpack/mods.lock.json` (필수 13 + 권장 5, 버전 고정). 2026-11-17 전용 서버 기동 통과 (run 44061047052). 클라이언트 실행은 아직 확인 안 함 |
 | 우리 모드 3개 | `fantasyrpg`(이 저장소), `magiccity`(JitPack), `royalqol`(클라이언트 전용 편의 모드, `magic-city-mod` 저장소 `royalqol/`, `mods.lock.json`의 `royalqol.commit`으로 빌드 — `tools/build_royalqol.sh`). 테스트 팩과 서버 기동 검사에 셋 다 들어감. **챕터 보스 모드 `fantasybosses`**(3장 라디키온, ARR — 사용자 허락으로 공개 저장소): `magic-city-mod` 저장소 `fantasybosses/`, `mods.lock.json` 의 `fantasybosses.commit` 으로 빌드(`tools/build_fantasybosses.sh`) → 테스트 팩·통합 팩, 서버 기동 검사는 2단계(GeckoLib 필요)에만. `modpack/local-mods/` 는 지금 비어 있음 |
-| 최신 테스트 팩 | **v0.27.1-test.1** (지하 동굴 + 장비 그림 v0.7 + Combat Traces + 오버월드 7급·무기 그림·갑옷 수리·방어구 성향 + fantasybosses 0.9.0 필드 몬스터 30종). 모두 게임 확인 전 — `docs/TESTING.md` 빠른 확인 20~23회차 |
+| 최신 테스트 팩 | **v0.27.1-test.2** (test.1 에서 Effectual 이 TLib 없이 들어가 클라이언트가 켜지지 않던 문제 고침. 지하 동굴 + 장비 그림 v0.7 + Combat Traces + 오버월드 7급·무기 그림·갑옷 수리·방어구 성향 + fantasybosses 0.9.0). 모두 게임 확인 전 — `docs/TESTING.md` 빠른 확인 20~23회차 |
 | 게임 테스트 | `docs/TESTING.md`의 v0.1·v0.2 체크리스트 |
 
 ### 테스트 팩 Release 만드는 법
@@ -232,6 +232,10 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - 이 저장소: `mods.lock.json` fantasybosses 고정 커밋 → `4da5507`, CI 의 jar 이름·서버 로그 검사 0.9.0. 사전 릴리스 `v0.27.0-test.2`. 게임 확인 TESTING FM1~FM8, 빠른 확인 22회차.
 - 남은 것: 원거리·비행·스킬 AI, 지역별 자연 스폰(지역 고정 등급), 드롭·수치, 균열 포식자 부위 판정 여부.
 
+
+### 2026-11-22 — Effectual 필수 라이브러리 빠짐 (클라이언트 시작 실패)
+- 사용자 화면: "Effectual (effectual) has failed to load correctly — NoClassDefFoundError: com/imeetake/tlib/client/particle/TParticles". Effectual 1.3.0(NeoForge)은 같은 만든이의 TLib 를 필수로 쓰는데, 서버 기동 검사는 클라이언트 전용 모드를 빼고 돌아서 못 잡았음.
+- 고침: `mods.lock.json` 에 TLib `1.5.0-1.21.1`(클라이언트 전용) 추가, 통합 팩 모드 25 → 26. `tools/fetch_mods.py` 가 Modrinth 의 "필수" 의존 모드가 목록에 빠져 있으면 실패로 알리고 이름·맞는 버전을 보여 줌(클라이언트 포함 전체 받기 때) — 이번 CI 에서 다른 빠진 필수 모드 없음 확인. 사전 릴리스 `v0.27.1-test.2`.
 
 ### 2026-11-22 — 지하 동굴 (fantasyrpg 0.27.1, magiccity `92f7ee8`)
 - 사용자 요청: 특정 높이 아래로 동굴, 던전과 겹치지 않게(지어 둔 지형 기준 여백), 용암·지하수가 던전을 망가뜨리지 않게. 결정: Y 0 미만, 여백 8칸(사용자 5칸 제안 → 상자 오차 여유로 8 추천), 물 없음·바닥 용암, 기존 월드 명령.
