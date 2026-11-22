@@ -14,8 +14,8 @@ import software.bernie.geckolib.renderer.GeoArmorRenderer;
  * 본 규칙(GeckoLib 갑옷): armorHead·armorBody·armorRightArm·armorLeftArm·armorRightLeg·armorLeftLeg·armorRightBoot·armorLeftBoot.
  * 각 본은 플레이어의 같은 부위를 따라 움직인다(걷기·팔 흔들기·웅크리기·공격). Bedrock 좌표 x&lt;0 이 캐릭터 오른쪽.
  * <p>
- * 흉갑도 다리 본(armorLeftLeg·armorRightLeg)을 그린다 — 로브 하단·코트 자락을 다리에 붙여 걷기 때 함께 움직이게 하기 위해.
- * GeckoLib 기본은 흉갑 칸에서 몸통·팔만 보여 주므로 여기서 다리도 켠다.
+ * 흉갑은 머리 본·다리 본도 그린다 — 후드·마스크(머리를 따라 돎), 로브 하단·코트 자락(다리를 따라 움직임)용.
+ * GeckoLib 기본은 흉갑 칸에서 몸통·팔만 보여 주므로 여기서 머리·다리도 켠다 (부품이 없는 본은 그려도 아무것도 없음).
  */
 public final class DevTestArmorRenderer extends GeoArmorRenderer<DevTestArmorItem> {
     public DevTestArmorRenderer() {
@@ -26,6 +26,7 @@ public final class DevTestArmorRenderer extends GeoArmorRenderer<DevTestArmorIte
     protected void applyBoneVisibilityBySlot(EquipmentSlot currentSlot) {
         super.applyBoneVisibilityBySlot(currentSlot);
         if (currentSlot == EquipmentSlot.CHEST) {
+            setBoneVisible(this.head, true);
             setBoneVisible(this.rightLeg, true);
             setBoneVisible(this.leftLeg, true);
         }

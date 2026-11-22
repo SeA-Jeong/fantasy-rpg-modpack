@@ -15,7 +15,7 @@
 | CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄). 모드 구성이 바뀌면 `modpack smoke`가 외부 모드 18개 + 우리 모드 2개로 **NeoForge 전용 서버를 실제 기동** |
 | 1차 외부 모드 구성 | `modpack/mods.lock.json` (필수 13 + 권장 5, 버전 고정). 2026-11-17 전용 서버 기동 통과 (run 44061047052). 클라이언트 실행은 아직 확인 안 함 |
 | 우리 모드 3개 | `fantasyrpg`(이 저장소), `magiccity`(JitPack), `royalqol`(클라이언트 전용 편의 모드, `magic-city-mod` 저장소 `royalqol/`, `mods.lock.json`의 `royalqol.commit`으로 빌드 — `tools/build_royalqol.sh`). 테스트 팩과 서버 기동 검사에 셋 다 들어감. **챕터 보스 모드 `fantasybosses`**(3장 라디키온, ARR — 사용자 허락으로 공개 저장소): `magic-city-mod` 저장소 `fantasybosses/`, `mods.lock.json` 의 `fantasybosses.commit` 으로 빌드(`tools/build_fantasybosses.sh`) → 테스트 팩·통합 팩, 서버 기동 검사는 2단계(GeckoLib 필요)에만. `modpack/local-mods/` 는 지금 비어 있음 |
-| 최신 테스트 팩 | **v0.28.0-test.1** (개발자 전용 테스트 장비 + 장비 그림 v0.9 16px 아이콘 + 장비 그림 v0.8·갑옷 오오라 + 빛·입자 + Effectual TLib 고침 + 지하 동굴 + 장비 그림 v0.7 + Combat Traces + 오버월드 7급·무기 그림·갑옷 수리·방어구 성향 + fantasybosses 0.9.0). 모두 게임 확인 전 — `docs/TESTING.md` 빠른 확인 20~27회차 |
+| 최신 테스트 팩 | **v0.28.1-test.1** (테스트 흉갑 v2.0 + 개발자 전용 테스트 장비 + 장비 그림 v0.9 16px 아이콘 + 장비 그림 v0.8·갑옷 오오라 + 빛·입자 + Effectual TLib 고침 + 지하 동굴 + 장비 그림 v0.7 + Combat Traces + 오버월드 7급·무기 그림·갑옷 수리·방어구 성향 + fantasybosses 0.9.0). 모두 게임 확인 전 — `docs/TESTING.md` 빠른 확인 20~28회차 |
 | 게임 테스트 | `docs/TESTING.md`의 v0.1·v0.2 체크리스트 |
 
 ### 테스트 팩 Release 만드는 법
@@ -240,6 +240,11 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - 이 저장소: `mods.lock.json` fantasybosses 고정 커밋 → `4da5507`, CI 의 jar 이름·서버 로그 검사 0.9.0. 사전 릴리스 `v0.27.0-test.2`. 게임 확인 TESTING FM1~FM8, 빠른 확인 22회차.
 - 남은 것: 원거리·비행·스킬 AI, 지역별 자연 스폰(지역 고정 등급), 드롭·수치, 균열 포식자 부위 판정 여부.
 
+
+### 2026-11-23 — 테스트 흉갑 v2.0 (fantasyrpg 0.28.1)
+- 사용자 제공 `fantasyrpg_armor_quality_patch_v2.0.zip`(같은 3종의 품질 개선판: 기사 40·마법사 65·도적 47 큐브). 압축 풀기만(같이 온 `build_armor_quality_v2.py` 는 실행 안 함).
+- 이번에도 좌우 본 이름 반대 → 스크립트에 `import <id> --geo --texture --icon --bbmodel --swap-sides` 를 더해 v03 으로 넣음(v01·v02 보관). 도적 후드·마스크가 `armorHead` 본에 있어 **렌더러가 흉갑일 때 머리 본도 보이게** 바꿈(Java).
+- 확인: 로컬 JUnit(본 좌우·리소스) 통과, CI·서버 기동 검사 → `v0.28.1-test.1`. 게임 확인 TESTING Q2-1~Q2-4, 빠른 확인 28회차.
 
 ### 2026-11-23 — 개발자 전용 테스트 장비 (fantasyrpg 0.28.0)
 - 사용자 작업 지시서("장비 모델링 반복 테스트 환경 구축") + `fantasyrpg_armor_validation_models_v1.1.zip`(흉갑 3종 bbmodel·geo·256 텍스처·32 아이콘). 압축 풀기만, 스크립트 없음.

@@ -14,7 +14,7 @@ Blockbench 에서 고치고 → 파일을 바꾸고 → 게임에서 입어 보�
 
 **1단계 — 등록 (DT1·DT2)**
 5. `/fantasyrpgtest armor list` → 3개, `목록: 모드 기본, 오류 0건`.
-6. E → 창작 탭 **"판타지 RPG 개발 테스트 장비"** → 아이콘 3개, 이름 `[테스트] 기사 1급 흉갑 (v02)` 등. (F3+H 를 켜면 툴팁에 모델 경로)
+6. E → 창작 탭 **"판타지 RPG 개발 테스트 장비"** → 아이콘 3개, 이름 `[테스트] 기사 1급 흉갑 (v03)` 등. (F3+H 를 켜면 툴팁에 모델 경로)
 
 **2단계 — 입어 보기 (DT3~DT6)**
 7. 먼저 철 흉갑을 입고 `/fantasyrpgtest armor equip knight 1` → "기존 장비는 가방으로", 철 흉갑이 가방에 있는지.
@@ -22,8 +22,8 @@ Blockbench 에서 고치고 → 파일을 바꾸고 → 게임에서 입어 보�
 9. 움직이기: 걷기(W) · 달리기(Ctrl+W) · 점프(Space) · 웅크리기(Shift) · 공격(왼쪽 클릭 반복). 볼 것:
    - 팔 부품(견갑·소매)이 **같은 쪽 팔**을 따라 움직이는지 — 공격하면 오른팔이 크게 움직이니 오른쪽 견갑이 따라가야 함
    - 다리 부품이 같은 쪽 다리를 따라가는지, 몸을 뚫고 나오는 곳
-10. `/fantasyrpgtest armor equip mage 5` → 걷기·달리기: **로브 하단이 좌우로 나뉘어 다리와 같이 움직이는지**, 다리와 겹쳐 뚫리는 정도, 넓은 소매.
-11. `/fantasyrpgtest armor equip rogue 10` → 큰 견갑이 **캐릭터 오른쪽 어깨**, 걷고 돌 때 코트 꼬리, 수정 장식이 몸을 따라오는지.
+10. `/fantasyrpgtest armor equip mage 5` → 걷기·달리기: **3단 로브 하단(앞·옆·뒷자락)이 좌우 다리와 같이 움직이는지**, 다리끼리·몸통 앞치마와 겹쳐 뚫리는 정도, 종 모양 소매·작은 케이프·브로치.
+11. `/fantasyrpgtest armor equip rogue 10` → **후드·마스크가 머리를 따라 도는지**(위아래·좌우로 보기), 갈라진 숄이 **캐릭터 오른쪽 어깨**, 좌우 길이가 다른 코트 꼬리가 걸을 때 다리를 따라가는지, 투구를 같이 쓰면 후드와 겹치는 정도.
 
 **3단계 — 게임 끄지 않고 바꾸기 (DT7)**
 12. Prism 에서 인스턴스 → **폴더**. `devtest/source_assets/test_armor/test_knight_chest_t01/current/test_knight_chest_t01.png` 를 복사해 그림판 등으로 눈에 띄게 칠함.
@@ -94,6 +94,8 @@ python devtest/test_armor.py snapshot test_mage_chest_t05 --note "로브 하단 
 python devtest/test_armor.py use test_mage_chest_t05 v02           # 보관한 판 → current
 python devtest/test_armor.py deploy instance .                     # current → 리소스팩·설정 (그다음 F3+T)
 python devtest/test_armor.py validate                              # 본 이름·좌우·UV·텍스처 크기 검사
+python devtest/test_armor.py import test_mage_chest_t05 --geo a.geo.json --texture a.png --icon a_icon.png --bbmodel a.bbmodel --swap-sides --note "v2.0"
+                                                                   # 받은 파일 → 새 판 + current (좌우 본 이름 고침은 --swap-sides)
 ```
 폴더: `source_assets/test_armor/<id>/current/` (작업본) · `revisions/v01, v02 …` (보관, 지우지 않음).
 
@@ -106,6 +108,7 @@ Java·렌더러·명령어는 고치지 않습니다. 경로 규칙을 바꾸려
 ## 7. 모델 규칙 (GeckoLib 갑옷)
 - 최상위 본: `armorHead` `armorBody` `armorRightArm` `armorLeftArm` `armorRightLeg` `armorLeftLeg` `armorRightBoot` `armorLeftBoot`. 각 본은 플레이어의 같은 부위를 따라 움직입니다. 장식은 이 본들의 자식으로.
 - **Blockbench(Bedrock) 좌표에서 x<0 이 캐릭터 오른쪽**입니다 (`armorRightArm` 회전축 [-5, 22, 0], `armorLeftArm` [5, 22, 0], 다리 ±2).
-- 흉갑은 몸통·팔에 더해 **다리 본도 그립니다** (로브 하단·코트 자락용). 투구·각반·장화는 GeckoLib 기본대로 자기 부위만.
+- 흉갑은 몸통·팔에 더해 **머리 본·다리 본도 그립니다** (후드·마스크, 로브 하단·코트 자락용). 투구·각반·장화는 GeckoLib 기본대로 자기 부위만.
+- **좌우 주의:** 지금까지 받은 모델(v1.1·v2.0)은 모두 좌우 본 이름이 반대로 나왔습니다. 받은 파일은 `import … --swap-sides` 로 넣으면 이름만 바로잡힙니다. 모델을 만들 때부터 맞추려면 Blockbench 화면에서 **x 가 음수인 쪽 = `armorRight*`**.
 - 텍스처 투명도는 0 또는 255 만 (갑옷은 잘라내기 렌더라 반투명이 안 보임).
 - geo 형식 `1.12.0`, 텍스처 크기는 geo 의 `texture_width/height` 와 같게.
