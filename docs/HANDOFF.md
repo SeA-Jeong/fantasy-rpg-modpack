@@ -15,7 +15,7 @@
 | CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄). 모드 구성이 바뀌면 `modpack smoke`가 외부 모드 18개 + 우리 모드 2개로 **NeoForge 전용 서버를 실제 기동** |
 | 1차 외부 모드 구성 | `modpack/mods.lock.json` (필수 13 + 권장 5, 버전 고정). 2026-11-17 전용 서버 기동 통과 (run 44061047052). 클라이언트 실행은 아직 확인 안 함 |
 | 우리 모드 3개 | `fantasyrpg`(이 저장소), `magiccity`(JitPack), `royalqol`(클라이언트 전용 편의 모드, `magic-city-mod` 저장소 `royalqol/`, `mods.lock.json`의 `royalqol.commit`으로 빌드 — `tools/build_royalqol.sh`). 테스트 팩과 서버 기동 검사에 셋 다 들어감. **챕터 보스 모드 `fantasybosses`**(3장 라디키온, ARR — 사용자 허락으로 공개 저장소): `magic-city-mod` 저장소 `fantasybosses/`, `mods.lock.json` 의 `fantasybosses.commit` 으로 빌드(`tools/build_fantasybosses.sh`) → 테스트 팩·통합 팩, 서버 기동 검사는 2단계(GeckoLib 필요)에만. `modpack/local-mods/` 는 지금 비어 있음 |
-| 최신 테스트 팩 | **v0.27.2-test.1** (빛·입자 + Effectual TLib 고침 + 지하 동굴 + 장비 그림 v0.7 + Combat Traces + 오버월드 7급·무기 그림·갑옷 수리·방어구 성향 + fantasybosses 0.9.0). 모두 게임 확인 전 — `docs/TESTING.md` 빠른 확인 20~24회차 |
+| 최신 테스트 팩 | **v0.27.3-test.1** (장비 그림 v0.8·갑옷 오오라 + 빛·입자 + Effectual TLib 고침 + 지하 동굴 + 장비 그림 v0.7 + Combat Traces + 오버월드 7급·무기 그림·갑옷 수리·방어구 성향 + fantasybosses 0.9.0). 모두 게임 확인 전 — `docs/TESTING.md` 빠른 확인 20~25회차 |
 | 게임 테스트 | `docs/TESTING.md`의 v0.1·v0.2 체크리스트 |
 
 ### 테스트 팩 Release 만드는 법
@@ -51,6 +51,7 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - **(v0.26, 게임 확인 전) 오버월드 7급:** `CraftRules.MAX_UPGRADE` 7, 7급 승급·유산 7급 재료(오버월드 부품), magiccity `4da6f55`(12장 완료 → 7급, 레벨 상한 Lv.60 유지)
 - **(v0.26~0.27, 게임 확인 전) 장비 그림:** 무기 6종 × 10등급(인벤토리 2D·손 3D, `separate_transforms`, 속성 `fantasyrpg:tier`), 활 당기기 3단계(우리 활에 `pull`·`pulling` 속성 등록), 재료 17종 입체·아이콘, 계열 갑옷 아이콘 200(속성 `fantasyrpg:tier`), **입은 갑옷 계열·등급별 모습**(`FamilyArmorItem.getArmorTexture` → `textures/models/armor/<계열>_tNN_layer_1|2.png`), 룬석·연마재 등급 그림(속성 `fantasyrpg:grade`, `rune_sel/`), 작업대 블록 그림(`GridBenchBlock.FACING`, 놓을 때 플레이어 쪽, 이전 월드는 북쪽)
 - **(v0.27.1, magiccity `92f7ee8`, 게임 확인 전) 지하 동굴:** 왕국 대륙 Y 0 미만에만 동굴(`world/CaveRules` 순수 노이즈·JUnit 4, Y −55 이하 용암), 지어 둔 던전 영역(`Restore` 영역 상자 = `world/UndergroundZones`) + 8칸 제외, 그 영역 땅속 바닐라 액체는 생성 때 돌로, 기존 월드 `/magiccity fix caves [반지름]`. 지표 입구 없음
+- **(v0.27.3, 게임 확인 전) 장비 그림 v0.8:** 갑옷 아이콘 200(64×64)·무기 입체 모델 60·활 당김 30·무기 빛 마스크 1~10급 전부 새 그림으로 다시 생성(`apply_eq07.py`·`glow_eq07.py`), 갑옷 8~10급 오오라 입자 15종(`RpgParticles.aura`, `RuneFx`가 입은 부위마다 뿜음, 파손 부위 제외). 입은 갑옷 입체(GeckoLib geo 50)는 **미적용** — 렌더러·GeckoLib 필수 의존성 결정 대기
 - **(v0.27.2, 게임 확인 전) 빛·입자:** 입체 아이템 모델(무기 8~10급·룬석·재료 9종)과 작업대 블록 모델에 빛 마스크 겹침 면(0.01 키움, NeoForge 면 데이터 `block_light`·`sky_light` 15, `render_type` translucent — 작업용 스크립트로 생성), 입은 갑옷 8~10급 빛 층(`client/GlowArmorLayer`, `RenderType.eyes`, 플레이어만, 파손 시 끔), 입자 12종(`fx/RpgParticles`, `client/GlowSparkParticle`: 룬석 8 반짝임·작업대 룬 먼지·불꽃), 룬석 입자 뿜기(`client/RuneFx`: 손 중급 이상·바닥, 프리셋 v0.4 초당 개수, 24칸), 작업대 `ACTIVE` 상태(화면 열린 수를 서버가 셈, 작동 모델·빛 7·`animateTick` 입자)
 - **(팩) Combat Traces 1.1.0:** `modpack/local-mods/` jar, 클라이언트·서버 둘 다
 
