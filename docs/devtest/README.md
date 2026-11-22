@@ -3,6 +3,45 @@
 Blockbench 에서 고치고 → 파일을 바꾸고 → 게임에서 입어 보고 → 다시 고치는 작업을 위한 개발자 전용 도구입니다.
 일반 게임 기능(무기·갑옷·강화·직업·퀘스트·전투)은 건드리지 않습니다. 테스트 장비는 능력치 0, 제작법·드롭 없음.
 
+## 0. 처음 테스트하는 순서 (약 30분)
+결과는 `번호 / 통과·실패 / 본 것` 한 줄씩 + 이상하면 F2 스크린샷.
+
+**준비**
+1. Prism Launcher → 추가 → 가져오기 → `magic-kingdom-testpack-v0.28.0-test.1.mrpack` (새 인스턴스). 실행.
+2. 메인 화면 **Mods** → `Fantasy RPG Core 0.28.0`, `GeckoLib` 이 있는지.
+3. **옵션 → 리소스 팩** → `fantasyrpg_devtest` 를 오른쪽(사용 중)으로 → 완료.
+4. 새 월드: 게임 모드 **크리에이티브**, **치트 허용 켬**. 들어가면 `/time set day`, 평평한 곳에 서기.
+
+**1단계 — 등록 (DT1·DT2)**
+5. `/fantasyrpgtest armor list` → 3개, `목록: 모드 기본, 오류 0건`.
+6. E → 창작 탭 **"판타지 RPG 개발 테스트 장비"** → 아이콘 3개, 이름 `[테스트] 기사 1급 흉갑 (v02)` 등. (F3+H 를 켜면 툴팁에 모델 경로)
+
+**2단계 — 입어 보기 (DT3~DT6)**
+7. 먼저 철 흉갑을 입고 `/fantasyrpgtest armor equip knight 1` → "기존 장비는 가방으로", 철 흉갑이 가방에 있는지.
+8. **F5** 두 번(앞에서 보기) → 마우스로 돌며 앞·옆·뒤 확인. F1 로 HUD 숨기면 잘 보임.
+9. 움직이기: 걷기(W) · 달리기(Ctrl+W) · 점프(Space) · 웅크리기(Shift) · 공격(왼쪽 클릭 반복). 볼 것:
+   - 팔 부품(견갑·소매)이 **같은 쪽 팔**을 따라 움직이는지 — 공격하면 오른팔이 크게 움직이니 오른쪽 견갑이 따라가야 함
+   - 다리 부품이 같은 쪽 다리를 따라가는지, 몸을 뚫고 나오는 곳
+10. `/fantasyrpgtest armor equip mage 5` → 걷기·달리기: **로브 하단이 좌우로 나뉘어 다리와 같이 움직이는지**, 다리와 겹쳐 뚫리는 정도, 넓은 소매.
+11. `/fantasyrpgtest armor equip rogue 10` → 큰 견갑이 **캐릭터 오른쪽 어깨**, 걷고 돌 때 코트 꼬리, 수정 장식이 몸을 따라오는지.
+
+**3단계 — 게임 끄지 않고 바꾸기 (DT7)**
+12. Prism 에서 인스턴스 → **폴더**. `devtest/source_assets/test_armor/test_knight_chest_t01/current/test_knight_chest_t01.png` 를 복사해 그림판 등으로 눈에 띄게 칠함.
+13. 그 파일을 `resourcepacks/fantasyrpg_devtest/assets/fantasyrpg/textures/armor/test_armor/test_knight_chest_t01.png` 로 저장 (폴더가 없으면 만들기).
+14. 게임에서 기사 흉갑을 입고 `/fantasyrpgtest armor reload` (또는 F3+T) → "리소스 다시 읽기 끝" 뒤 입은 모습이 바뀌는지.
+15. 13번 파일을 지우고 다시 `reload` → 원래 그림으로.
+16. (Blockbench 있으면) `…/current/test_knight_chest_t01.bbmodel` 을 열어 큐브 하나를 옮기고 **File → Export → Export Bedrock Geometry** → `resourcepacks/fantasyrpg_devtest/assets/fantasyrpg/geo/test_armor/test_knight_chest_t01.geo.json` 으로 저장 → `reload` → 모양이 바뀌는지. 끝나면 그 파일 지우고 `reload`.
+
+**4단계 — 리비전 되돌리기 (DT8, 파이썬 필요)**
+17. 인스턴스 폴더에서 터미널(주소창에 `cmd`) → `py devtest/test_armor.py list` → 3개, 보관 `v01, v02`.
+18. `py devtest/test_armor.py use test_mage_chest_t05 v01` → `py devtest/test_armor.py deploy instance .` → 게임 다시 시작.
+19. `/fantasyrpgtest armor list` 가 `목록: config/…` 이고 마법사가 `v01`. 입고 걸으면 **팔·다리 부품이 반대쪽 팔다리를 따라 움직임**(원본 문제가 보이면 통과).
+20. 되돌리기: `use test_mage_chest_t05 v02` → `deploy instance .` → 다시 시작. (모드 기본 목록으로 완전히 되돌리려면 `config/fantasyrpg-devtest/armor_manifest.json` 과 리소스팩 안 `assets` 폴더를 지움)
+
+**5단계 — 정리 (DT9)**
+21. `/fantasyrpgtest armor clear` → "테스트 장비 N개 지움", 원래 모습으로 돌아오는지.
+22. (선택) `config/fantasyrpg-devtest/ENABLE` 을 지우고 다시 시작 → `/fantasyrpgtest` 가 없고 창작 탭도 없음 (끄기 확인). 다시 쓰려면 파일을 되살림.
+
 ## 1. 켜기·끄기
 - 통합 테스트 팩에는 `config/fantasyrpg-devtest/ENABLE` 파일이 들어 있어 **켜진 상태**입니다. 지우면 다음 실행부터 꺼집니다.
 - 그 밖에: 시스템 속성 `-Dfantasyrpg.devtest=true|false` 가 가장 우선, Gradle `runClient` 개발 환경은 기본으로 켜짐.
