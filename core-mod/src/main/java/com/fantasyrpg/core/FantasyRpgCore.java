@@ -60,7 +60,8 @@ public final class FantasyRpgCore {
         GearRegistry.register(modEventBus);
         com.fantasyrpg.core.gear.RpgAttributes.register(modEventBus);
         com.fantasyrpg.core.network.DataSync.bootstrap();                                // 전용 서버 데이터 동기화 읽기 코드 (2026-11-21)    // 코어 회복·스킬 가속 능력치 (2026-11-21)
-        com.fantasyrpg.core.craft.CraftRegistry.register(modEventBus);   // 확장 작업대·부품·소재 (2026-11-20)
+        com.fantasyrpg.core.craft.CraftRegistry.register(modEventBus);
+        com.fantasyrpg.core.fx.RpgParticles.register(modEventBus);       // 룬석·작업대 입자 (2026-11-22)   // 확장 작업대·부품·소재 (2026-11-20)
         NeoForge.EVENT_BUS.addListener(FamilyArmorAttributes::onItemAttributes);
         // 룬석: 아이템·소켓 컴포넌트·제작대 조합 등록, 모루 보호, 툴팁(클라이언트에서만 불림)
         RuneRegistry.register(modEventBus);

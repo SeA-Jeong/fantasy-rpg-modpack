@@ -51,6 +51,7 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - **(v0.26, 게임 확인 전) 오버월드 7급:** `CraftRules.MAX_UPGRADE` 7, 7급 승급·유산 7급 재료(오버월드 부품), magiccity `4da6f55`(12장 완료 → 7급, 레벨 상한 Lv.60 유지)
 - **(v0.26~0.27, 게임 확인 전) 장비 그림:** 무기 6종 × 10등급(인벤토리 2D·손 3D, `separate_transforms`, 속성 `fantasyrpg:tier`), 활 당기기 3단계(우리 활에 `pull`·`pulling` 속성 등록), 재료 17종 입체·아이콘, 계열 갑옷 아이콘 200(속성 `fantasyrpg:tier`), **입은 갑옷 계열·등급별 모습**(`FamilyArmorItem.getArmorTexture` → `textures/models/armor/<계열>_tNN_layer_1|2.png`), 룬석·연마재 등급 그림(속성 `fantasyrpg:grade`, `rune_sel/`), 작업대 블록 그림(`GridBenchBlock.FACING`, 놓을 때 플레이어 쪽, 이전 월드는 북쪽)
 - **(v0.27.1, magiccity `92f7ee8`, 게임 확인 전) 지하 동굴:** 왕국 대륙 Y 0 미만에만 동굴(`world/CaveRules` 순수 노이즈·JUnit 4, Y −55 이하 용암), 지어 둔 던전 영역(`Restore` 영역 상자 = `world/UndergroundZones`) + 8칸 제외, 그 영역 땅속 바닐라 액체는 생성 때 돌로, 기존 월드 `/magiccity fix caves [반지름]`. 지표 입구 없음
+- **(v0.27.2, 게임 확인 전) 빛·입자:** 입체 아이템 모델(무기 8~10급·룬석·재료 9종)과 작업대 블록 모델에 빛 마스크 겹침 면(0.01 키움, NeoForge 면 데이터 `block_light`·`sky_light` 15, `render_type` translucent — 작업용 스크립트로 생성), 입은 갑옷 8~10급 빛 층(`client/GlowArmorLayer`, `RenderType.eyes`, 플레이어만, 파손 시 끔), 입자 12종(`fx/RpgParticles`, `client/GlowSparkParticle`: 룬석 8 반짝임·작업대 룬 먼지·불꽃), 룬석 입자 뿜기(`client/RuneFx`: 손 중급 이상·바닥, 프리셋 v0.4 초당 개수, 24칸), 작업대 `ACTIVE` 상태(화면 열린 수를 서버가 셈, 작동 모델·빛 7·`animateTick` 입자)
 - **(팩) Combat Traces 1.1.0:** `modpack/local-mods/` jar, 클라이언트·서버 둘 다
 
 ### 아직 없는 것 (다음 작업 후보)
@@ -232,6 +233,11 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - 이 저장소: `mods.lock.json` fantasybosses 고정 커밋 → `4da5507`, CI 의 jar 이름·서버 로그 검사 0.9.0. 사전 릴리스 `v0.27.0-test.2`. 게임 확인 TESTING FM1~FM8, 빠른 확인 22회차.
 - 남은 것: 원거리·비행·스킬 AI, 지역별 자연 스폰(지역 고정 등급), 드롭·수치, 균열 포식자 부위 판정 여부.
 
+
+### 2026-11-22 — 빛·입자 연결 (fantasyrpg 0.27.2)
+- 사용자: "아이템이 어둡고 빛 효과가 없다" → 장비 그림 v0.7 때 빛 마스크·입자는 보관만 했던 것. 새 모델링 없이 받은 마스크(무기 33·룬석 64·재료 18·입은 갑옷 30·작업대 8)와 입자 그림으로 연결. 사용자 "그것도 넣어줘"(입자 포함).
+- 기사 방패·네더 아이템 빛은 아이템이 없어 넣지 않음. 인벤토리 아이콘의 어두움은 빛과 무관(그림 색감) — 게임 확인 뒤 판단. 갑옷 9급 맥동·10급 발자국 같은 움직이는 연출(자료 effects_spec)은 아직.
+- 게임 확인 TESTING v0.27.2 GL1~GL8, 빠른 확인 24회차.
 
 ### 2026-11-22 — Effectual 필수 라이브러리 빠짐 (클라이언트 시작 실패)
 - 사용자 화면: "Effectual (effectual) has failed to load correctly — NoClassDefFoundError: com/imeetake/tlib/client/particle/TParticles". Effectual 1.3.0(NeoForge)은 같은 만든이의 TLib 를 필수로 쓰는데, 서버 기동 검사는 클라이언트 전용 모드를 빼고 돌아서 못 잡았음.

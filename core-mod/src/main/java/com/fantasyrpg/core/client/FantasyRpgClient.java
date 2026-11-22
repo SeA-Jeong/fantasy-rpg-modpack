@@ -50,6 +50,17 @@ public final class FantasyRpgClient {
             e.register(com.fantasyrpg.core.craft.CraftRegistry.MENU_5.get(), GridCraftScreen::new);
         });
         NeoForge.EVENT_BUS.addListener(ClientTickEvent.Post.class, FantasyRpgClient::onClientTick);
+        // 빛·입자 (2026-11-22): 입자 그림 연결, 8~10급 입은 갑옷 빛 층
+        modBus.addListener(net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent.class, e -> {
+            for (var h : com.fantasyrpg.core.fx.RpgParticles.ALL.values()) e.registerSpriteSet(h.get(), GlowSparkParticle.Provider::new);
+        });
+        modBus.addListener(net.neoforged.neoforge.client.event.EntityRenderersEvent.AddLayers.class, e -> {
+            for (net.minecraft.client.resources.PlayerSkin.Model skin : e.getSkins()) {
+                if (e.getSkin(skin) instanceof net.minecraft.client.renderer.entity.player.PlayerRenderer pr) {
+                    pr.addLayer(new GlowArmorLayer(pr, e.getEntityModels()));
+                }
+            }
+        });
         // 직업 무기 등급별 모양 (2026-11-21): 모델 overrides 가 fantasyrpg:tier (= 등급 ÷ 10) 로 _t01~_t10 을 고름
         modBus.addListener(net.neoforged.fml.event.lifecycle.FMLClientSetupEvent.class, e -> e.enqueueWork(() -> {
             for (com.fantasyrpg.core.gear.weapon.WeaponType t : com.fantasyrpg.core.gear.weapon.WeaponType.values()) {
@@ -86,6 +97,7 @@ public final class FantasyRpgClient {
     private static void onClientTick(ClientTickEvent.Post event) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
+        RuneFx.tick(mc);
         while (OPEN_TREE.consumeClick()) {
             if (mc.screen == null) mc.setScreen(new SkillTreeScreen());
         }

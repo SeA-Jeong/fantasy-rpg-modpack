@@ -39,9 +39,9 @@ public final class CraftRegistry {
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, FantasyRpgCore.MOD_ID);
 
     public static final DeferredBlock<GridBenchBlock> BENCH_4 = BLOCKS.register("workbench_4x4",
-            () -> new GridBenchBlock(4, BlockBehaviour.Properties.ofFullCopy(Blocks.CRAFTING_TABLE)));
+            () -> new GridBenchBlock(4, BlockBehaviour.Properties.ofFullCopy(Blocks.CRAFTING_TABLE).lightLevel(s -> s.getValue(GridBenchBlock.ACTIVE) ? 7 : 0)));
     public static final DeferredBlock<GridBenchBlock> BENCH_5 = BLOCKS.register("workbench_5x5",
-            () -> new GridBenchBlock(5, BlockBehaviour.Properties.ofFullCopy(Blocks.CRAFTING_TABLE)));
+            () -> new GridBenchBlock(5, BlockBehaviour.Properties.ofFullCopy(Blocks.CRAFTING_TABLE).lightLevel(s -> s.getValue(GridBenchBlock.ACTIVE) ? 7 : 0)));
     public static final DeferredItem<BlockItem> BENCH_4_ITEM = ITEMS.registerSimpleBlockItem(BENCH_4);
     public static final DeferredItem<BlockItem> BENCH_5_ITEM = ITEMS.registerSimpleBlockItem(BENCH_5);
 

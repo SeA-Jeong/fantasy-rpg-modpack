@@ -63,6 +63,7 @@ public class GridCraftMenu extends AbstractContainerMenu {
         for (int r = 0; r < 3; r++) for (int c = 0; c < 9; c++) addSlot(new Slot(inv, c + r * 9 + 9, 8 + c * 18, iy + r * 18));
         for (int c = 0; c < 9; c++) addSlot(new Slot(inv, c, 8 + c * 18, iy + 58));
         addDataSlot(needGrade);
+        access.execute(GridBenchBlock::opened);                          // 작업대 작동 모습 (2026-11-22)
     }
 
     public int needGrade() {
@@ -158,6 +159,7 @@ public class GridCraftMenu extends AbstractContainerMenu {
     public void removed(Player p) {
         super.removed(p);
         access.execute((level, pos) -> clearContainer(p, craft));
+        access.execute(GridBenchBlock::closed);
     }
 
     @Override
