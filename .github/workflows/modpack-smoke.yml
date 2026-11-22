@@ -154,7 +154,7 @@ jobs:
       - name: "전체 구성: 서버 기동"
         run: |
           python3 tools/smoke_server.py server full \
-            --jvm-arg "-Dfantasyrpg.devtest=true" \
+            --jvm-arg=-Dfantasyrpg.devtest=true \
             --command "fantasyrpgtest armor list=>test_rogue_chest_t10" \
             --command "magiccity status" \
             --command "rpg simulate 100 2.0 0 0.25 0=>150"

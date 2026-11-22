@@ -45,7 +45,7 @@ def main(argv):
     ap.add_argument("mods_dir")
     ap.add_argument("--timeout", type=int, default=900)
     ap.add_argument("--command", action="append", default=[], help="콘솔 명령=>출력에 있어야 할 문자열(선택)")
-    ap.add_argument("--jvm-arg", action="append", default=[], help="user_jvm_args.txt 에 더할 JVM 인자 (예: -Dfantasyrpg.devtest=true)")
+    ap.add_argument("--jvm-arg", action="append", default=[], help="user_jvm_args.txt 에 더할 JVM 인자 (--jvm-arg=-D… 처럼 = 로 붙여 씀)")
     a = ap.parse_args(argv)
 
     sd = os.path.abspath(a.server_dir)
