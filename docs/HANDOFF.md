@@ -5,7 +5,7 @@
 
 ---
 
-## 현재 상태 (2026-11-21 기준)
+## 현재 상태 (2026-11-22 기준)
 
 | 항목 | 상태 |
 |---|---|
@@ -15,7 +15,7 @@
 | CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄). 모드 구성이 바뀌면 `modpack smoke`가 외부 모드 18개 + 우리 모드 2개로 **NeoForge 전용 서버를 실제 기동** |
 | 1차 외부 모드 구성 | `modpack/mods.lock.json` (필수 13 + 권장 5, 버전 고정). 2026-11-17 전용 서버 기동 통과 (run 44061047052). 클라이언트 실행은 아직 확인 안 함 |
 | 우리 모드 3개 | `fantasyrpg`(이 저장소), `magiccity`(JitPack), `royalqol`(클라이언트 전용 편의 모드, `magic-city-mod` 저장소 `royalqol/`, `mods.lock.json`의 `royalqol.commit`으로 빌드 — `tools/build_royalqol.sh`). 테스트 팩과 서버 기동 검사에 셋 다 들어감. **챕터 보스 모드 `fantasybosses`**(3장 라디키온, ARR — 사용자 허락으로 공개 저장소): `magic-city-mod` 저장소 `fantasybosses/`, `mods.lock.json` 의 `fantasybosses.commit` 으로 빌드(`tools/build_fantasybosses.sh`) → 테스트 팩·통합 팩, 서버 기동 검사는 2단계(GeckoLib 필요)에만. `modpack/local-mods/` 는 지금 비어 있음 |
-| 최신 테스트 팩 | **v0.25.0-test.1** (경갑 직업 룬석·스킬 가속 + 치명타 상한·궁수 활 근접 + 파티 회복·방벽·경험치 + 마스터리 교체 마을 안 + 전용 서버 데이터 동기화 + 초기화·직업 변경 비용·빌드 프리셋 + 분해·계열 전환 + 계열 방어구 세트 효과 + 룬석 정식 재료·드롭 + 바닐라 전투 인챈트 정리 + 라디키온 마디를 지팡이·스킬로도 맞힘·방어구 무시 공격 배율 없음 + 라디키온 3장 보스 전장에서 전투(fantasybosses 0.8.0)·마디 RPG 피해 + 라디키온 0.7.5.1 + 외부 보스 연결(3장 라디키온)·보스 수치 데이터 + 크리퍼 없음 + 보스 방 복사 전장 + 확장 작업대·방어구 제작법 + 챕터 보스 인스턴스 전장 + 필드보스 꾸러미 + 장별 중간 단계 + 심층 광산·보라빛 숲 병합 + 스킬트리 156노드 + 서장 NPC 직업 선택 + 기사 가드·프리셋 + 유산 무기 + 2~12장 챕터 퀘스트 + 보스 고정 피해 패턴, 게임 확인 전 — Releases 탭). 통합 팩 `magic-kingdom-testpack-*.mrpack`(우리 모드 3개 + 파일 1개 + 외부 18개 = 22개, 견본 데이터팩 `magiccity_boss_stats_sample`, Prism 가져오기) + `fantasyrpg-testpack-*.zip`. 이전 판은 v0.2~v0.18 |
+| 최신 테스트 팩 | **v0.27.0-test.2** (fantasyrpg 0.27.0: 장비 그림 v0.7 + Combat Traces + 오버월드 7급·무기 그림·갑옷 수리·방어구 성향; 다른 세션의 fantasybosses 0.9.0 필드 몬스터 30종 포함). 모두 게임 확인 전 — `docs/TESTING.md` 빠른 확인 20~22회차 |
 | 게임 테스트 | `docs/TESTING.md`의 v0.1·v0.2 체크리스트 |
 
 ### 테스트 팩 Release 만드는 법
@@ -46,14 +46,21 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - **(준비, 게임 연결 없음) 무기 사용 권한·기본 공격 입력:** `combat/WeaponPermission`(정책 P1 판정), `combat/BasicAttackMath`(콤보 배율 정리·바닐라 충전 곡선). 아직 어떤 이벤트에도 연결하지 않음
 - **도구:** `tools/check_mods.py` — mods 폴더 jar 의존성·버전 범위 검사. `tools/fetch_mods.py` — `mods.lock.json`의 외부 모드 내려받기. `tools/smoke_server.py` — 전용 서버 기동·콘솔 명령·로그 검사
 
+- **(v0.26, 게임 확인 전) 갑옷 파손·수리:** 계열 갑옷은 내구도 1에서 멈추고 파손 상태(`FamilyArmorItem.isBroken`, 능력치·세트·룬석 꺼짐). 제작대 `FamilyArmorRepairRecipe`로 수리(`armor_crafting/costs.json` rework.repair)
+- **(v0.26, 게임 확인 전) 방어구 성향:** 컴포넌트 `fantasyrpg:affinity`, 성향석 4종, `FamilyArmorRetuneRecipe`, 공명·방향 일치 ×1.25(`AffinityRules`·`AffinityEffects`, `armor_affinity/settings.json`)
+- **(v0.26, 게임 확인 전) 오버월드 7급:** `CraftRules.MAX_UPGRADE` 7, 7급 승급·유산 7급 재료(오버월드 부품), magiccity `4da6f55`(12장 완료 → 7급, 레벨 상한 Lv.60 유지)
+- **(v0.26~0.27, 게임 확인 전) 장비 그림:** 무기 6종 × 10등급(인벤토리 2D·손 3D, `separate_transforms`, 속성 `fantasyrpg:tier`), 활 당기기 3단계(우리 활에 `pull`·`pulling` 속성 등록), 재료 17종 입체·아이콘, 계열 갑옷 아이콘 200(속성 `fantasyrpg:tier`), **입은 갑옷 계열·등급별 모습**(`FamilyArmorItem.getArmorTexture` → `textures/models/armor/<계열>_tNN_layer_1|2.png`), 룬석·연마재 등급 그림(속성 `fantasyrpg:grade`, `rune_sel/`), 작업대 블록 그림(`GridBenchBlock.FACING`, 놓을 때 플레이어 쪽, 이전 월드는 북쪽)
+- **(팩) Combat Traces 1.1.0:** `modpack/local-mods/` jar, 클라이언트·서버 둘 다
+
 ### 아직 없는 것 (다음 작업 후보)
-- 파티원 공격 제외(FTB Teams), 쇠뇌, 무기 제작법, 활 당김 모습(전용 그림·속성)
+- 파티원 공격 제외(FTB Teams), 쇠뇌, 무기 제작법
+- 장비 그림 v0.7 중 보관만 한 것: 기사 방패(아이템 없음), 네더 15종(구현 금지, 7급 촉매는 폐지), GeckoLib 입체 갑옷, 발광 마스크·입자, 작업대 작동 상태. 성향석 4종 그림 없음
 - NPC 직업 변경 메뉴(지금은 `/rpgclass change`), 2장 이후 개인 퀘스트·다른 NPC 대사, FTB 파티 퀘스트
 - 장비 치명타 옵션(합계 상한 50%는 있음)
 - 기사 전용 방패 아이템·그림, 다른 직업 가드, 엔딩 후 무료 초기화(magiccity 엔딩 API 필요), 장비 W 전부, 파티 대상 버프 더 넓히기(지금은 전투사제 회복 5종·신성 방벽만)
 - 분해·계열 전환의 JEI 표시
 - magiccity 연동 중 레벨·SP 부분(연동작업지침 4~8절). 이번에는 의존성 연결(1~3절)만 함
-- 계열 고유 특성, 7~10급 승급, 전용 그림, 계열별 내구도. 심연 계열은 설계 보류
+- 계열 고유 특성, 8~10급 승급(네더), 계열별 내구도. 심연 계열은 설계 보류
 
 ---
 
@@ -82,6 +89,8 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 | `combat/CombatSettings` | **순수** 기본 공격 수치(W 표·직업 계수·공격 속도·지팡이 탄·치명타) 파싱·검사 |
 | `combat/CombatManager`, `RpgAttacks`, `CombatEvents` | `combat` 로더, 무기 사실(태그)·피해 입력·치명타·거부 안내, 근접·활·사용 시작·PvP 이벤트 |
 | `gear/weapon/WeaponType`, `ClassWeaponItem`, `ArcherBowItem`, `WeaponRegistry` | 직업 무기 6종, 지팡이 마법 탄, 공격력·공격 속도 속성 |
+| `client/FantasyRpgClient` (FMLClientSetupEvent) | 아이템 속성 등록: 무기·계열 갑옷 `fantasyrpg:tier`(등급÷10), 룬석·연마재 `fantasyrpg:grade`(등급÷10), 활 `pull`·`pulling` — 모델 overrides 가 이 값으로 그림을 고름 |
+| `gear/armor/AffinityRules`, `AffinityEffects`, `AffinityTooltip`, `craft/FamilyArmorRepairRecipe`, `FamilyArmorRetuneRecipe`, `ReworkRules`, `GridBenchBlock` | **순수** 성향 규칙 / 성향 효과·툴팁, 갑옷 수리·성향 바꾸기 조합, 분해·전환·수리 비용(순수), 작업대 블록(방향 `FACING`) |
 | `compat/bettercombat/BetterCombatCompat` | Better Combat 콤보 배율 (모드가 있을 때만 호출) |
 | `skilltree/SkillNode`, `SkillTreeRules`, `PassiveNode`, `ResetRules`, `classcore/CoreDef` | **순수** 노드 형식·투자/되돌리기 판정(부록 A-2)·공통 패시브 포인트·무료 초기화권·코어 회복/감소 |
 | `skilltree/SkillData`, `SkillService`, `SkillEffects`, `classcore/CoreService` | 로더 3개, 서버 처리·동기화, 스킬 효과 등록소(비어 있음), 코어 현재값 |
@@ -99,7 +108,7 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 | `playerdata/ClassSelection`, `client/ClassSelectScreen` | 서장 NPC 직업 선택(magiccity `NpcActionEvent`·`QuestStepStartEvent` 수신, 화면 열기 기억 5분, 1급 무기 지급, 퀘스트 신호), 6직업 카드 화면(글은 언어 파일 `class.fantasyrpg.<직업>.weapon|core|desc|play`) |
 | `command/SkillCommands` | `/rpg skill list|invest|refund|reset [force]|equip|cast`, `/rpg passive list|invest|refund` |
 | `core-mod/src/main/resources/data/` | 피해 유형 정의, 바닐라 피해 태그 추가, `fantasyrpg/armor_stats/*.json` 계열 수치표 기본값, `fantasyrpg/runes/*.json` 룬석 효과, `fantasyrpg/recipe/` 룬석 조합(특수 4종 + 시험용 임시 제작법), `fantasyrpg/progression/` 레벨 곡선·몬스터 경험치 [초안], `fantasyrpg/combat/basic_attack.json` 기본 공격 [초안], `fantasyrpg/tags/item/class_weapons/` 직업 무기 태그, `fantasyrpg/weapon_attributes/` Better Combat 동작, 바닐라 갑옷 부위 태그(인챈트용)에 계열 방어구 추가 |
-| `core-mod/src/main/resources/assets/` | 언어(ko·en), 계열 방어구 아이템 모델(바닐라 모델을 부모로) |
+| `core-mod/src/main/resources/assets/` | 언어(ko·en), 사용자 제공 그림: `models/item/weapons|weapon_icons|weapon_sel`(무기·활 당김), `armor/`(갑옷 아이콘), `materials|material_icons`(재료), `runes|rune_icons|rune_sel`(룬석), `textures/models/armor/`(입은 갑옷 층), `blockstates|models/block`(작업대). 최상위 `models/item/<id>.json` 은 overrides·`separate_transforms` 로 고름 |
 | `core-mod/src/test/` | JUnit 73개: 6직업 스킬 데이터·수치·코어·순수 계산(`ClassSkillsTest`), 스킬트리·부록 A-2(`SkillTreeRulesTest`), 기본 공격 수치·직업 간 화력 ±15%(`CombatSettingsTest`), 성장(`ProgressionMathTest`), 룬석 규칙(`RuneRulesTest`), 부록 A-1, 4.3장 표, 계산 순서, 저항 파싱·판정, 계열 방어구 수치표·배분·바닐라 대비·받는 피해(`ArmorStatTableTest`), 무기 권한, 기본 공격 입력 |
 | `tools/check_mods.py` | mods 폴더 의존성 검사 (자체 검사 `tools/test_check_mods.py`, CI) |
 | `modpack/mods.lock.json`, `tools/fetch_mods.py`, `tools/smoke_server.py`, `.github/workflows/modpack-smoke.yml` | 1차 외부 모드 고정 목록과 혼합 서버 기동 검사 (1단계 우리 모드만 → 전체 20개) |
