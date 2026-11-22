@@ -36,8 +36,24 @@ public final class RpgParticles {
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> BENCH5_DUST = reg("workbench_5x5_rune_dust");
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> BENCH5_SPARK = reg("workbench_5x5_arc_spark");
 
+    /** 계열 갑옷 8~10급 오오라 (사용자 제공 그림 v0.8): armor_<계열>_tNN */
+    private static final Map<String, DeferredHolder<ParticleType<?>, SimpleParticleType>> AURA = new LinkedHashMap<>();
+
     static {
         for (RuneType t : RuneType.values()) RUNE.put(t, reg(t.itemName() + "_spark"));
+        for (com.fantasyrpg.core.gear.armor.ArmorFamily f : com.fantasyrpg.core.gear.armor.ArmorFamily.values()) {
+            for (int tier = 8; tier <= 10; tier++) {
+                String key = "armor_" + f.id() + "_t" + (tier < 10 ? "0" : "") + tier;
+                AURA.put(key, reg(key));
+            }
+        }
+    }
+
+    /** 오오라 입자 (8~10급만, 없으면 null) */
+    public static SimpleParticleType aura(com.fantasyrpg.core.gear.armor.ArmorFamily f, int tier) {
+        if (tier < 8) return null;
+        var h = AURA.get("armor_" + f.id() + "_t" + (Math.min(10, tier) < 10 ? "0" : "") + Math.min(10, tier));
+        return h == null ? null : h.get();
     }
 
     public static SimpleParticleType rune(RuneType t) {

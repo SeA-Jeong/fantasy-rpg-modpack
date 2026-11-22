@@ -41,6 +41,27 @@ final class RuneFx {
                 spawn(level, (RuneItem) s.getItem(), at, r);
             }
         }
+        // 계열 갑옷 8~10급 오오라 (v0.8 rarity_effects: 초당 8급 2.0·9급 3.2·10급 4.0 — 4부위 합, 부위마다 1/4). 파손된 부위는 없음
+        for (Player p : level.players()) {
+            if (p.distanceToSqr(mc.player) > RANGE * RANGE || p.isInvisible()) continue;
+            for (net.minecraft.world.entity.EquipmentSlot slot : new net.minecraft.world.entity.EquipmentSlot[]{
+                    net.minecraft.world.entity.EquipmentSlot.HEAD, net.minecraft.world.entity.EquipmentSlot.CHEST,
+                    net.minecraft.world.entity.EquipmentSlot.LEGS, net.minecraft.world.entity.EquipmentSlot.FEET}) {
+                ItemStack s = p.getItemBySlot(slot);
+                if (!(s.getItem() instanceof com.fantasyrpg.core.gear.armor.FamilyArmorItem fa)
+                        || com.fantasyrpg.core.gear.armor.FamilyArmorItem.isBroken(s)) continue;
+                int tier = com.fantasyrpg.core.gear.armor.GearRegistry.tierOf(s);
+                var type = RpgParticles.aura(fa.family(), tier);
+                if (type == null) continue;
+                float rate = tier >= 10 ? 4.0f : tier == 9 ? 3.2f : 2.0f;
+                if (r.nextFloat() >= rate / 4f / 20f) continue;
+                double radius = tier >= 10 ? 0.52 : tier == 9 ? 0.43 : 0.34;
+                double h = switch (slot) { case HEAD -> 0.85; case CHEST -> 0.6; case LEGS -> 0.35; default -> 0.08; };
+                double a = r.nextDouble() * Math.PI * 2;
+                level.addParticle(type, p.getX() + Math.cos(a) * radius, p.getY() + p.getBbHeight() * h, p.getZ() + Math.sin(a) * radius,
+                        0, 0.012 + r.nextDouble() * 0.01, 0);
+            }
+        }
         for (ItemEntity e : level.getEntitiesOfClass(ItemEntity.class, mc.player.getBoundingBox().inflate(RANGE))) {
             ItemStack s = e.getItem();
             float rate = rate(s, DROPPED);
