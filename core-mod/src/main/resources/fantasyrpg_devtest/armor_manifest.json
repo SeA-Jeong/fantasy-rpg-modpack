@@ -15,7 +15,7 @@
       "class": "knight",
       "grade": 1,
       "slot": "chestplate",
-      "revision": "v03",
+      "revision": "v05",
       "note": "다층 판금·견갑·허리 장갑 — 중장갑 착용 구조 검증"
     },
     {
@@ -23,7 +23,7 @@
       "class": "mage",
       "grade": 5,
       "slot": "chestplate",
-      "revision": "v03",
+      "revision": "v05",
       "note": "넓은 소매·분할 로브·마도 장식 — 로브 하단이 다리 본에 붙어 걷기 때 나뉘는지 검증"
     },
     {
@@ -31,7 +31,7 @@
       "class": "rogue",
       "grade": 10,
       "slot": "chestplate",
-      "revision": "v03",
+      "revision": "v05",
       "note": "비대칭 견갑·가죽 하네스·코트 자락 — 코트 꼬리 피벗(다리 본)과 고등급 장식 검증"
     }
   ]

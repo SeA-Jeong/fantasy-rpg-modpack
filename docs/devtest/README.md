@@ -14,7 +14,7 @@ Blockbench 에서 고치고 → 파일을 바꾸고 → 게임에서 입어 보�
 
 **1단계 — 등록 (DT1·DT2)**
 5. `/fantasyrpgtest armor list` → 3개, `목록: 모드 기본, 오류 0건`.
-6. E → 창작 탭 **"판타지 RPG 개발 테스트 장비"** → 아이콘 3개, 이름 `[테스트] 기사 1급 흉갑 (v03)` 등. (F3+H 를 켜면 툴팁에 모델 경로)
+6. E → 창작 탭 **"판타지 RPG 개발 테스트 장비"** → 아이콘 3개, 이름 `[테스트] 기사 1급 흉갑 (v05)` 등. (F3+H 를 켜면 툴팁에 모델 경로)
 
 **2단계 — 입어 보기 (DT3~DT6)**
 7. 먼저 철 흉갑을 입고 `/fantasyrpgtest armor equip knight 1` → "기존 장비는 가방으로", 철 흉갑이 가방에 있는지.
@@ -22,8 +22,8 @@ Blockbench 에서 고치고 → 파일을 바꾸고 → 게임에서 입어 보�
 9. 움직이기: 걷기(W) · 달리기(Ctrl+W) · 점프(Space) · 웅크리기(Shift) · 공격(왼쪽 클릭 반복). 볼 것:
    - 팔 부품(견갑·소매)이 **같은 쪽 팔**을 따라 움직이는지 — 공격하면 오른팔이 크게 움직이니 오른쪽 견갑이 따라가야 함
    - 다리 부품이 같은 쪽 다리를 따라가는지, 몸을 뚫고 나오는 곳
-10. `/fantasyrpgtest armor equip mage 5` → 걷기·달리기: **3단 로브 하단(앞·옆·뒷자락)이 좌우 다리와 같이 움직이는지**, 다리끼리·몸통 앞치마와 겹쳐 뚫리는 정도, 종 모양 소매·작은 케이프·브로치.
-11. `/fantasyrpgtest armor equip rogue 10` → **후드·마스크가 머리를 따라 도는지**(위아래·좌우로 보기), 갈라진 숄이 **캐릭터 오른쪽 어깨**, 좌우 길이가 다른 코트 꼬리가 걸을 때 다리를 따라가는지, 투구를 같이 쓰면 후드와 겹치는 정도.
+10. `/fantasyrpgtest armor equip mage 5` → 서 있을 때 로브가 **한 벌로 이어져 보이는지**(가운데에서 맞닿음), 걸을 때 아래 두 단이 다리를 따라 나뉘고 윗단(몸통)은 그대로인지, 넓은 어깨 망토·종 모양 소매·푸른 브로치, 팔을 흔들 때 어깨 망토 관통 정도.
+11. `/fantasyrpgtest armor equip rogue 10` → **후드·마스크가 머리를 따라 도는지**(위아래·좌우로 보기), **오른쪽 어깨 = 작은 가죽 견갑, 왼쪽 어깨 = 겹친 보라 견갑**, 왼쪽 코트 꼬리가 더 긴지, 투구를 같이 쓰면 후드와 겹치는 정도.
 
 **3단계 — 게임 끄지 않고 바꾸기 (DT7)**
 12. Prism 에서 인스턴스 → **폴더**. `devtest/source_assets/test_armor/test_knight_chest_t01/current/test_knight_chest_t01.png` 를 복사해 그림판 등으로 눈에 띄게 칠함.
@@ -41,6 +41,14 @@ Blockbench 에서 고치고 → 파일을 바꾸고 → 게임에서 입어 보�
 **5단계 — 정리 (DT9)**
 21. `/fantasyrpgtest armor clear` → "테스트 장비 N개 지움", 원래 모습으로 돌아오는지.
 22. (선택) `config/fantasyrpg-devtest/ENABLE` 을 지우고 다시 시작 → `/fantasyrpgtest` 가 없고 창작 탭도 없음 (끄기 확인). 다시 쓰려면 파일을 되살림.
+
+## 리비전 내력 (테스트 흉갑 3종)
+| 판 | 내용 |
+|---|---|
+| v01 | 검증 모델 v1.1 원본 (geo 좌우 반대) |
+| v02·v03 | v1.1·v2.0 을 본 이름만 바꿔 넣은 판 — 비대칭 부품이 반대쪽 (비교용) |
+| v04 | v2.0 을 Blockbench 규칙으로 다시 내보낸 **수정 전 기준** (모양·그림 v2.0 그대로) |
+| **v05** | **cleannrooster(MIT) 원본 조형을 골라 재작업** — `tools/devtest/build_from_upstream.py`, 비교 그림 `docs/devtest/compare_v04_v05.png` |
 
 ## 1. 켜기·끄기
 - 통합 테스트 팩에는 `config/fantasyrpg-devtest/ENABLE` 파일이 들어 있어 **켜진 상태**입니다. 지우면 다음 실행부터 꺼집니다.
@@ -94,8 +102,10 @@ python devtest/test_armor.py snapshot test_mage_chest_t05 --note "로브 하단 
 python devtest/test_armor.py use test_mage_chest_t05 v02           # 보관한 판 → current
 python devtest/test_armor.py deploy instance .                     # current → 리소스팩·설정 (그다음 F3+T)
 python devtest/test_armor.py validate                              # 본 이름·좌우·UV·텍스처 크기 검사
-python devtest/test_armor.py import test_mage_chest_t05 --geo a.geo.json --texture a.png --icon a_icon.png --bbmodel a.bbmodel --swap-sides --note "v2.0"
-                                                                   # 받은 파일 → 새 판 + current (좌우 본 이름 고침은 --swap-sides)
+python devtest/test_armor.py import test_mage_chest_t05 --bbmodel a.bbmodel --note "무엇을 바꿨나"
+                                                                   # bbmodel 하나로 새 판: geo(Blockbench 규칙)·텍스처(bbmodel 안)·아이콘(3D 앞모습) 자동
+                                                                   # (--texture·--icon 을 주면 그 파일을 씀. 아이콘 자동은 Pillow 필요)
+python devtest/preview.py <모델.bbmodel> 비교.png --skin           # 앞·옆·뒤·실루엣 미리보기 (Pillow)
 ```
 폴더: `source_assets/test_armor/<id>/current/` (작업본) · `revisions/v01, v02 …` (보관, 지우지 않음).
 
@@ -109,6 +119,7 @@ Java·렌더러·명령어는 고치지 않습니다. 경로 규칙을 바꾸려
 - 최상위 본: `armorHead` `armorBody` `armorRightArm` `armorLeftArm` `armorRightLeg` `armorLeftLeg` `armorRightBoot` `armorLeftBoot`. 각 본은 플레이어의 같은 부위를 따라 움직입니다. 장식은 이 본들의 자식으로.
 - **Blockbench(Bedrock) 좌표에서 x<0 이 캐릭터 오른쪽**입니다 (`armorRightArm` 회전축 [-5, 22, 0], `armorLeftArm` [5, 22, 0], 다리 ±2).
 - 흉갑은 몸통·팔에 더해 **머리 본·다리 본도 그립니다** (후드·마스크, 로브 하단·코트 자락용). 투구·각반·장화는 GeckoLib 기본대로 자기 부위만.
-- **좌우 주의:** 지금까지 받은 모델(v1.1·v2.0)은 모두 좌우 본 이름이 반대로 나왔습니다. 받은 파일은 `import … --swap-sides` 로 넣으면 이름만 바로잡힙니다. 모델을 만들 때부터 맞추려면 Blockbench 화면에서 **x 가 음수인 쪽 = `armorRight*`**.
+- **좌우 (2026-11-23 바로잡음):** Blockbench 는 Bedrock 으로 내보낼 때 x 를 뒤집습니다. 그래서 **Blockbench(bbmodel)에서는 `armorRightArm` 이 x>0(회전축 [5, 22, 0])**, 내보낸 geo.json 에서는 x<0 이 됩니다 — cleannrooster 원본·GeckoLib 템플릿과 같은 규칙. 지금까지 받은 v1.1·v2.0 은 bbmodel 은 맞았고 **geo.json 을 x 를 뒤집지 않고 만든 것**이 문제였습니다. 그래서 geo 는 손으로 만들지 말고 **Blockbench 에서 내보내거나 `import --bbmodel` 로 넣으면 `tools/devtest/bb2geo.py` 가 Blockbench 와 같은 규칙으로 만듭니다**. `validate` 가 bbmodel 과 geo 가 다르면 알려 줍니다.
+- 예전 v02·v03 은 본 이름만 바꿔 고쳤기 때문에 **비대칭 부품이 반대쪽**에 있습니다(비교용 보관). 올바른 기준은 v04.
 - 텍스처 투명도는 0 또는 255 만 (갑옷은 잘라내기 렌더라 반투명이 안 보임).
 - geo 형식 `1.12.0`, 텍스처 크기는 geo 의 `texture_width/height` 와 같게.

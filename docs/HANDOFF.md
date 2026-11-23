@@ -15,7 +15,7 @@
 | CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄). 모드 구성이 바뀌면 `modpack smoke`가 외부 모드 18개 + 우리 모드 2개로 **NeoForge 전용 서버를 실제 기동** |
 | 1차 외부 모드 구성 | `modpack/mods.lock.json` (필수 13 + 권장 5, 버전 고정). 2026-11-17 전용 서버 기동 통과 (run 44061047052). 클라이언트 실행은 아직 확인 안 함 |
 | 우리 모드 3개 | `fantasyrpg`(이 저장소), `magiccity`(JitPack), `royalqol`(클라이언트 전용 편의 모드, `magic-city-mod` 저장소 `royalqol/`, `mods.lock.json`의 `royalqol.commit`으로 빌드 — `tools/build_royalqol.sh`). 테스트 팩과 서버 기동 검사에 셋 다 들어감. **챕터 보스 모드 `fantasybosses`**(3장 라디키온, ARR — 사용자 허락으로 공개 저장소): `magic-city-mod` 저장소 `fantasybosses/`, `mods.lock.json` 의 `fantasybosses.commit` 으로 빌드(`tools/build_fantasybosses.sh`) → 테스트 팩·통합 팩, 서버 기동 검사는 2단계(GeckoLib 필요)에만. `modpack/local-mods/` 는 지금 비어 있음 |
-| 최신 테스트 팩 | **v0.28.1-test.1** (테스트 흉갑 v2.0 + 개발자 전용 테스트 장비 + 장비 그림 v0.9 16px 아이콘 + 장비 그림 v0.8·갑옷 오오라 + 빛·입자 + Effectual TLib 고침 + 지하 동굴 + 장비 그림 v0.7 + Combat Traces + 오버월드 7급·무기 그림·갑옷 수리·방어구 성향 + fantasybosses 0.9.0). 모두 게임 확인 전 — `docs/TESTING.md` 빠른 확인 20~28회차 |
+| 최신 테스트 팩 | **v0.28.2-test.1** (테스트 흉갑 v05 cleannrooster 재작업·좌우 규칙 바로잡음 + 테스트 흉갑 v2.0 + 개발자 전용 테스트 장비 + 장비 그림 v0.9 16px 아이콘 + 장비 그림 v0.8·갑옷 오오라 + 빛·입자 + Effectual TLib 고침 + 지하 동굴 + 장비 그림 v0.7 + Combat Traces + 오버월드 7급·무기 그림·갑옷 수리·방어구 성향 + fantasybosses 0.9.0). 모두 게임 확인 전 — `docs/TESTING.md` 빠른 확인 20~29회차 |
 | 게임 테스트 | `docs/TESTING.md`의 v0.1·v0.2 체크리스트 |
 
 ### 테스트 팩 Release 만드는 법
@@ -240,6 +240,12 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - 이 저장소: `mods.lock.json` fantasybosses 고정 커밋 → `4da5507`, CI 의 jar 이름·서버 로그 검사 0.9.0. 사전 릴리스 `v0.27.0-test.2`. 게임 확인 TESTING FM1~FM8, 빠른 확인 22회차.
 - 남은 것: 원거리·비행·스킬 AI, 지역별 자연 스폰(지역 고정 등급), 드롭·수치, 균열 포식자 부위 판정 여부.
 
+
+### 2026-11-23 — 테스트 흉갑 v05: cleannrooster(MIT) 재작업, 좌우 규칙 바로잡음 (fantasyrpg 0.28.2)
+- 사용자 제공 `fantasyrpg_claude_asset_handoff_v1.zip`(작업 지시 + v2.0 기준 + 받기 스크립트). `tools/fetch_and_distribute.py --scope tests` 실행 → raw.githubusercontent 가 프록시에서 막혀 실패(30건) → 같은 저장소를 git 으로 받음(HEAD = 지정 커밋 `a1ca6f8` 확인) → 스크립트 `--offline` 으로 검사·배분(15개, 오류 0).
+- **잘못 알고 있던 것 바로잡음:** Blockbench 는 Bedrock 내보내기·가져오기에서 x 를 뒤집는다(소스 `js/formats/bedrock/bedrock.js` compileCube `origin[0] = -(from+size)`, pivot `*= -1`). 그래서 bbmodel 에서는 armorRightArm 이 x>0(원본·GeckoLib 템플릿과 같음), geo 에서는 x<0. 받은 v1.1·v2.0 은 bbmodel 은 맞고 **geo 를 뒤집지 않고 만든 것**이 문제였음 — 0.28.0·0.28.1 에서 본 이름만 바꾼 처리(v02·v03)는 대칭 부품은 맞지만 **비대칭 부품이 반대쪽**이고 bbmodel 이름까지 바꿈. → `tools/devtest/bb2geo.py`(Blockbench 와 같은 규칙), `import --bbmodel`(geo·텍스처·아이콘 자동), `validate` 가 bbmodel↔geo 불일치 알림, `--swap-sides` 삭제. v04 = v2.0 을 바르게 내보낸 기준.
+- v05: `tools/devtest/build_from_upstream.py`(원본은 `source_assets/test_armor/_upstream/cleannrooster-a1ca6f8/` + LICENSE·ATTRIBUTION). 기사 24 큐브(templar 흉판·덧옷·허리·팔 5부품 + city guardian 상판·목가리개·허리 장갑판 6, 강철로 다시 칠함), 마법사 30(archmage 로브 몸통·띠·어깨 망토·소매 + 새 높은 깃·브로치·3단 로브·종 소매·소매 자락, 남색·금), 도적 21(thief 후드·조끼·띠·멜빵·등 망토·팔 + sanguine 보라 겹 견갑(왼쪽) + 새 마스크·주머니·단검집·좌우 길이 다른 코트 꼬리). 상자 UV 내림 규칙(GeckoLib `Math.floor`)·알파 0/255. 미리보기·아이콘 `tools/devtest/preview.py`. 비교 `docs/devtest/compare_v04_v05.png`. 라이선스 `core-mod/src/main/resources/licenses/cleannrooster-forg-assets-MIT.txt`.
+- 렌더러 Java 변경 없음(머리·다리 본 표시는 0.28.1 그대로). 확인: 로컬 JUnit, 스크립트 validate 오류 0, CI → `v0.28.2-test.1`. **Blockbench 앱으로 열기·게임 화면 확인은 안 함** — TESTING Q3-1~Q3-5, 빠른 확인 29회차.
 
 ### 2026-11-23 — 테스트 흉갑 v2.0 (fantasyrpg 0.28.1)
 - 사용자 제공 `fantasyrpg_armor_quality_patch_v2.0.zip`(같은 3종의 품질 개선판: 기사 40·마법사 65·도적 47 큐브). 압축 풀기만(같이 온 `build_armor_quality_v2.py` 는 실행 안 함).

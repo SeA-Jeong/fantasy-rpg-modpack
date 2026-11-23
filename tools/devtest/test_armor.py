@@ -12,9 +12,10 @@
   validate                      파일·JSON·본 이름·좌우·UV 범위·텍스처 크기 검사 (오류가 있으면 종료 코드 1)
   snapshot <id> [--note 글]     current 를 새 판(vNN+1)으로 보관하고 manifest 의 revision 을 그 판으로
   use <id> <rev>                보관한 판을 current 로 되돌리고 manifest 의 revision 을 그 판으로
-  import <id> --geo P --texture P --icon P [--bbmodel P] [--swap-sides] [--note 글]
+  import <id> --bbmodel P [--geo P] [--texture P] [--icon P] [--note 글]
                                 받은 파일로 새 판(vNN+1)을 만들고 current·manifest 를 그 판으로.
-                                --swap-sides: 좌우 본 이름(armorLeft*↔armorRight*)을 바꿔 GeckoLib 규칙에 맞춤
+                                --geo 를 주지 않으면 bbmodel 에서 Blockbench 와 같은 규칙으로 만든다(bb2geo.py, 권장),
+                                --texture 가 없으면 bbmodel 안의 그림, --icon 이 없으면 3D 앞모습으로 만든다(preview.py, Pillow 필요).
   deploy repo                   current → 모드 소스 리소스(core-mod/src/main/resources) — Gradle 빌드해야 jar 에 들어감
   deploy pack <폴더>            current → 리소스팩 폴더 (게임에서 F3+T 로 바로 갱신)
   deploy instance <인스턴스>    current → <인스턴스>/resourcepacks/fantasyrpg_devtest + 목록을 <인스턴스>/config/fantasyrpg-devtest/
@@ -170,6 +171,24 @@ def check_geo(path, tex_size):
 
 
 def check_bbmodel(path, geo_path):
+    """bbmodel 을 Blockbench 규칙으로 내보낸 것과 geo 가 같은지 (다르면 Blockbench 에서 다시 내보내기)"""
+    sys.path.insert(0, HERE)
+    import bb2geo
+    try:
+        bb = json.load(open(path, encoding="utf-8-sig"))
+        geo = json.load(open(geo_path, encoding="utf-8"))["minecraft:geometry"][0]
+    except Exception as ex:  # noqa: BLE001
+        return [f"bbmodel 읽기 실패: {ex}"]
+    exp = bb2geo.convert(bb)["minecraft:geometry"][0]
+    r = lambda v: [round(float(t), 2) for t in v] if v else v
+    a = {b["name"]: (r(b.get("pivot")), sorted(r(c.get("origin")) for c in b.get("cubes", []))) for b in exp["bones"]}
+    b = {x["name"]: (r(x.get("pivot")), sorted(r(c.get("origin")) for c in x.get("cubes", []))) for x in geo.get("bones", [])}
+    if a != b:
+        return ["geo 가 bbmodel 을 Blockbench 로 내보낸 것과 다름 — Blockbench 에서 다시 내보내거나 import --bbmodel 로 넣기"]
+    return []
+
+
+def _old_check_bbmodel(path, geo_path):
     try:
         bb = json.load(open(path, encoding="utf-8"))
         geo = json.load(open(geo_path, encoding="utf-8"))["minecraft:geometry"][0]
@@ -284,43 +303,39 @@ def cmd_use(src, m, i, rev):
     return 0
 
 
-SWAP = {"armorLeftArm": "armorRightArm", "armorRightArm": "armorLeftArm", "armorLeftLeg": "armorRightLeg",
-        "armorRightLeg": "armorLeftLeg", "armorLeftBoot": "armorRightBoot", "armorRightBoot": "armorLeftBoot"}
-
-
-def cmd_import(src, m, i, opts, swap, note):
-    e = entry(m, i)
+def cmd_import(src, m, i, opts, note):
+    import base64
+    sys.path.insert(0, HERE)
+    import bb2geo
+    entry(m, i)
     revs = revisions(src, i)
     nxt = f"v{(int(revs[-1][1:]) + 1 if revs else 1):02d}"
     d = os.path.join(src, i, "revisions", nxt)
     os.makedirs(d)
-    dst = {"geo": f"{i}.geo.json", "texture": f"{i}.png", "icon": f"{i}_icon.png", "bbmodel": f"{i}.bbmodel"}
-    for k, name in dst.items():
+    names = {"geo": f"{i}.geo.json", "texture": f"{i}.png", "icon": f"{i}_icon.png", "bbmodel": f"{i}.bbmodel"}
+    for k, name in names.items():
         if opts.get(k):
             shutil.copyfile(opts[k], os.path.join(d, name))
-    if swap:
-        gp = os.path.join(d, dst["geo"])
-        g = json.load(open(gp, encoding="utf-8"))
-        geo = g["minecraft:geometry"][0]
-        geo["description"]["identifier"] = f"geometry.fantasyrpg.test_armor.{i}"
-        for b in geo.get("bones", []):
-            b["name"] = SWAP.get(b["name"], b["name"])
-            if b.get("parent"):
-                b["parent"] = SWAP.get(b["parent"], b["parent"])
-        json.dump(g, open(gp, "w", encoding="utf-8"), indent=1)
-        bp = os.path.join(d, dst["bbmodel"])
-        if os.path.isfile(bp):
-            bb = json.load(open(bp, encoding="utf-8"))
-            for grp in bb.get("groups", []):
-                grp["name"] = SWAP.get(grp["name"], grp["name"])
-            bb["name"] = i
-            bb["model_identifier"] = f"geometry.fantasyrpg.test_armor.{i}"
-            json.dump(bb, open(bp, "w", encoding="utf-8"), indent=1)
+    made = []
+    bb = json.load(open(os.path.join(d, names["bbmodel"]), encoding="utf-8-sig"))
+    if not opts.get("geo"):
+        with open(os.path.join(d, names["geo"]), "w", encoding="utf-8") as f:
+            json.dump(bb2geo.convert(bb, f"geometry.fantasyrpg.test_armor.{i}"), f, indent=1)
+        made.append("geo(bb2geo)")
+    if not opts.get("texture"):
+        src_png = bb["textures"][0]["source"].split(",", 1)[1]
+        with open(os.path.join(d, names["texture"]), "wb") as f:
+            f.write(base64.b64decode(src_png))
+        made.append("텍스처(bbmodel 안)")
+    if not opts.get("icon"):
+        import preview
+        preview.icon(bb, 32).save(os.path.join(d, names["icon"]))
+        made.append("아이콘(3D 앞모습)")
     with open(os.path.join(d, "NOTES.md"), "w", encoding="utf-8") as f:
-        f.write(f"# {nxt}\n\n{note or '(메모 없음)'}\n" + ("\n좌우 본 이름 바꿈(--swap-sides): 큐브·UV 는 그대로.\n" if swap else ""))
+        f.write(f"# {nxt}\n\n{note or '(메모 없음)'}\n\n" + (f"만든 것: {', '.join(made)}\n" if made else ""))
     with open(os.path.join(d, "REVISION"), "w") as f:
         f.write(nxt + "\n")
-    print(f"{i}: 받은 파일 → revisions/{nxt}" + (" (좌우 본 이름 고침)" if swap else ""))
+    print(f"{i}: 받은 파일 → revisions/{nxt}" + (f" ({', '.join(made)})" if made else ""))
     return cmd_use(src, m, i, nxt)
 
 
@@ -399,10 +414,10 @@ def main(argv):
         return cmd_use(src, m, argv[1], argv[2])
     if c == "import" and len(argv) >= 2:
         opts = {k: argv[argv.index("--" + k) + 1] for k in ("geo", "texture", "icon", "bbmodel") if "--" + k in argv}
-        if not all(k in opts for k in ("geo", "texture", "icon")):
-            sys.exit("import 에는 --geo --texture --icon 이 필요")
+        if "bbmodel" not in opts:
+            sys.exit("import 에는 --bbmodel 이 필요 (geo·텍스처·아이콘은 없으면 bbmodel 에서 만듦)")
         note = argv[argv.index("--note") + 1] if "--note" in argv else ""
-        return cmd_import(src, m, argv[1], opts, "--swap-sides" in argv, note)
+        return cmd_import(src, m, argv[1], opts, note)
     if c == "deploy" and len(argv) >= 2 and argv[1] in ("repo", "pack", "instance"):
         return cmd_deploy(src, m, argv[1], argv[2] if len(argv) > 2 else None)
     print(__doc__)
