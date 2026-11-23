@@ -1,0 +1,66 @@
+{
+ "knight_t01": {
+  "source": "templar.geo.bbmodel",
+  "texture": "templar.png",
+  "texture_semi_alpha_px": 0,
+  "slots": {
+   "helmet": 4,
+   "chestplate": 16,
+   "leggings": 2,
+   "boots": 8
+  },
+  "dropped": [],
+  "fixes": [],
+  "made": {
+   "helmet": "test_knight_helmet_t01",
+   "chestplate": "test_knight_chest_t01",
+   "leggings": "test_knight_legs_t01",
+   "boots": "test_knight_boots_t01"
+  }
+ },
+ "mage_t05": {
+  "source": "archmagefire.bbmodel",
+  "texture": "archmagetexturefire.png",
+  "texture_semi_alpha_px": 0,
+  "slots": {
+   "helmet": 1,
+   "chestplate": 11,
+   "leggings": 2,
+   "boots": 2
+  },
+  "dropped": [
+   "head [-4, 24, -4]→[4, 32, 4] (몹 맨살 머리(inflate 0))"
+  ],
+  "fixes": [
+   "armorRightArm [4, 12, -2]→[8, 24, 2]: inflate 0 → 0.4 (피부와 겹침 방지)",
+   "armorLeftArm [-8, 12, -2]→[-4, 24, 2]: inflate 0 → 0.4 (피부와 겹침 방지)"
+  ],
+  "made": {
+   "helmet": "test_mage_helmet_t05",
+   "chestplate": "test_mage_chest_t05",
+   "leggings": "test_mage_legs_t05",
+   "boots": "test_mage_boots_t05"
+  }
+ },
+ "rogue_t10": {
+  "source": "thiefmob.bbmodel",
+  "texture": "thieftexture.png",
+  "texture_semi_alpha_px": 0,
+  "slots": {
+   "helmet": 1,
+   "chestplate": 11,
+   "leggings": 2,
+   "boots": 2
+  },
+  "dropped": [
+   "head [-4, 24, -4]→[4, 32, 4] (몹 맨살 머리(inflate 0))"
+  ],
+  "fixes": [],
+  "made": {
+   "helmet": "test_rogue_helmet_t10",
+   "chestplate": "test_rogue_chest_t10",
+   "leggings": "test_rogue_legs_t10",
+   "boots": "test_rogue_boots_t10"
+  }
+ }
+}

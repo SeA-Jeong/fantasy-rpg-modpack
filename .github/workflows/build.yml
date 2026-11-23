@@ -67,7 +67,13 @@ jobs:
           cp -r modpack/kubejs testpack/kubejs
           cp docs/TESTING.md testpack/TESTING.md
           # 개발자 전용 테스트 장비 도구(켜기 파일·작업용 리소스팩·리비전 스크립트·원본) — 2026-11-23
+          python3 -I source_assets/armor_library/tools/verify_catalog.py
+          python3 tools/devtest/dist_licenses.py --check
           bash tools/devtest/make_kit.sh devkit
+          test ! -e devkit/devtest/source_assets/test_armor/_retired_ai
+          test -f devkit/ASSET_PROVENANCE.csv
+          test -f devkit/LICENSES/cleannrooster__forg-cleannrooster-assets/LICENSE
+          unzip -l "$(ls core-mod/build/libs/*.jar | grep -v -- -sources | head -1)" | grep -q 'licenses/ASSET_PROVENANCE.csv' || { echo 'jar 에 출처 목록 없음'; exit 1; }
           cp -r devkit/. testpack/
           (cd testpack && zip -qr ../fantasyrpg-testpack.zip .)
 
@@ -93,6 +99,9 @@ jobs:
           test -f packcheck/config/fantasyrpg-devtest/ENABLE
           test -f packcheck/resourcepacks/fantasyrpg_devtest/pack.mcmeta
           test -f packcheck/devtest/test_armor.py
+          test -f packcheck/ASSET_PROVENANCE.csv
+          test -f packcheck/LICENSES/cleannrooster__forg-cleannrooster-assets/LICENSE
+          test ! -e packcheck/devtest/source_assets/test_armor/_retired_ai
 
       - name: 통합 팩 업로드
         uses: actions/upload-artifact@v4

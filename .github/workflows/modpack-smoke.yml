@@ -155,7 +155,7 @@ jobs:
         run: |
           python3 tools/smoke_server.py server full \
             --jvm-arg=-Dfantasyrpg.devtest=true \
-            --command "fantasyrpgtest armor list=>test_rogue_chest_t10" \
+            --command "fantasyrpgtest armor list=>test_rogue_boots_t10" \
             --command "magiccity status" \
             --command "rpg simulate 100 2.0 0 0.25 0=>150"
           # royalqol 은 클라이언트 전용: 서버 모드 목록에 올라오고(로딩 오류 없이) 진입점은 만들어지지 않아야 한다
@@ -165,8 +165,8 @@ jobs:
           grep -E "FantasyBosses 0\.9\.0 \(fantasybosses\)" server/logs/latest.log
           # Combat Traces(무기 궤적·타격 효과, 2026-11-21)가 서버에서 오류 없이 불러지는지
           grep -E "Combat Traces 1\.1\.0 \(combattraces\)" server/logs/latest.log
-          # 개발자 전용 테스트 장비(2026-11-23): 켜면 GeckoLib 과 함께 3종 등록, 목록 오류 0
-          grep -E "\[개발 테스트\] 테스트 장비 3개 등록 \(목록: 모드 기본\), 오류 0건" server/logs/latest.log
+          # 개발자 전용 테스트 장비(2026-11-23): 켜면 GeckoLib 과 함께 12종 등록 (v06: 3벌 × 4부위), 목록 오류 0
+          grep -E "\[개발 테스트\] 테스트 장비 12개 등록 \(목록: 모드 기본\), 오류 0건" server/logs/latest.log
 
       - name: 로그 보관
         if: always()

@@ -1,0 +1,191 @@
+[
+  {
+    "class": "warrior",
+    "tier": 1,
+    "morearmor_asset": "coal",
+    "match": "medium",
+    "notes": "흑철/광부식 실전 전투복"
+  },
+  {
+    "class": "warrior",
+    "tier": 2,
+    "morearmor_asset": "bone",
+    "match": "high",
+    "notes": "마수 뼈·사냥꾼 장비"
+  },
+  {
+    "class": "warrior",
+    "tier": 3,
+    "morearmor_asset": "copper",
+    "match": "medium",
+    "notes": "군용 합금의 초기 판금"
+  },
+  {
+    "class": "warrior",
+    "tier": 6,
+    "morearmor_asset": "red_dragon",
+    "match": "high",
+    "notes": "용린/용의 붉은 비늘"
+  },
+  {
+    "class": "warrior",
+    "tier": 8,
+    "morearmor_asset": "magma",
+    "match": "high",
+    "notes": "네더 용암 합금"
+  },
+  {
+    "class": "knight",
+    "tier": 3,
+    "morearmor_asset": "quartz",
+    "match": "medium",
+    "notes": "석영빛 제식 갑주"
+  },
+  {
+    "class": "knight",
+    "tier": 7,
+    "morearmor_asset": "gilded",
+    "match": "high",
+    "notes": "왕실 금장 판금"
+  },
+  {
+    "class": "knight",
+    "tier": 8,
+    "morearmor_asset": "ancient_debris",
+    "match": "high",
+    "notes": "네더 고대 잔해 제련"
+  },
+  {
+    "class": "knight",
+    "tier": 9,
+    "morearmor_asset": "reinforced_deepslate",
+    "match": "low",
+    "notes": "단단한 암흑 판금, 영혼 요소 별도 필요"
+  },
+  {
+    "class": "knight",
+    "tier": 10,
+    "morearmor_asset": "bedrock",
+    "match": "low",
+    "notes": "견고한 최종 갑주, 차원 구조 별도 필요"
+  },
+  {
+    "class": "rogue",
+    "tier": 2,
+    "morearmor_asset": "skeleton",
+    "match": "medium",
+    "notes": "가벼운 해골/골제 암살 복장"
+  },
+  {
+    "class": "rogue",
+    "tier": 4,
+    "morearmor_asset": "glass",
+    "match": "low",
+    "notes": "은신·유리 경갑으로 대폭 개조 필요"
+  },
+  {
+    "class": "rogue",
+    "tier": 5,
+    "morearmor_asset": "sculk",
+    "match": "medium",
+    "notes": "고대 스컬크 감응 복장"
+  },
+  {
+    "class": "rogue",
+    "tier": 8,
+    "morearmor_asset": "wither_skeleton",
+    "match": "high",
+    "notes": "위더 암살자 장비"
+  },
+  {
+    "class": "rogue",
+    "tier": 9,
+    "morearmor_asset": "shulker",
+    "match": "medium",
+    "notes": "차원 경갑으로 개조"
+  },
+  {
+    "class": "archer",
+    "tier": 1,
+    "morearmor_asset": "cactus",
+    "match": "low",
+    "notes": "야생 경갑, 선인장 장식 단순화"
+  },
+  {
+    "class": "archer",
+    "tier": 4,
+    "morearmor_asset": "guardian",
+    "match": "medium",
+    "notes": "자연의 수호자 경갑으로 재해석"
+  },
+  {
+    "class": "archer",
+    "tier": 6,
+    "morearmor_asset": "ender_dragon",
+    "match": "medium",
+    "notes": "용가죽과 드래곤 뿔 재해석"
+  },
+  {
+    "class": "archer",
+    "tier": 7,
+    "morearmor_asset": "emerald",
+    "match": "medium",
+    "notes": "정령 보석이 있는 숲 수호자"
+  },
+  {
+    "class": "mage",
+    "tier": 1,
+    "morearmor_asset": "lapis",
+    "match": "medium",
+    "notes": "청금석 마법사 복장"
+  },
+  {
+    "class": "mage",
+    "tier": 4,
+    "morearmor_asset": "amethyst",
+    "match": "high",
+    "notes": "수정 기반 마법 로브"
+  },
+  {
+    "class": "mage",
+    "tier": 5,
+    "morearmor_asset": "redstone",
+    "match": "medium",
+    "notes": "마도 기계와 회로"
+  },
+  {
+    "class": "mage",
+    "tier": 10,
+    "morearmor_asset": "galaxy",
+    "match": "medium",
+    "notes": "차원 마도사 의복으로 재구성"
+  },
+  {
+    "class": "cleric",
+    "tier": 4,
+    "morearmor_asset": "totem",
+    "match": "high",
+    "notes": "수호·신성 토템 장식"
+  },
+  {
+    "class": "cleric",
+    "tier": 6,
+    "morearmor_asset": "ruby",
+    "match": "medium",
+    "notes": "붉은 성석을 정화한 복장"
+  },
+  {
+    "class": "cleric",
+    "tier": 8,
+    "morearmor_asset": "obsidian",
+    "match": "medium",
+    "notes": "성직복+네더 흑요석 판금"
+  },
+  {
+    "class": "cleric",
+    "tier": 9,
+    "morearmor_asset": "music",
+    "match": "low",
+    "notes": "성가/공명 성직복으로 개조 필요"
+  }
+]

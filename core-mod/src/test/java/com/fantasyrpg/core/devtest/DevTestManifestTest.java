@@ -24,10 +24,10 @@ class DevTestManifestTest {
     }
 
     @Test
-    void builtInManifestHasThreeValidEntries() throws IOException {
+    void builtInManifestHasTwelveValidEntries() throws IOException {
         DevTestManifest m = DevTestManifest.parse(read(BUILT_IN));
         assertEquals(java.util.List.of(), m.errors());
-        assertEquals(3, m.entries().size());
+        assertEquals(12, m.entries().size());   // v06: 기사 T01·마법사 T05·도적 T10 × 4부위
         DevTestManifest.Entry mage = m.find("mage", 5, "chestplate").orElseThrow();
         assertEquals("test_mage_chest_t05", mage.id());
         assertEquals("geo/test_armor/test_mage_chest_t05.geo.json", mage.model());
@@ -36,6 +36,12 @@ class DevTestManifestTest {
         assertEquals("", mage.animation());
         assertTrue(m.find("rogue", 10, null).isPresent());
         assertTrue(m.find("rogue", 9, null).isEmpty());
+        // 부위 생략 = 한 벌 4부위 (투구·흉갑·각반·장화)
+        assertEquals(java.util.List.of("helmet", "chestplate", "leggings", "boots"),
+                m.findAll("knight", 1, null).stream().map(DevTestManifest.Entry::slot).toList());
+        assertEquals(java.util.List.of("test_rogue_legs_t10"),
+                m.findAll("rogue", 10, "leggings").stream().map(DevTestManifest.Entry::id).toList());
+        assertTrue(m.findAll("mage", 4, null).isEmpty());
     }
 
     @Test

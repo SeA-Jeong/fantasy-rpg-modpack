@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "fantasyrpg:item/test_armor/test_mage_helmet_t05"
+  }
+}

@@ -12,10 +12,11 @@
   validate                      파일·JSON·본 이름·좌우·UV 범위·텍스처 크기 검사 (오류가 있으면 종료 코드 1)
   snapshot <id> [--note 글]     current 를 새 판(vNN+1)으로 보관하고 manifest 의 revision 을 그 판으로
   use <id> <rev>                보관한 판을 current 로 되돌리고 manifest 의 revision 을 그 판으로
-  import <id> --bbmodel P [--geo P] [--texture P] [--icon P] [--note 글]
+  import <id> --bbmodel P [--geo P] [--texture P] [--icon P] [--rev vNN] [--note 글]
                                 받은 파일로 새 판(vNN+1)을 만들고 current·manifest 를 그 판으로.
                                 --geo 를 주지 않으면 bbmodel 에서 Blockbench 와 같은 규칙으로 만든다(bb2geo.py, 권장),
                                 --texture 가 없으면 bbmodel 안의 그림, --icon 이 없으면 3D 앞모습으로 만든다(preview.py, Pillow 필요).
+                                --rev 로 판 번호를 정할 수 있음 (같은 세대의 여러 부위를 같은 번호로 맞출 때; 마지막 판보다 커야 함).
   deploy repo                   current → 모드 소스 리소스(core-mod/src/main/resources) — Gradle 빌드해야 jar 에 들어감
   deploy pack <폴더>            current → 리소스팩 폴더 (게임에서 F3+T 로 바로 갱신)
   deploy instance <인스턴스>    current → <인스턴스>/resourcepacks/fantasyrpg_devtest + 목록을 <인스턴스>/config/fantasyrpg-devtest/
@@ -272,7 +273,9 @@ def entry(m, i):
 def cmd_snapshot(src, m, i, note):
     e = entry(m, i)
     revs = revisions(src, i)
-    nxt = f"v{(int(revs[-1][1:]) + 1 if revs else 1):02d}"
+    nxt = opts.get("rev") or f"v{(int(revs[-1][1:]) + 1 if revs else 1):02d}"
+    if not re.match(r"^v\d+$", nxt) or (revs and int(nxt[1:]) <= int(revs[-1][1:])):
+        sys.exit(f"--rev {nxt}: vNN 이고 마지막 판({revs[-1] if revs else '-'})보다 커야 함")
     d = os.path.join(src, i, "revisions", nxt)
     shutil.copytree(os.path.join(src, i, "current"), d)
     with open(os.path.join(d, "NOTES.md"), "w", encoding="utf-8") as f:
@@ -309,7 +312,9 @@ def cmd_import(src, m, i, opts, note):
     import bb2geo
     entry(m, i)
     revs = revisions(src, i)
-    nxt = f"v{(int(revs[-1][1:]) + 1 if revs else 1):02d}"
+    nxt = opts.get("rev") or f"v{(int(revs[-1][1:]) + 1 if revs else 1):02d}"
+    if not re.match(r"^v\d+$", nxt) or (revs and int(nxt[1:]) <= int(revs[-1][1:])):
+        sys.exit(f"--rev {nxt}: vNN 이고 마지막 판({revs[-1] if revs else '-'})보다 커야 함")
     d = os.path.join(src, i, "revisions", nxt)
     os.makedirs(d)
     names = {"geo": f"{i}.geo.json", "texture": f"{i}.png", "icon": f"{i}_icon.png", "bbmodel": f"{i}.bbmodel"}
@@ -413,7 +418,7 @@ def main(argv):
     if c == "use" and len(argv) == 3:
         return cmd_use(src, m, argv[1], argv[2])
     if c == "import" and len(argv) >= 2:
-        opts = {k: argv[argv.index("--" + k) + 1] for k in ("geo", "texture", "icon", "bbmodel") if "--" + k in argv}
+        opts = {k: argv[argv.index("--" + k) + 1] for k in ("geo", "texture", "icon", "bbmodel", "rev") if "--" + k in argv}
         if "bbmodel" not in opts:
             sys.exit("import 에는 --bbmodel 이 필요 (geo·텍스처·아이콘은 없으면 bbmodel 에서 만듦)")
         note = argv[argv.index("--note") + 1] if "--note" in argv else ""

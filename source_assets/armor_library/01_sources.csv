@@ -1,0 +1,7 @@
+﻿source_key,repository,pinned_commit,license,asset_type,purpose,rights_notes,source_url
+cleann,cleannrooster/forg-cleannrooster-assets,a1ca6f85e56ae4fbcca31aca3c1981b190dc31a8,MIT,Blockbench humanoid,3D 지오메트리 후보; humanoid mob → 슬롯별 재구성,모델·텍스처 자체 제작 및 재사용 허용(README),https://github.com/cleannrooster/forg-cleannrooster-assets
+morearmor,elijah-farrell/More-Armor,372f6260672a7da736aaeb8ff3e1140ad1d62ce6,MIT,2D vanilla armor layers,36세트의 바닐라형 착용 텍스처/16px 아이콘,"원저작자 AverageTaTeMan MIT 표기, 원작자 라이선스도 보존",https://github.com/elijah-farrell/More-Armor
+loy,SL0ANE/Loy-s-Goodies,afbb7695b09de0ed8ee3aa97732ff7c3d367520c,CC0-1.0,Model accessories,"모자·장식용 .bbmodel, 전신 방어구가 아님","CC0, 제3자 저작물 개입 여부 개별 확인",https://github.com/SL0ANE/Loy-s-Goodies
+french,FrenchKrab/mc-blockbench-models,3a568ceda77434a17e2722459e8becf48a1f6920,CC-BY-4.0,Weapons/tools models,"주로 무기/도구 .bbmodel, 방어구 수량에 미포함",저작자 표시 및 변경 표시 필요,https://github.com/FrenchKrab/mc-blockbench-models
+immersive,Luke100000/ImmersiveArmors,ac0d2e2e36c6807b5a852ee95a75ab2e49367bb7,GPL-3.0,Armor textures & source code,"참고 전용 기본값, 별도 라이선스 검토 후 사용",GPL-3.0 의무와 개별 리소스 권리 검토 전 자동 포함 금지,https://github.com/Luke100000/ImmersiveArmors
+warborn,PJM-Project-Minecraft/Warborn-Renewed,e457b105ce821c7d0ef0dad1f7317275d28e72ea,MIT,Renderer / pack example,커스텀 armor resource pack/renderer 설계 참고 (현대 장비 위주),재사용 시 라이선스 표시,https://github.com/PJM-Project-Minecraft/Warborn-Renewed

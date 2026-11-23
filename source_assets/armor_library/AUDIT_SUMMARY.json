@@ -1,0 +1,13 @@
+{
+  "sources": 6,
+  "source_sets_2d": 36,
+  "morearmor_2d_icon_files_expected": 144,
+  "2d_sets_assigned": 27,
+  "2d_slots_provisionally_assigned": 108,
+  "3d_humanoid_candidates": 15,
+  "cc0_accessories": 7,
+  "remaining_2d_sets": 33,
+  "remaining_2d_slots": 132,
+  "game_ready_slots": 0,
+  "notes": "original third-party assets are not included; download scripts only, game integration not tested"
+}

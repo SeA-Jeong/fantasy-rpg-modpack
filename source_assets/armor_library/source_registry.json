@@ -1,0 +1,50 @@
+{
+  "cleann": {
+    "repo": "cleannrooster/forg-cleannrooster-assets",
+    "sha": "a1ca6f85e56ae4fbcca31aca3c1981b190dc31a8",
+    "license": "MIT",
+    "usage": "3D 지오메트리 후보; humanoid mob → 슬롯별 재구성",
+    "type": "Blockbench humanoid",
+    "rights": "모델·텍스처 자체 제작 및 재사용 허용(README)"
+  },
+  "morearmor": {
+    "repo": "elijah-farrell/More-Armor",
+    "sha": "372f6260672a7da736aaeb8ff3e1140ad1d62ce6",
+    "license": "MIT",
+    "usage": "36세트의 바닐라형 착용 텍스처/16px 아이콘",
+    "type": "2D vanilla armor layers",
+    "rights": "원저작자 AverageTaTeMan MIT 표기, 원작자 라이선스도 보존"
+  },
+  "loy": {
+    "repo": "SL0ANE/Loy-s-Goodies",
+    "sha": "afbb7695b09de0ed8ee3aa97732ff7c3d367520c",
+    "license": "CC0-1.0",
+    "usage": "모자·장식용 .bbmodel, 전신 방어구가 아님",
+    "type": "Model accessories",
+    "rights": "CC0, 제3자 저작물 개입 여부 개별 확인"
+  },
+  "french": {
+    "repo": "FrenchKrab/mc-blockbench-models",
+    "sha": "3a568ceda77434a17e2722459e8becf48a1f6920",
+    "license": "CC-BY-4.0",
+    "usage": "주로 무기/도구 .bbmodel, 방어구 수량에 미포함",
+    "type": "Weapons/tools models",
+    "rights": "저작자 표시 및 변경 표시 필요"
+  },
+  "immersive": {
+    "repo": "Luke100000/ImmersiveArmors",
+    "sha": "ac0d2e2e36c6807b5a852ee95a75ab2e49367bb7",
+    "license": "GPL-3.0",
+    "usage": "참고 전용 기본값, 별도 라이선스 검토 후 사용",
+    "type": "Armor textures & source code",
+    "rights": "GPL-3.0 의무와 개별 리소스 권리 검토 전 자동 포함 금지"
+  },
+  "warborn": {
+    "repo": "PJM-Project-Minecraft/Warborn-Renewed",
+    "sha": "e457b105ce821c7d0ef0dad1f7317275d28e72ea",
+    "license": "MIT",
+    "usage": "커스텀 armor resource pack/renderer 설계 참고 (현대 장비 위주)",
+    "type": "Renderer / pack example",
+    "rights": "재사용 시 라이선스 표시"
+  }
+}

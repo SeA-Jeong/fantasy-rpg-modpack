@@ -132,6 +132,13 @@ public final class DevTestManifest {
                 .findFirst();
     }
 
+    /** 직업·등급·부위로 모두 찾기 (부위가 null 이면 그 직업·등급의 모든 부위 — 한 벌 지급·착용용), 목록 순서 */
+    public List<Entry> findAll(String cls, int grade, String slot) {
+        return entries.stream()
+                .filter(e -> e.cls().equals(cls) && e.grade() == grade && (slot == null || e.slot().equals(slot)))
+                .toList();
+    }
+
     public List<String> classes() {
         return entries.stream().map(Entry::cls).distinct().toList();
     }

@@ -1,0 +1,61 @@
+﻿class,class_ko,grade,theme,status,2d_asset_set,visual_match,3d_model_candidates,notes,completed_pieces,source_url
+warrior,전사,T01,개척자,2D 원본 배정안(3D 미완성) + 3D 변환 후보,coal,medium,bb/peasant.geo.bbmodel,흑철/광부식 실전 전투복,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/coal; https://github.com/cleannrooster/forg-cleannrooster-assets/tree/a1ca6f85e56ae4fbcca31aca3c1981b190dc31a8/bb
+warrior,전사,T02,마수 사냥꾼,2D 원본 배정안(3D 미완성),bone,high,,마수 뼈·사냥꾼 장비,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/bone
+warrior,전사,T03,왕국 정규군,2D 원본 배정안(3D 미완성),copper,medium,,군용 합금의 초기 판금,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/copper
+warrior,전사,T04,고대 숲,미배정,,,,,0,
+warrior,전사,T05,잊힌 문명,미배정,,,,,0,
+warrior,전사,T06,용 사냥,2D 원본 배정안(3D 미완성) + 3D 변환 후보,red_dragon,high,bb/juggmob.bbmodel,용린/용의 붉은 비늘,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/red_dragon; https://github.com/cleannrooster/forg-cleannrooster-assets/tree/a1ca6f85e56ae4fbcca31aca3c1981b190dc31a8/bb
+warrior,전사,T07,왕국 유산,미배정3D 변환 후보(2D 미배정),,,bb/kaomsheart.geo.bbmodel,,0,https://github.com/cleannrooster/forg-cleannrooster-assets/tree/a1ca6f85e56ae4fbcca31aca3c1981b190dc31a8/bb
+warrior,전사,T08,네더 제련,2D 원본 배정안(3D 미완성),magma,high,,네더 용암 합금,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/magma
+warrior,전사,T09,심연·영혼,미배정,,,,,0,
+warrior,전사,T10,차원 유산,미배정,,,,,0,
+knight,기사,T01,개척자,미배정3D 변환 후보(2D 미배정),,,bb/templar.geo.bbmodel,,0,https://github.com/cleannrooster/forg-cleannrooster-assets/tree/a1ca6f85e56ae4fbcca31aca3c1981b190dc31a8/bb
+knight,기사,T02,마수 사냥꾼,미배정,,,,,0,
+knight,기사,T03,왕국 정규군,2D 원본 배정안(3D 미완성) + 3D 변환 후보,quartz,medium,bb/legion.geo.bbmodel,석영빛 제식 갑주,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/quartz; https://github.com/cleannrooster/forg-cleannrooster-assets/tree/a1ca6f85e56ae4fbcca31aca3c1981b190dc31a8/bb
+knight,기사,T04,고대 숲,미배정,,,,,0,
+knight,기사,T05,잊힌 문명,미배정,,,,,0,
+knight,기사,T06,용 사냥,미배정,,,,,0,
+knight,기사,T07,왕국 유산,2D 원본 배정안(3D 미완성) + 3D 변환 후보,gilded,high,bb/cityguardian.bbmodel,왕실 금장 판금,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/gilded; https://github.com/cleannrooster/forg-cleannrooster-assets/tree/a1ca6f85e56ae4fbcca31aca3c1981b190dc31a8/bb
+knight,기사,T08,네더 제련,2D 원본 배정안(3D 미완성),ancient_debris,high,,네더 고대 잔해 제련,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/ancient_debris
+knight,기사,T09,심연·영혼,2D 원본 배정안(3D 미완성),reinforced_deepslate,low,,"단단한 암흑 판금, 영혼 요소 별도 필요",0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/reinforced_deepslate
+knight,기사,T10,차원 유산,2D 원본 배정안(3D 미완성) + 3D 변환 후보,bedrock,low,bb/templar_legacy.bbmodel,"견고한 최종 갑주, 차원 구조 별도 필요",0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/bedrock; https://github.com/cleannrooster/forg-cleannrooster-assets/tree/a1ca6f85e56ae4fbcca31aca3c1981b190dc31a8/bb
+rogue,도적,T01,개척자,미배정,,,,,0,
+rogue,도적,T02,마수 사냥꾼,2D 원본 배정안(3D 미완성),skeleton,medium,,가벼운 해골/골제 암살 복장,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/skeleton
+rogue,도적,T03,왕국 정규군,미배정,,,,,0,
+rogue,도적,T04,고대 숲,2D 원본 배정안(3D 미완성),glass,low,,은신·유리 경갑으로 대폭 개조 필요,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/glass
+rogue,도적,T05,잊힌 문명,2D 원본 배정안(3D 미완성),sculk,medium,,고대 스컬크 감응 복장,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/sculk
+rogue,도적,T06,용 사냥,미배정,,,,,0,
+rogue,도적,T07,왕국 유산,미배정,,,,,0,
+rogue,도적,T08,네더 제련,2D 원본 배정안(3D 미완성),wither_skeleton,high,,위더 암살자 장비,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/wither_skeleton
+rogue,도적,T09,심연·영혼,2D 원본 배정안(3D 미완성) + 3D 변환 후보,shulker,medium,bb/sanguine.geo.bbmodel,차원 경갑으로 개조,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/shulker; https://github.com/cleannrooster/forg-cleannrooster-assets/tree/a1ca6f85e56ae4fbcca31aca3c1981b190dc31a8/bb
+rogue,도적,T10,차원 유산,미배정3D 변환 후보(2D 미배정),,,bb/thiefmob.bbmodel,,0,https://github.com/cleannrooster/forg-cleannrooster-assets/tree/a1ca6f85e56ae4fbcca31aca3c1981b190dc31a8/bb
+archer,궁수,T01,개척자,2D 원본 배정안(3D 미완성),cactus,low,,"야생 경갑, 선인장 장식 단순화",0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/cactus
+archer,궁수,T02,마수 사냥꾼,미배정,,,,,0,
+archer,궁수,T03,왕국 정규군,미배정,,,,,0,
+archer,궁수,T04,고대 숲,2D 원본 배정안(3D 미완성) + 3D 변환 후보,guardian,medium,bb/primalist.geo.bbmodel,자연의 수호자 경갑으로 재해석,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/guardian; https://github.com/cleannrooster/forg-cleannrooster-assets/tree/a1ca6f85e56ae4fbcca31aca3c1981b190dc31a8/bb
+archer,궁수,T05,잊힌 문명,미배정3D 변환 후보(2D 미배정),,,bb/artillerist.geo.bbmodel,,0,https://github.com/cleannrooster/forg-cleannrooster-assets/tree/a1ca6f85e56ae4fbcca31aca3c1981b190dc31a8/bb
+archer,궁수,T06,용 사냥,2D 원본 배정안(3D 미완성),ender_dragon,medium,,용가죽과 드래곤 뿔 재해석,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/ender_dragon
+archer,궁수,T07,왕국 유산,2D 원본 배정안(3D 미완성),emerald,medium,,정령 보석이 있는 숲 수호자,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/emerald
+archer,궁수,T08,네더 제련,미배정3D 변환 후보(2D 미배정),,,bb/primalist_netherite.geo.bbmodel,,0,https://github.com/cleannrooster/forg-cleannrooster-assets/tree/a1ca6f85e56ae4fbcca31aca3c1981b190dc31a8/bb
+archer,궁수,T09,심연·영혼,미배정,,,,,0,
+archer,궁수,T10,차원 유산,미배정,,,,,0,
+mage,마법사,T01,개척자,2D 원본 배정안(3D 미완성),lapis,medium,,청금석 마법사 복장,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/lapis
+mage,마법사,T02,마수 사냥꾼,미배정,,,,,0,
+mage,마법사,T03,왕국 정규군,미배정,,,,,0,
+mage,마법사,T04,고대 숲,2D 원본 배정안(3D 미완성),amethyst,high,,수정 기반 마법 로브,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/amethyst
+mage,마법사,T05,잊힌 문명,2D 원본 배정안(3D 미완성) + 3D 변환 후보,redstone,medium,bb/archmagefire.bbmodel,마도 기계와 회로,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/redstone; https://github.com/cleannrooster/forg-cleannrooster-assets/tree/a1ca6f85e56ae4fbcca31aca3c1981b190dc31a8/bb
+mage,마법사,T06,용 사냥,미배정,,,,,0,
+mage,마법사,T07,왕국 유산,미배정,,,,,0,
+mage,마법사,T08,네더 제련,미배정,,,,,0,
+mage,마법사,T09,심연·영혼,미배정,,,,,0,
+mage,마법사,T10,차원 유산,2D 원본 배정안(3D 미완성) + 3D 변환 후보,galaxy,medium,bb/gemini.geo.bbmodel,차원 마도사 의복으로 재구성,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/galaxy; https://github.com/cleannrooster/forg-cleannrooster-assets/tree/a1ca6f85e56ae4fbcca31aca3c1981b190dc31a8/bb
+cleric,전투사제,T01,개척자,미배정,,,,,0,
+cleric,전투사제,T02,마수 사냥꾼,미배정,,,,,0,
+cleric,전투사제,T03,왕국 정규군,미배정,,,,,0,
+cleric,전투사제,T04,고대 숲,2D 원본 배정안(3D 미완성),totem,high,,수호·신성 토템 장식,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/totem
+cleric,전투사제,T05,잊힌 문명,미배정,,,,,0,
+cleric,전투사제,T06,용 사냥,2D 원본 배정안(3D 미완성),ruby,medium,,붉은 성석을 정화한 복장,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/ruby
+cleric,전투사제,T07,왕국 유산,미배정3D 변환 후보(2D 미배정),,,bb/kintsugi.geo.bbmodel,,0,https://github.com/cleannrooster/forg-cleannrooster-assets/tree/a1ca6f85e56ae4fbcca31aca3c1981b190dc31a8/bb
+cleric,전투사제,T08,네더 제련,2D 원본 배정안(3D 미완성),obsidian,medium,,성직복+네더 흑요석 판금,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/obsidian
+cleric,전투사제,T09,심연·영혼,2D 원본 배정안(3D 미완성),music,low,,성가/공명 성직복으로 개조 필요,0,https://github.com/elijah-farrell/More-Armor/tree/372f6260672a7da736aaeb8ff3e1140ad1d62ce6/src/main/resources/assets/morearmor/textures/item/averagetateman/armors/music
+cleric,전투사제,T10,차원 유산,미배정,,,,,0,

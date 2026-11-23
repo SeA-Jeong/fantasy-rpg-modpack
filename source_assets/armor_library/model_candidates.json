@@ -1,0 +1,92 @@
+[
+  {
+    "file": "templar.geo.bbmodel",
+    "class": "knight",
+    "tier": 1,
+    "notes": "다층 갑주, 견갑; 기본 가벼운 제식형으로 수정"
+  },
+  {
+    "file": "templar_legacy.bbmodel",
+    "class": "knight",
+    "tier": 10,
+    "notes": "최상위 기사 유산의 제작 기법"
+  },
+  {
+    "file": "thiefmob.bbmodel",
+    "class": "rogue",
+    "tier": 10,
+    "notes": "후드와 가죽 경갑 핵심 구조"
+  },
+  {
+    "file": "primalist.geo.bbmodel",
+    "class": "archer",
+    "tier": 4,
+    "notes": "사냥꾼 의복/자연형 방어구"
+  },
+  {
+    "file": "primalist_netherite.geo.bbmodel",
+    "class": "archer",
+    "tier": 8,
+    "notes": "네더 사냥꾼 장비"
+  },
+  {
+    "file": "archmagefire.bbmodel",
+    "class": "mage",
+    "tier": 5,
+    "notes": "천 구조/마도브로치; 의복 리모델링 필요"
+  },
+  {
+    "file": "juggmob.bbmodel",
+    "class": "warrior",
+    "tier": 6,
+    "notes": "전사 근접 판금/견갑"
+  },
+  {
+    "file": "cityguardian.bbmodel",
+    "class": "knight",
+    "tier": 7,
+    "notes": "도시 수호 갑주"
+  },
+  {
+    "file": "peasant.geo.bbmodel",
+    "class": "warrior",
+    "tier": 1,
+    "notes": "기본 비례·초기 군장 참고"
+  },
+  {
+    "file": "sanguine.geo.bbmodel",
+    "class": "rogue",
+    "tier": 9,
+    "notes": "심연/영혼 모티프, 경갑 분해 필요"
+  },
+  {
+    "file": "kaomsheart.geo.bbmodel",
+    "class": "warrior",
+    "tier": 7,
+    "notes": "생체장갑/금속 혼합, 조형 검토"
+  },
+  {
+    "file": "kintsugi.geo.bbmodel",
+    "class": "cleric",
+    "tier": 7,
+    "notes": "의복+금장 장식 참조"
+  },
+  {
+    "file": "gemini.geo.bbmodel",
+    "class": "mage",
+    "tier": 10,
+    "notes": "머리 장식 위주; 완전한 로브 아님"
+  },
+  {
+    "file": "legion.geo.bbmodel",
+    "class": "knight",
+    "tier": 3,
+    "notes": "리그 변환 우선, 배낭 제거"
+  },
+  {
+    "file": "artillerist.geo.bbmodel",
+    "class": "archer",
+    "tier": 5,
+    "notes": "원거리 장비 실루엣만; 총기 파츠 제외"
+  }
+]

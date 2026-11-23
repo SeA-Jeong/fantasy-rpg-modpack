@@ -1,5 +1,5 @@
-# v05
+# v06
 
-cleannrooster(MIT, a1ca6f8) 원본 조형을 골라 재작업 — tools/devtest/build_from_upstream.py 로 다시 만들 수 있음. 원본 큐브 + 새 큐브, 텍스처 다시 칠함(알파 0/255), 아이콘은 3D 앞모습
+v06: 오픈소스 장비 라이브러리 원본(cleannrooster a1ca6f85, MIT) 그대로 4부위로 나눔. AI 가 만든 큐브·색 없음. 만든 도구: tools/devtest/build_from_library.py (고친 것·뺀 것은 source_assets/test_armor/build_report_v06.json)
 
 만든 것: geo(bb2geo), 텍스처(bbmodel 안), 아이콘(3D 앞모습)

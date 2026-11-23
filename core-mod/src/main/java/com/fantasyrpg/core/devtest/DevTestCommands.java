@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.Optional;
+import java.util.List;
 
 /**
  * 개발자 전용 명령 {@code /fantasyrpgtest armor ...} (권한 2, 테스트 장비가 켜져 있을 때만 등록).
@@ -70,34 +70,39 @@ public final class DevTestCommands {
         return m.entries().size();
     }
 
+    /** 부위를 주면 그 부위 하나, 생략하면 그 직업·등급의 모든 부위(한 벌)를 지급·착용 */
     private static int give(CommandContext<CommandSourceStack> c, String slot, boolean equip) throws CommandSyntaxException {
         ServerPlayer p = c.getSource().getPlayerOrException();
         String cls = StringArgumentType.getString(c, "class");
         int grade = IntegerArgumentType.getInteger(c, "grade");
-        Optional<DevTestManifest.Entry> found = DevTest.manifest().find(cls, grade, slot);
+        List<DevTestManifest.Entry> found = DevTest.manifest().findAll(cls, grade, slot);
         if (found.isEmpty()) {
             c.getSource().sendFailure(Component.literal("[개발 테스트] " + cls + " " + grade + "급" + (slot == null ? "" : " " + slot)
                     + " 테스트 장비가 목록에 없음 — /fantasyrpgtest armor list"));
             return 0;
         }
-        var holder = DevTestRegistry.items().get(found.get().id());
-        if (holder == null) {
-            c.getSource().sendFailure(Component.literal("[개발 테스트] " + found.get().id() + " 는 이번 실행에 등록되지 않음 — 목록을 바꿨다면 게임을 다시 켜기"));
-            return 0;
+        int done = 0;
+        for (DevTestManifest.Entry e : found) {
+            var holder = DevTestRegistry.items().get(e.id());
+            if (holder == null) {
+                c.getSource().sendFailure(Component.literal("[개발 테스트] " + e.id() + " 는 이번 실행에 등록되지 않음 — 목록을 바꿨다면 게임을 다시 켜기"));
+                continue;
+            }
+            ItemStack stack = new ItemStack(holder.get());
+            if (equip) {
+                EquipmentSlot es = holder.get().getEquipmentSlot();
+                ItemStack old = p.getItemBySlot(es);
+                if (!old.isEmpty() && !p.getInventory().add(old.copy())) p.drop(old.copy(), false);
+                p.setItemSlot(es, stack);
+                c.getSource().sendSuccess(() -> Component.literal("[개발 테스트] " + e.id() + " 착용 ("
+                        + (old.isEmpty() ? "빈 칸" : "기존 장비는 가방으로") + ")"), false);
+            } else {
+                if (!p.getInventory().add(stack)) p.drop(stack, false);
+                c.getSource().sendSuccess(() -> Component.literal("[개발 테스트] " + e.id() + " 지급"), false);
+            }
+            done++;
         }
-        ItemStack stack = new ItemStack(holder.get());
-        if (equip) {
-            EquipmentSlot es = holder.get().getEquipmentSlot();
-            ItemStack old = p.getItemBySlot(es);
-            if (!old.isEmpty() && !p.getInventory().add(old.copy())) p.drop(old.copy(), false);
-            p.setItemSlot(es, stack);
-            c.getSource().sendSuccess(() -> Component.literal("[개발 테스트] " + found.get().id() + " 착용 ("
-                    + (old.isEmpty() ? "빈 칸" : "기존 장비는 가방으로") + ")"), false);
-        } else {
-            if (!p.getInventory().add(stack)) p.drop(stack, false);
-            c.getSource().sendSuccess(() -> Component.literal("[개발 테스트] " + found.get().id() + " 지급"), false);
-        }
-        return 1;
+        return done;
     }
 
     private static int clear(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {

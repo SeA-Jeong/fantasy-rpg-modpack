@@ -57,6 +57,7 @@
 | 8 | **유산 무기** | H2 → H3 → H4 → H5 → H6 → H7 → H8 → H10 → H11 → H12 | 이름·반짝임, 각성 문장, 강화로 이름의 등급이 바뀌는지, 죽어도 남는지 |
 | 9 | **챕터 퀘스트** | E2 → E3 → E4 → E5 → E6 → E7 → E9 | NPC가 서 있는 자리(묻히거나 뜨지 않는지), 대사·목표 좌표, 각성 재료 |
 | 22 | **필드 몬스터 30종 모델** (팩 v0.27.0-test.2) | FM8 → FM1 → FM2 → FM3 → FM5 → FM4 → FM6 → FM7 | 크기·발광 밝기·히트박스가 모델과 맞는지, 몬스터 이름과 본 이름으로 적어 주기 |
+| 30 | **테스트 장비 v06 (오픈소스 원본 그대로 3벌 × 4부위)** | Q4-1 → Q4-2 → Q4-3 → Q4-4 → Q4-5 → Q4-6 | AI 제작 판 폐기, 한 벌 착용, 크레딧 파일 |
 | 29 | **테스트 흉갑 v05 (오픈소스 재작업)** | Q3-1 → Q3-2 → Q3-3 → Q3-4 → Q3-5 | cleannrooster 조형 적용 3종, 좌우 바로잡음 |
 | 28 | **테스트 흉갑 v2.0** | Q2-1 → Q2-2 → Q2-3 → Q2-4 (+ `docs/devtest/README.md` 0절 순서) | 새 흉갑 3종, 마법사 로브 하단, 도적 후드 |
 | 27 | **개발 테스트 장비** | DT1 → DT2 → DT3 → DT4 → DT5 → DT6 → DT7 → DT8 → DT9 | 테스트 흉갑 3종 착용·걷기·로브·코트, 리소스팩으로 바꾸고 F3+T, 리비전 되돌리기 |
@@ -492,6 +493,17 @@
 | FM6 | 거미 둥지 수호자·균열 포식자·절벽 비룡을 1~2칸 통로·문으로 유인 | 끼여 멈추거나 벽을 통과하지 않음(큰 몸은 좁은 길에 못 들어가는 것이 정상) | 아니오 |
 | FM7 | 처치 | death 동작이 끝까지 재생, 옆으로 눕지 않음, 1초쯤 뒤 연기와 함께 사라짐 | 아니오 |
 | FM8 | 전용 서버(또는 싱글) 켜기 | 오류 없이 켜짐, 로그에 `FantasyBosses 0.9.0` | **CI 서버 기동 검사** |
+
+### v0.28.3 — 테스트 장비 v06 (오픈소스 원본 구조 그대로, 3벌 × 4부위) + 크레딧
+개발자 전용 (`config/fantasyrpg-devtest/ENABLE`, 리소스팩 `fantasyrpg_devtest` 켬). 자세한 순서 `devtest/README.md` 0장.
+| 번호 | 할 것 | 기대 결과 | 자동 확인 |
+|---|---|---|---|
+| Q4-1 | `/fantasyrpgtest armor list`, 창작 탭 | 12개, 오류 0, 이름 `[테스트] 기사 1급 투구 (v06)` 등 | 전용 서버 등록 로그 12개, JUnit |
+| Q4-2 | `/fantasyrpgtest armor equip knight 1` (철 갑옷 입은 채) | 4칸 모두 바뀌고 철 갑옷 4개는 가방으로. 십자 투구·빨간 망토·허리 장갑·장화 테 | 없음 |
+| Q4-3 | 기사로 걷기·달리기·공격·웅크리기 (F5) | 견갑이 같은 쪽 팔을 따라감. 망토가 다리를 뚫는 정도 기록 | 좌우 규칙 JUnit |
+| Q4-4 | `equip mage 5`, `equip rogue 10` 걸어 보기 | 마법사: 후드·어깨 망토·긴 로브(로브 자락은 몸통에 붙어 걸을 때 다리가 뚫고 나올 것으로 예상 — 정도 기록). 도적: 후드·어깨끈·등 망토 | 없음 |
+| Q4-5 | `equip rogue 10 helmet` | 투구 칸만 바뀜 | JUnit(findAll) |
+| Q4-6 | Blockbench 로 `devtest/source_assets/test_armor/<id>/current/<id>.bbmodel` 열기 (아무 1~2개) | 오류·빠진 텍스처 없이 열림. 팩 최상위에 `LICENSES/`·`ASSET_PROVENANCE.csv` 있고 `devtest/source_assets/test_armor/_retired_ai` 는 없음 | CI(파일 있음·없음) |
 
 ### v0.28.2 — 테스트 흉갑 v05 (cleannrooster MIT 원본 재작업) + 좌우 규칙 바로잡음
 **바뀐 것:** ① 좌우: Blockbench 는 내보낼 때 x 를 뒤집는데 받은 geo 는 뒤집지 않고 만들어져 있었음 → bbmodel 에서 Blockbench 규칙으로 geo 를 만드는 `bb2geo.py`, v04 = v2.0 을 바르게 내보낸 수정 전 기준(v02·v03 은 비대칭 부품이 반대쪽) ② v05 = cleannrooster 원본(templar·cityguardian·archmagefire·thiefmob·sanguine)에서 고른 큐브 + 새 큐브, 다시 칠한 256 텍스처, 3D 앞모습 아이콘. 비교 그림 `docs/devtest/compare_v04_v05.png`.

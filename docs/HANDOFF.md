@@ -15,7 +15,7 @@
 | CI | push마다 빌드·JUnit·도구 자체 검사·테스트 팩 생성 (테스트 결과는 로그의 "테스트 합계" 줄). 모드 구성이 바뀌면 `modpack smoke`가 외부 모드 18개 + 우리 모드 2개로 **NeoForge 전용 서버를 실제 기동** |
 | 1차 외부 모드 구성 | `modpack/mods.lock.json` (필수 13 + 권장 5, 버전 고정). 2026-11-17 전용 서버 기동 통과 (run 44061047052). 클라이언트 실행은 아직 확인 안 함 |
 | 우리 모드 3개 | `fantasyrpg`(이 저장소), `magiccity`(JitPack), `royalqol`(클라이언트 전용 편의 모드, `magic-city-mod` 저장소 `royalqol/`, `mods.lock.json`의 `royalqol.commit`으로 빌드 — `tools/build_royalqol.sh`). 테스트 팩과 서버 기동 검사에 셋 다 들어감. **챕터 보스 모드 `fantasybosses`**(3장 라디키온, ARR — 사용자 허락으로 공개 저장소): `magic-city-mod` 저장소 `fantasybosses/`, `mods.lock.json` 의 `fantasybosses.commit` 으로 빌드(`tools/build_fantasybosses.sh`) → 테스트 팩·통합 팩, 서버 기동 검사는 2단계(GeckoLib 필요)에만. `modpack/local-mods/` 는 지금 비어 있음 |
-| 최신 테스트 팩 | **v0.28.2-test.1** (테스트 흉갑 v05 cleannrooster 재작업·좌우 규칙 바로잡음 + 테스트 흉갑 v2.0 + 개발자 전용 테스트 장비 + 장비 그림 v0.9 16px 아이콘 + 장비 그림 v0.8·갑옷 오오라 + 빛·입자 + Effectual TLib 고침 + 지하 동굴 + 장비 그림 v0.7 + Combat Traces + 오버월드 7급·무기 그림·갑옷 수리·방어구 성향 + fantasybosses 0.9.0). 모두 게임 확인 전 — `docs/TESTING.md` 빠른 확인 20~29회차 |
+| 최신 테스트 팩 | **v0.28.3-test.1** (테스트 장비 v06: 오픈소스 원본 구조 그대로 3벌 × 4부위, AI 제작 판 폐기, 배포물에 LICENSES·ASSET_PROVENANCE + 테스트 흉갑 v05 cleannrooster 재작업·좌우 규칙 바로잡음 + 테스트 흉갑 v2.0 + 개발자 전용 테스트 장비 + 장비 그림 v0.9 16px 아이콘 + 장비 그림 v0.8·갑옷 오오라 + 빛·입자 + Effectual TLib 고침 + 지하 동굴 + 장비 그림 v0.7 + Combat Traces + 오버월드 7급·무기 그림·갑옷 수리·방어구 성향 + fantasybosses 0.9.0). 모두 게임 확인 전 — `docs/TESTING.md` 빠른 확인 20~30회차 |
 | 게임 테스트 | `docs/TESTING.md`의 v0.1·v0.2 체크리스트 |
 
 ### 테스트 팩 Release 만드는 법
@@ -51,6 +51,7 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - **(v0.26, 게임 확인 전) 오버월드 7급:** `CraftRules.MAX_UPGRADE` 7, 7급 승급·유산 7급 재료(오버월드 부품), magiccity `4da6f55`(12장 완료 → 7급, 레벨 상한 Lv.60 유지)
 - **(v0.26~0.27, 게임 확인 전) 장비 그림:** 무기 6종 × 10등급(인벤토리 2D·손 3D, `separate_transforms`, 속성 `fantasyrpg:tier`), 활 당기기 3단계(우리 활에 `pull`·`pulling` 속성 등록), 재료 17종 입체·아이콘, 계열 갑옷 아이콘 200(속성 `fantasyrpg:tier`), **입은 갑옷 계열·등급별 모습**(`FamilyArmorItem.getArmorTexture` → `textures/models/armor/<계열>_tNN_layer_1|2.png`), 룬석·연마재 등급 그림(속성 `fantasyrpg:grade`, `rune_sel/`), 작업대 블록 그림(`GridBenchBlock.FACING`, 놓을 때 플레이어 쪽, 이전 월드는 북쪽)
 - **(v0.27.1, magiccity `92f7ee8`, 게임 확인 전) 지하 동굴:** 왕국 대륙 Y 0 미만에만 동굴(`world/CaveRules` 순수 노이즈·JUnit 4, Y −55 이하 용암), 지어 둔 던전 영역(`Restore` 영역 상자 = `world/UndergroundZones`) + 8칸 제외, 그 영역 땅속 바닐라 액체는 생성 때 돌로, 기존 월드 `/magiccity fix caves [반지름]`. 지표 입구 없음
+- **(v0.28.3, 게임 확인 전) 테스트 장비 v06 = 오픈소스 원본:** 12종(기사 T01 templar·마법사 T05 archmagefire·도적 T10 thiefmob × 투구·흉갑·각반·장화, cleannrooster a1ca6f85 MIT). `tools/devtest/build_from_library.py`가 원본 큐브·텍스처를 그대로 4부위로 나눔(바꾼 것은 `source_assets/test_armor/build_report_v06.json`). `give/equip <직업> <등급>` 부위 생략 = 한 벌(`DevTestManifest.findAll`). v01~v05(AI 제작·재조립)는 `source_assets/test_armor/_retired_ai/`에만, 배포 제외(CI 확인). 오픈소스 라이브러리 `source_assets/armor_library/`(배분표 240칸 `04_240_slots.csv` 진행 플래그, `upstream/` 원본 사본, `staging/`은 git 제외). 배포물 크레딧 `tools/devtest/dist_licenses.py` → `modpack/devtest_kit/{LICENSES/,ASSET_PROVENANCE.csv}`, jar `licenses/ASSET_PROVENANCE.csv`
 - **(v0.28.0, 게임 확인 전) 개발자 전용 테스트 장비:** 목록(`fantasyrpg_devtest/armor_manifest.json`, 원본 `source_assets/test_armor/manifest.json`) 항목마다 GeckoLib 입체 갑옷 아이템 등록(능력치 0), `/fantasyrpgtest armor list|give|equip|clear|reload`(권한 2), 창작 탭, 흉갑은 다리 본도 그림. 켜기 = `config/fantasyrpg-devtest/ENABLE`(테스트 팩에 있음)·`-Dfantasyrpg.devtest`·개발 환경. 리비전·배치 `tools/devtest/test_armor.py`. 설명서 `docs/devtest/README.md`
 - **(v0.27.4, 게임 확인 전) 장비 그림 v0.9:** 인벤토리 무기·갑옷 아이콘 = 16px 픽셀 그림(`textures/item/weapons_16`·`armor_16`, 옛 64px `textures/item/weapons`·`armor` 폴더는 지움), 활 당김 아이콘 3단계. 손·3인칭은 입체 무기(`models/item/weapons`, v0.8 과 같음 — 자료의 `weapons_3d`)
 - **(v0.27.3, 게임 확인 전) 장비 그림 v0.8:** 갑옷 아이콘 200(64×64)·무기 입체 모델 60·활 당김 30·무기 빛 마스크 1~10급 전부 새 그림으로 다시 생성(`apply_eq07.py`·`glow_eq07.py`), 갑옷 8~10급 오오라 입자 15종(`RpgParticles.aura`, `RuneFx`가 입은 부위마다 뿜음, 파손 부위 제외). 입은 갑옷 입체(GeckoLib geo 50)는 **미적용** — 렌더러·GeckoLib 필수 의존성 결정 대기
@@ -79,7 +80,8 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 | `devtest/DevTestManifest`, `DevTestSwitch` | **순수 로직** 개발 테스트 장비 목록 읽기·검사(id `test_` 접두, 부위, 등급, GeckoLib 경로 규칙), 켜기 규칙 (JUnit `DevTestManifestTest`) |
 | `devtest/DevTest`, `DevTestRegistry`, `DevTestArmorItem`, `DevTestCommands` | 개발 테스트 장비 진입점(켜졌을 때만 등록)·재질 `devtest`(0)·아이템(GeoItem)·창작 탭·`/fantasyrpgtest` |
 | `client/DevTestArmorRenderer`, `client/DevTestClient` | GeckoLib 갑옷 렌더러(경로는 항목에서, 흉갑은 다리 본도 보임), 리소스 다시 읽기 |
-| `source_assets/test_armor/`, `tools/devtest/test_armor.py`, `tools/devtest/make_kit.sh`, `modpack/devtest_kit/` | 테스트 장비 원본·리비전(v01 원본, v02 좌우 본 고침), 검사·리비전·배치 스크립트, 테스트 팩용 묶음(켜기 파일·작업용 리소스팩) |
+| `source_assets/test_armor/`, `tools/devtest/test_armor.py`, `tools/devtest/make_kit.sh`, `modpack/devtest_kit/` | 테스트 장비 원본·리비전(현재 v06, 폐기한 v01~v05 는 `_retired_ai/` — 배포 제외), 검사·리비전·배치 스크립트, 테스트 팩용 묶음(켜기 파일·작업용 리소스팩·`LICENSES/`·`ASSET_PROVENANCE.csv`) |
+| `source_assets/armor_library/`, `tools/devtest/build_from_library.py`, `tools/devtest/dist_licenses.py` | 오픈소스 장비 라이브러리(배분표 240칸·원본 고정 커밋·`upstream/` 원본 사본·라이브러리 스크립트), 원본 → 4부위 테스트 장비 변환, 배포 크레딧·출처 목록 생성(CI `--check`) |
 | `combat/DamageInput`, `Resistances`, `DamageBreakdown` | 입력·저항·단계별 결과 레코드 |
 | `combat/RpgDamage` | 계산 결과를 실제 엔티티에 적용 (피해 유형 `fantasyrpg:rpg`) |
 | `resist/MobResistanceManager` | 데이터팩 저항 로더 (싱글턴, 리로드 리스너) |
@@ -240,6 +242,15 @@ Claude 세션에서는 태그 push가 막혀 있으므로 **수동 실행**으�
 - 이 저장소: `mods.lock.json` fantasybosses 고정 커밋 → `4da5507`, CI 의 jar 이름·서버 로그 검사 0.9.0. 사전 릴리스 `v0.27.0-test.2`. 게임 확인 TESTING FM1~FM8, 빠른 확인 22회차.
 - 남은 것: 원거리·비행·스킬 AI, 지역별 자연 스폰(지역 고정 등급), 드롭·수치, 균열 포식자 부위 판정 여부.
 
+
+### 2026-11-23 — 테스트 장비 v06: 오픈소스 원본 구조 그대로, AI 제작 판 폐기 (fantasyrpg 0.28.3)
+- 사용자 제공 `FantasyRPG_OpenSource_Armor_Library_v1.zip`의 `CLAUDE_NEXT_KO.md`를 지침으로. 압축을 `source_assets/armor_library/`에 두고 스크립트는 읽은 뒤 실행: `verify_catalog.py` 통과(240칸·60세트·2D 배정 27·원본 후보 15) → `fetch_upstream.py --source primary`는 GitHub API·raw 가 프록시 403 → 스크립트에 `--local <source>=<git 클론>`을 더하고 고정 커밋(More-Armor `372f626`, cleann `a1ca6f8`, Loy `afbb769`)을 git 으로 받아 실행(297개, 원본 해시를 라이브러리 `ASSET_PROVENANCE.csv`에) → `build_staging.py` 282개(`staging/`, git 제외). ImmersiveArmors(GPL)·FrenchKrab 은 받지 않음. More Armor 원작 TaTe 라이선스(MIT, 저작권자 칸이 빈 양식 그대로)도 `upstream/morearmor/…/averagetateman/LICENSE`로 보관.
+- 6항(먼저 3종): 배분표의 원본 하나씩만 씀 — 기사 T01 `templar.geo.bbmodel`(텍스처 templar.png, 네더라이트판 아님), 마법사 T05 `archmagefire.bbmodel`, 도적 T10 `thiefmob.bbmodel`. **다른 모델을 섞지 않고, 다시 칠하지 않고, 새 큐브를 만들지 않음.** `tools/devtest/build_from_library.py`: 원본 그룹 → GeckoLib 갑옷 본(몹 리그 torso → armorBody 등), 몹 맨살 머리(inflate 0) 뺌, 마법사 팔 안쪽 큐브(맨살과 같은 크기·inflate 0) inflate 0.4. 부위마다 8본 모두 두고 그 부위 큐브만. 기사 30큐브(4·16·2·8), 마법사 16(1·11·2·2), 도적 16(1·11·2·2).
+- 흉갑 3종은 같은 id 로 v06, 투구·각반·장화 9종 새 id(`test_<직업>_{helmet,legs,boots}_tNN`). `test_armor.py import --rev`. v01~v05·`build_from_upstream.py`·옛 `_upstream`은 `source_assets/test_armor/_retired_ai/`로 옮김(README), `make_kit.sh`가 빼고 CI 가 테스트 팩·mrpack 에 없는지 확인.
+- 아이콘: 기사·도적은 2D 배정이 없고, 마법사의 More Armor `redstone` 2D 는 판금 모양·밝은 빨강이라 로브와 맞지 않아 **안 씀** → 12종 모두 모델 앞모습 렌더(임시, 각반·장화는 알아보기 어려움). 그래서 이번 배포물에 More Armor 파일은 없음.
+- 배분표 `04_240_slots.csv`: 12칸 `files_imported=1`, `3d_model_converted=1`, `game_linked`는 CI 빌드·전용 서버 등록 확인 뒤 1, `game_tested=0`. 열 `game_item_id`·`progress_note` 추가. `verify_catalog.py`의 "모두 0" 검사를 단계 순서·게임 아이템 연결 검사로 바꿈. 엑셀 `FantasyRPG_240_오픈소스_배분표.xlsx`는 갱신 안 함(CSV 가 기준).
+- 크레딧: `tools/devtest/dist_licenses.py` → 게임 파일 36줄(모델·텍스처·아이콘 × 12, 원본 해시·고정 커밋·바꾼 것) `ASSET_PROVENANCE.csv` + `LICENSES/cleannrooster__forg-cleannrooster-assets/`, CI `--check`. jar 에도 출처 목록.
+- 확인: 로컬 JUnit(DevTestManifestTest 6, 12종·한 벌 찾기), `test_armor.py validate` 12종 오류 0, `verify_catalog.py` 통과, 비교 그림 `docs/devtest/compare_v05_v06.png`. **Blockbench 앱으로 열기·게임 착용·관통은 확인 안 함** — TESTING Q4-1~Q4-6, 빠른 확인 30회차. 예상 문제: 마법사 로브 자락이 몸통 본이라 걸을 때 다리가 뚫고 나옴(원본 몹 구조), 기사 망토도 같음.
 
 ### 2026-11-23 — 테스트 흉갑 v05: cleannrooster(MIT) 재작업, 좌우 규칙 바로잡음 (fantasyrpg 0.28.2)
 - 사용자 제공 `fantasyrpg_claude_asset_handoff_v1.zip`(작업 지시 + v2.0 기준 + 받기 스크립트). `tools/fetch_and_distribute.py --scope tests` 실행 → raw.githubusercontent 가 프록시에서 막혀 실패(30건) → 같은 저장소를 git 으로 받음(HEAD = 지정 커밋 `a1ca6f8` 확인) → 스크립트 `--offline` 으로 검사·배분(15개, 오류 0).

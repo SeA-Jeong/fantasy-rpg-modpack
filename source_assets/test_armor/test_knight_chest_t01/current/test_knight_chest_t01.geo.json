@@ -4,8 +4,8 @@
   {
    "description": {
     "identifier": "geometry.fantasyrpg.test_armor.test_knight_chest_t01",
-    "texture_width": 256,
-    "texture_height": 256,
+    "texture_width": 128,
+    "texture_height": 128,
     "visible_bounds_width": 4,
     "visible_bounds_height": 4,
     "visible_bounds_offset": [
@@ -46,6 +46,23 @@
        "uv": [
         32,
         37
+       ]
+      },
+      {
+       "origin": [
+        -7,
+        6.7,
+        -0.3
+       ],
+       "size": [
+        14,
+        17.3,
+        3.5
+       ],
+       "inflate": 0.5,
+       "uv": [
+        2,
+        92
        ]
       },
       {
@@ -112,257 +129,6 @@
        "uv": [
         70,
         0
-       ]
-      },
-      {
-       "origin": [
-        -4,
-        15,
-        -2
-       ],
-       "size": [
-        8,
-        4,
-        3
-       ],
-       "inflate": 0.8,
-       "uv": [
-        200,
-        15
-       ]
-      },
-      {
-       "origin": [
-        -4,
-        20,
-        -2
-       ],
-       "size": [
-        3,
-        3,
-        3
-       ],
-       "inflate": 0.9,
-       "uv": [
-        208,
-        8
-       ]
-      },
-      {
-       "origin": [
-        1,
-        20,
-        -2
-       ],
-       "size": [
-        3,
-        3,
-        3
-       ],
-       "inflate": 0.9,
-       "uv": [
-        172,
-        80
-       ]
-      }
-     ]
-    },
-    {
-     "name": "tasset_front",
-     "parent": "armorBody",
-     "pivot": [
-      0,
-      14.02925,
-      -3.79024
-     ],
-     "cubes": [
-      {
-       "origin": [
-        -5.0,
-        7,
-        -5
-       ],
-       "size": [
-        5.5,
-        7,
-        1
-       ],
-       "pivot": [
-        0,
-        10,
-        -2
-       ],
-       "rotation": [
-        -12.5,
-        12.5,
-        0
-       ],
-       "uv": [
-        208,
-        0
-       ]
-      },
-      {
-       "origin": [
-        -0.5,
-        7,
-        -5
-       ],
-       "size": [
-        5.5,
-        7,
-        1
-       ],
-       "pivot": [
-        0,
-        10,
-        -2
-       ],
-       "rotation": [
-        -12.5,
-        -12.5,
-        0
-       ],
-       "uv": [
-        208,
-        22
-       ]
-      }
-     ]
-    },
-    {
-     "name": "tasset_right",
-     "parent": "armorBody",
-     "pivot": [
-      -5.33252,
-      14.02925,
-      0
-     ],
-     "cubes": [
-      {
-       "origin": [
-        -6,
-        7,
-        2
-       ],
-       "size": [
-        6,
-        7,
-        1
-       ],
-       "pivot": [
-        -3,
-        10,
-        0
-       ],
-       "rotation": [
-        12.5,
-        -90,
-        0
-       ],
-       "uv": [
-        204,
-        39
-       ]
-      }
-     ]
-    },
-    {
-     "name": "tasset_left",
-     "parent": "armorBody",
-     "pivot": [
-      5.33252,
-      14.02925,
-      0
-     ],
-     "cubes": [
-      {
-       "origin": [
-        0,
-        7,
-        2
-       ],
-       "size": [
-        6,
-        7,
-        1
-       ],
-       "pivot": [
-        3,
-        10,
-        0
-       ],
-       "rotation": [
-        12.5,
-        90,
-        0
-       ],
-       "uv": [
-        192,
-        74
-       ]
-      }
-     ]
-    },
-    {
-     "name": "tasset_back",
-     "parent": "armorBody",
-     "pivot": [
-      0,
-      14.02925,
-      3.79024
-     ],
-     "cubes": [
-      {
-       "origin": [
-        -0.5,
-        7,
-        4
-       ],
-       "size": [
-        5.5,
-        7,
-        1
-       ],
-       "pivot": [
-        0,
-        10,
-        2
-       ],
-       "rotation": [
-        12.5,
-        12.5,
-        0
-       ],
-       "uv": [
-        208,
-        30
-       ]
-      },
-      {
-       "origin": [
-        -5.0,
-        7,
-        4
-       ],
-       "size": [
-        5.5,
-        7,
-        1
-       ],
-       "pivot": [
-        0,
-        10,
-        2
-       ],
-       "rotation": [
-        12.5,
-        -12.5,
-        0
-       ],
-       "uv": [
-        160,
-        80
        ]
       }
      ]
@@ -585,6 +351,22 @@
     },
     {
      "name": "armorLeftLeg",
+     "pivot": [
+      1.9,
+      12,
+      0
+     ]
+    },
+    {
+     "name": "armorRightBoot",
+     "pivot": [
+      -1.9,
+      12,
+      0
+     ]
+    },
+    {
+     "name": "armorLeftBoot",
      "pivot": [
       1.9,
       12,
